@@ -702,7 +702,6 @@
                     </button>
                 </div>
 
-                <!-- FILTROS ACTUALIZADOS CON TODOS LOS SECTORES -->
                 <div style="display: flex; gap: 10px; margin-bottom: 24px; overflow-x: auto; padding-bottom: 8px;">
                     <button class="filter-pill active" onclick="filtrarStartups('Todos', this)">Todos los Proyectos</button>
                     <button class="filter-pill" onclick="filtrarStartups('Agroindustria', this)">Agroindustria</button>
@@ -770,7 +769,7 @@
                 </div>
             </section>
 
-            <!-- PANTALLA 4: DESAFÍOS INDUSTRIA -->
+            <!-- PANTALLA 4: DESAFÍOS INDUSTRIA (ACTUALIZADA CON GRID 3x3) -->
             <section id="view-desafio" class="view-section">
                 <div style="margin-bottom: 20px;">
                     <span class="badge badge-green" style="margin-bottom: 6px;">DESAFÍOS REGIONALES</span>
@@ -780,12 +779,10 @@
 
                 <div class="card">
                     <h3 style="font-size: 14px; margin-bottom: 12px; font-family: var(--font-mono); color: var(--primary);">Rubro de la Empresa</h3>
-                    <div class="grid-4" style="margin-bottom: 24px;">
+                    
+                    <!-- Cuadrícula 3x3 con los 9 rubros -->
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px;">
                         <div class="rubro-card selected" onclick="selectRubro(this)">
-                            <i data-lucide="zap" size="24" style="margin-bottom: 8px; color: var(--primary)"></i>
-                            <div style="font-size: 13px; font-weight: 600;">Energía</div>
-                        </div>
-                        <div class="rubro-card" onclick="selectRubro(this)">
                             <i data-lucide="tractor" size="24" style="margin-bottom: 8px; color: var(--primary)"></i>
                             <div style="font-size: 13px; font-weight: 600;">Agroindustria</div>
                         </div>
@@ -794,8 +791,32 @@
                             <div style="font-size: 13px; font-weight: 600;">Manufactura</div>
                         </div>
                         <div class="rubro-card" onclick="selectRubro(this)">
+                            <i data-lucide="zap" size="24" style="margin-bottom: 8px; color: var(--primary)"></i>
+                            <div style="font-size: 13px; font-weight: 600;">Energía</div>
+                        </div>
+                        <div class="rubro-card" onclick="selectRubro(this)">
                             <i data-lucide="truck" size="24" style="margin-bottom: 8px; color: var(--primary)"></i>
                             <div style="font-size: 13px; font-weight: 600;">Logística</div>
+                        </div>
+                        <div class="rubro-card" onclick="selectRubro(this)">
+                            <i data-lucide="droplets" size="24" style="margin-bottom: 8px; color: var(--primary)"></i>
+                            <div style="font-size: 13px; font-weight: 600;">Agua y Sanitario</div>
+                        </div>
+                        <div class="rubro-card" onclick="selectRubro(this)">
+                            <i data-lucide="utensils" size="24" style="margin-bottom: 8px; color: var(--primary)"></i>
+                            <div style="font-size: 13px; font-weight: 600;">Alimentos</div>
+                        </div>
+                        <div class="rubro-card" onclick="selectRubro(this)">
+                            <i data-lucide="heart-pulse" size="24" style="margin-bottom: 8px; color: var(--primary)"></i>
+                            <div style="font-size: 13px; font-weight: 600;">Salud</div>
+                        </div>
+                        <div class="rubro-card" onclick="selectRubro(this)">
+                            <i data-lucide="tree-pine" size="24" style="margin-bottom: 8px; color: var(--primary)"></i>
+                            <div style="font-size: 13px; font-weight: 600;">Forestal</div>
+                        </div>
+                        <div class="rubro-card" onclick="selectRubro(this)">
+                            <i data-lucide="fish" size="24" style="margin-bottom: 8px; color: var(--primary)"></i>
+                            <div style="font-size: 13px; font-weight: 600;">Pesca y Acuicultura</div>
                         </div>
                     </div>
 
@@ -945,10 +966,15 @@
                 <div style="margin-bottom: 14px;">
                     <label style="font-size: 12px; font-weight: 600;">Sector / Industria:</label>
                     <select required>
-                        <option value="Energía">Energía</option>
                         <option value="Agroindustria">Agroindustria</option>
                         <option value="Manufactura">Manufactura</option>
+                        <option value="Energía">Energía</option>
                         <option value="Logística">Logística</option>
+                        <option value="Agua">Agua y Sanitario</option>
+                        <option value="Alimentos">Alimentos</option>
+                        <option value="Salud">Salud</option>
+                        <option value="Forestal">Forestal</option>
+                        <option value="Pesca y Acuicultura">Pesca y Acuicultura</option>
                     </select>
                 </div>
                 <div style="margin-bottom: 14px;">
@@ -998,7 +1024,7 @@
 
         // Estructura oficial TRL 1 al 9
         const trlDefinitions = [
-            { level: 1, title: "TRL 1: Principios básicos observados", desc: "Investigación científica inicial y observación de principios teóricos fundamentales." },
+            { level: 1, title: "TRL 1: Principios básicos observados", desc: "Investigación científica inicial y observation de principios teóricos fundamentales." },
             { level: 2, title: "TRL 2: Concepto tecnológico formulado", desc: "Formulación teórica del concepto tecnológico o aplicación práctica." },
             { level: 3, title: "TRL 3: Prueba de concepto experimental", desc: "Demostración analítica y experimental de la función en entorno de laboratorio." },
             { level: 4, title: "TRL 4: Validación de componentes en laboratorio", desc: "Integración básica de componentes para comprobar que funcionan juntos en laboratorio." },
@@ -1009,7 +1035,7 @@
             { level: 9, title: "TRL 9: Sistema comercializado con éxito", desc: "Tecnología en producción continua y comercialización activa en el mercado." }
         ];
 
-        // BASE DE DATOS COMPLETA
+        // BASE DE DATOS COMPLETA (58 Proyectos)
         let startupsRegistry = [
             { 
                 nombre: "Lumina Photonics", 
@@ -1207,37 +1233,37 @@
             { 
                 nombre: "Sistema de desalinización sin membranas (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", 
                 queHace: "Sistema de desalinización sin membranas para tratamiento de agua.", 
-                industria: "Agua", comoHace: "Inv: Christian Pablo Romero Vieyra", trlMax: 1, evidencias: {} 
+                industria: "Agua y Sanitario", comoHace: "Inv: Christian Pablo Romero Vieyra", trlMax: 1, evidencias: {} 
             },
             { 
                 nombre: "Material biomimético superhidrofóbico (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", 
                 queHace: "Aplicación de material biomimético superhidrofóbico para el control de agua.", 
-                industria: "Agua", comoHace: "Inv: María Belén Barraza Sandoval", trlMax: 1, evidencias: {} 
+                industria: "Agua y Sanitario", comoHace: "Inv: María Belén Barraza Sandoval", trlMax: 1, evidencias: {} 
             },
             { 
                 nombre: "IDRO: Plantas desalinizadoras (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", 
                 queHace: "Evaluación y optimización de plantas desalinizadoras.", 
-                industria: "Agua", comoHace: "Inv: Adrián Enrique Ortiz Rojas", trlMax: 1, evidencias: {} 
+                industria: "Agua y Sanitario", comoHace: "Inv: Adrián Enrique Ortiz Rojas", trlMax: 1, evidencias: {} 
             },
             { 
                 nombre: "Sistema de remoción de Arsénico (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", 
                 queHace: "Sistema avanzado para la remoción de Arsénico en recursos hídricos.", 
-                industria: "Agua", comoHace: "Inv: Andrea Paola Lazo Acuña", trlMax: 1, evidencias: {} 
+                industria: "Agua y Sanitario", comoHace: "Inv: Andrea Paola Lazo Acuña", trlMax: 1, evidencias: {} 
             },
             { 
                 nombre: "Pintura antifouling hidrofóbica (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", 
                 queHace: "Desarrollo de pintura antifouling hidrofóbica para entornos acuáticos.", 
-                industria: "Agua", comoHace: "Inv: Paloma Brichetto", trlMax: 1, evidencias: {} 
+                industria: "Agua y Sanitario", comoHace: "Inv: Paloma Brichetto", trlMax: 1, evidencias: {} 
             },
             { 
                 nombre: "Desalinización por neblina (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", 
                 queHace: "Sistema de desalinización mediante ciclos de producción de neblina.", 
-                industria: "Agua", comoHace: "Inv: Paula Alejandra Guerra Pinto", trlMax: 1, evidencias: {} 
+                industria: "Agua y Sanitario", comoHace: "Inv: Paula Alejandra Guerra Pinto", trlMax: 1, evidencias: {} 
             },
             { 
                 nombre: "Reciclaje de membranas OI (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", 
                 queHace: "Desarrollo de procesos para el reciclaje de membranas de ósmosis inversa.", 
-                industria: "Agua", comoHace: "Inv: Paula Alejandra Guerra Pinto", trlMax: 1, evidencias: {} 
+                industria: "Agua y Sanitario", comoHace: "Inv: Paula Alejandra Guerra Pinto", trlMax: 1, evidencias: {} 
             },
             // --- CAPACIDADES USM: SECTOR AGROPECUARIA / AGROINDUSTRIA ---
             { 
@@ -1506,7 +1532,7 @@
             const textoSolucion = document.getElementById('texto-solucion-generada');
             
             boxResultado.style.display = 'block';
-            textoSolucion.innerHTML = `Basado en el desafío ingresado ("<i>${descripcion || 'Optimización logística sectorial'}</i>"), la Mesa de Innovación CIDERE identificó un match directo con la startup <b>Lumina Photonics</b>, la cual cuenta con tecnologías aplicables en eficiencia y automatización. Se ha generado un registro para vinculación automática.`;
+            textoSolucion.innerHTML = `Basado en el desafío ingresado ("<i>${descripcion || 'Optimización sectorial'}</i>"), la Mesa de Innovación CIDERE identificó opciones relevantes en el ecosistema para vinculación directa.`;
             lucide.createIcons();
         }
 
