@@ -488,7 +488,6 @@
     <!-- SIDEBAR -->
     <aside>
         <div>
-            <!-- AQUÍ ESTÁ EL CAMBIO DEL LOGO -->
             <div class="brand">
                 <img src="logo.png" alt="Logo CIDERE" style="max-width: 100%; height: auto;">
             </div>
@@ -711,23 +710,8 @@
                     <button class="filter-pill" onclick="filtrarStartups('Logística', this)">Logística</button>
                 </div>
 
+                <!-- Contenedor vacío. Se llenará dinámicamente con JavaScript al cargar -->
                 <div id="lista-startups" class="grid-3">
-                    <div class="card">
-                        <span class="badge badge-blue" style="margin-bottom: 8px;">STARTUP</span>
-                        <h4 style="font-size: 15px;">Lumina Photonics</h4>
-                        <p style="font-size: 11px; color: var(--text-muted); margin: 4px 0 10px 0;">Contacto: contacto@luminaphotonics.cl</p>
-                        <p style="font-size: 12px; color: var(--text-muted);"><b>Qué hacemos:</b> Interconexiones ópticas para centros de datos.</p>
-                        <p style="font-size: 12px; color: var(--text-muted); margin-top:4px;"><b>Industria:</b> Energía</p>
-                        <div style="margin-top: 14px; font-weight: 600; font-size: 12px; color: var(--primary);">TRL Actual: 5</div>
-                    </div>
-                    <div class="card">
-                        <span class="badge badge-green" style="margin-bottom: 8px;">STARTUP</span>
-                        <h4 style="font-size: 15px;">BioPolymer Solutions</h4>
-                        <p style="font-size: 11px; color: var(--text-muted); margin: 4px 0 10px 0;">Contacto: info@biopolymer.cl</p>
-                        <p style="font-size: 12px; color: var(--text-muted);"><b>Qué hacemos:</b> Plásticos biodegradables con micelio.</p>
-                        <p style="font-size: 12px; color: var(--text-muted); margin-top:4px;"><b>Industria:</b> Agroindustria</p>
-                        <div style="margin-top: 14px; font-weight: 600; font-size: 12px; color: var(--primary);">TRL Actual: 3</div>
-                    </div>
                 </div>
             </section>
 
@@ -743,9 +727,7 @@
                 <div class="card" style="margin-bottom: 24px;">
                     <label style="font-size: 13px; font-weight: 600; display: block; margin-bottom: 8px;">Seleccionar Startup para Evaluación TRL:</label>
                     <select id="select-empresa-trl" onchange="cargarEmpresaTRLLineal(this.value)">
-                        <option value="">-- Seleccione una empresa registrada --</option>
-                        <option value="Lumina Photonics">Lumina Photonics (Energía)</option>
-                        <option value="BioPolymer Solutions">BioPolymer Solutions (Agroindustria)</option>
+                        <option value="">-- Seleccione un proyecto registrado --</option>
                     </select>
                 </div>
 
@@ -1019,6 +1001,7 @@
         let startupsRegistry = [
             { 
                 nombre: "Lumina Photonics", 
+                tipo: "Startup",
                 contacto: "contacto@luminaphotonics.cl", 
                 queHace: "Interconexiones ópticas para centros de datos.", 
                 industria: "Energía", 
@@ -1028,12 +1011,109 @@
             },
             { 
                 nombre: "BioPolymer Solutions", 
+                tipo: "Startup",
                 contacto: "info@biopolymer.cl", 
                 queHace: "Plásticos biodegradables con micelio.", 
                 industria: "Agroindustria", 
                 comoHace: "Biotecnología fúngica", 
                 trlMax: 3,
                 evidencias: { 1: "articulo_micelio_udec.pdf", 2: "formulacion_polimero.pdf", 3: "prueba_concepto_lab.pdf" }
+            },
+            // --- CAPACIDADES USM: SECTOR ENERGÍA ---
+            { 
+                nombre: "Calefactor a pellet sustentable (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", 
+                queHace: "Desarrollo de calefactores a pellet sustentables y de bajo costo.", 
+                industria: "Energía", comoHace: "Inv: Guillermo Felipe Larson Muñoz", trlMax: 1, evidencias: {} 
+            },
+            { 
+                nombre: "Fragilizador de hidrógeno (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", 
+                queHace: "Tecnología de fragilización de hidrógeno.", 
+                industria: "Energía", comoHace: "Inv: Germán Javier Amador Díaz", trlMax: 1, evidencias: {} 
+            },
+            { 
+                nombre: "Advanced Sustainable Fuel - ASF (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", 
+                queHace: "Desarrollo de combustibles sostenibles avanzados.", 
+                industria: "Energía", comoHace: "Inv: Iván Andrés Cornejo García", trlMax: 1, evidencias: {} 
+            },
+            { 
+                nombre: "Limpiador de Paneles Solares (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", 
+                queHace: "Sistema automatizado para la limpieza y mantenimiento de paneles solares.", 
+                industria: "Energía", comoHace: "Inv: Christian Orellana", trlMax: 1, evidencias: {} 
+            },
+            { 
+                nombre: "Plataforma impacto macroeconómico (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", 
+                queHace: "Plataforma SaaS para evaluación de impacto macroeconómico de transformaciones energéticas.", 
+                industria: "Energía", comoHace: "Inv: George Williams Kerrigan Puig", trlMax: 1, evidencias: {} 
+            },
+            { 
+                nombre: "Transformador estado sólido modular (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", 
+                queHace: "Transformador en estado sólido completamente modular.", 
+                industria: "Energía", comoHace: "Inv: Felipe Ruiz", trlMax: 1, evidencias: {} 
+            },
+            { 
+                nombre: "Plataforma de control digital BRAIN (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", 
+                queHace: "Desarrollo de plataforma avanzada de control digital para sistemas energéticos.", 
+                industria: "Energía", comoHace: "Inv: Pablo Andrés Lezana Illesca", trlMax: 1, evidencias: {} 
+            },
+            { 
+                nombre: "Co-optimización Sistemas Eléctricos (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", 
+                queHace: "Herramienta de co-optimización de Sistemas Eléctricos de Potencia.", 
+                industria: "Energía", comoHace: "Inv: Leonardo Esteban Gacitúa Rocha", trlMax: 1, evidencias: {} 
+            },
+            { 
+                nombre: "Serie Low-E: Estufa a leña (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", 
+                queHace: "Diseño de estufa a leña de baja emisión contaminante.", 
+                industria: "Energía", comoHace: "Inv: Fabián Rodrigo Guerrero Castro", trlMax: 1, evidencias: {} 
+            },
+            { 
+                nombre: "App Solar (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", 
+                queHace: "Aplicación móvil orientada a la gestión y uso de energía solar.", 
+                industria: "Energía", comoHace: "Inv: Patricio Valdivia Lefort", trlMax: 1, evidencias: {} 
+            },
+            { 
+                nombre: "Captura aérea directa de CO2 (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", 
+                queHace: "Desarrollo de proceso tecnológico para la captura aérea directa de dióxido de carbono.", 
+                industria: "Energía", comoHace: "Inv: Gonzalo Alexis Núñez Montoya", trlMax: 1, evidencias: {} 
+            },
+            { 
+                nombre: "Quemador Dual Amoniaco-Hidrógeno (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", 
+                queHace: "Quemador dual adaptado para amoniaco e hidrógeno verde.", 
+                industria: "Energía", comoHace: "Inv: Mario Gonzalo Toledo Torres", trlMax: 1, evidencias: {} 
+            },
+            { 
+                nombre: "Planificación de transmisión resiliente (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", 
+                queHace: "Herramienta de apoyo a la planificación de transmisión eléctrica resiliente.", 
+                industria: "Energía", comoHace: "Inv: Ricardo Javier Álvarez Malebran", trlMax: 1, evidencias: {} 
+            },
+            { 
+                nombre: "Energy Converter Green Hydrogen (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", 
+                queHace: "Convertidor de energía integrado para la producción de hidrógeno verde.", 
+                industria: "Energía", comoHace: "Inv: Andrés Felipe Mora Castro", trlMax: 1, evidencias: {} 
+            },
+            { 
+                nombre: "Smart Transformer redes bidireccionales (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", 
+                queHace: "Transformador inteligente para la gestión de redes bidireccionales.", 
+                industria: "Energía", comoHace: "Inv: Equipo de Investigación USM", trlMax: 1, evidencias: {} 
+            },
+            { 
+                nombre: "Generador de hidrógeno verde (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", 
+                queHace: "Desarrollo tecnológico de equipo generador de hidrógeno verde.", 
+                industria: "Energía", comoHace: "Inv: Paula Rojas Alvarado", trlMax: 1, evidencias: {} 
+            },
+            { 
+                nombre: "Reactor bifuncional Hidrógeno Verde (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", 
+                queHace: "Nuevo reactor bifuncional para la conversión y producción de Hidrógeno Verde.", 
+                industria: "Energía", comoHace: "Inv: Iván Andrés Cornejo García", trlMax: 1, evidencias: {} 
+            },
+            { 
+                nombre: "Quemadores de amoniaco verde (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", 
+                queHace: "Desarrollo tecnológico de quemadores optimizados para amoniaco verde.", 
+                industria: "Energía", comoHace: "Inv: Claudio Muñoz", trlMax: 1, evidencias: {} 
+            },
+            { 
+                nombre: "INSPIRATECH (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", 
+                queHace: "Sistema de sujeción especializado para cables de alta tensión.", 
+                industria: "Energía", comoHace: "Inv: Catherina Ester Álvarez Escarate", trlMax: 1, evidencias: {} 
             }
         ];
 
@@ -1117,7 +1197,7 @@
 
         function actualizarEstadoTRLLineal(level, checked) {
             if(!empresaSeleccionadaActual) {
-                alert("Por favor seleccione primero una startup para evaluar.");
+                alert("Por favor seleccione primero un proyecto para evaluar.");
                 renderizarCuestionarioTRLLineal();
                 return;
             }
@@ -1132,7 +1212,7 @@
 
         function adjuntarEvidenciaTRL(level, inputElement) {
             if(!empresaSeleccionadaActual) {
-                alert("Selecciona una empresa primero.");
+                alert("Selecciona un proyecto primero.");
                 return;
             }
             if(inputElement.files && inputElement.files[0]) {
@@ -1175,7 +1255,8 @@
             const industria = document.getElementById('reg-industria').value;
             const comoHaces = document.getElementById('reg-como-hacemos').value;
 
-            startupsRegistry.push({ nombre, contacto, queHace: queHaces, industria, comoHace: comoHaces, trlMax: 1, evidencias: {} });
+            // Se asume que todo lo nuevo registrado por este formulario es Startup
+            startupsRegistry.push({ nombre, tipo: "Startup", contacto, queHace: queHaces, industria, comoHace: comoHaces, trlMax: 1, evidencias: {} });
             actualizarListasStartups();
             closeModal('modal-subir-desarrollo');
             alert(`¡Desarrollo "${nombre}" registrado con éxito!`);
@@ -1187,7 +1268,7 @@
             startupsRegistry.forEach(s => {
                 contenedor.innerHTML += `
                     <div class="card">
-                        <span class="badge badge-green" style="margin-bottom: 8px;">STARTUP</span>
+                        <span class="badge ${s.tipo === 'Universidad' ? 'badge-blue' : 'badge-green'}" style="margin-bottom: 8px;">${s.tipo ? s.tipo.toUpperCase() : 'STARTUP'}</span>
                         <h4 style="font-size: 15px;">${s.nombre}</h4>
                         <p style="font-size: 11px; color: var(--text-muted); margin: 4px 0 10px 0;">Contacto: ${s.contacto}</p>
                         <p style="font-size: 12px; color: var(--text-muted);"><b>Qué hacemos:</b> ${s.queHace}</p>
@@ -1198,7 +1279,7 @@
             });
 
             const selectTrl = document.getElementById('select-empresa-trl');
-            selectTrl.innerHTML = `<option value="">-- Seleccione una empresa del registro --</option>`;
+            selectTrl.innerHTML = `<option value="">-- Seleccione un proyecto registrado --</option>`;
             startupsRegistry.forEach(s => {
                 selectTrl.innerHTML += `<option value="${s.nombre}">${s.nombre} (${s.industria})</option>`;
             });
@@ -1246,7 +1327,7 @@
             filtradas.forEach(s => {
                 contenedor.innerHTML += `
                     <div class="card">
-                        <span class="badge badge-green" style="margin-bottom: 8px;">STARTUP</span>
+                        <span class="badge ${s.tipo === 'Universidad' ? 'badge-blue' : 'badge-green'}" style="margin-bottom: 8px;">${s.tipo ? s.tipo.toUpperCase() : 'STARTUP'}</span>
                         <h4 style="font-size: 15px;">${s.nombre}</h4>
                         <p style="font-size: 11px; color: var(--text-muted); margin: 4px 0 10px 0;">Contacto: ${s.contacto}</p>
                         <p style="font-size: 12px; color: var(--text-muted);"><b>Qué hacemos:</b> ${s.queHace}</p>
@@ -1260,6 +1341,7 @@
         // Inicialización al cargar la página
         window.onload = function() {
             renderizarCuestionarioTRLLineal();
+            actualizarListasStartups(); // Para que dibuje todas las tarjetas al iniciar
         };
     </script>
 </body>
