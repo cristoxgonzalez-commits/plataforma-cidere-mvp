@@ -702,12 +702,18 @@
                     </button>
                 </div>
 
+                <!-- FILTROS ACTUALIZADOS CON TODOS LOS SECTORES -->
                 <div style="display: flex; gap: 10px; margin-bottom: 24px; overflow-x: auto; padding-bottom: 8px;">
                     <button class="filter-pill active" onclick="filtrarStartups('Todos', this)">Todos los Proyectos</button>
                     <button class="filter-pill" onclick="filtrarStartups('Agroindustria', this)">Agroindustria</button>
                     <button class="filter-pill" onclick="filtrarStartups('Manufactura', this)">Manufactura</button>
                     <button class="filter-pill" onclick="filtrarStartups('Energía', this)">Energía</button>
                     <button class="filter-pill" onclick="filtrarStartups('Logística', this)">Logística</button>
+                    <button class="filter-pill" onclick="filtrarStartups('Agua', this)">Agua y Sanitario</button>
+                    <button class="filter-pill" onclick="filtrarStartups('Alimentos', this)">Alimentos</button>
+                    <button class="filter-pill" onclick="filtrarStartups('Salud', this)">Salud</button>
+                    <button class="filter-pill" onclick="filtrarStartups('Forestal', this)">Forestal</button>
+                    <button class="filter-pill" onclick="filtrarStartups('Pesca y Acuicultura', this)">Pesca y Acuicultura</button>
                 </div>
 
                 <!-- Contenedor vacío. Se llenará dinámicamente con JavaScript al cargar -->
@@ -908,6 +914,11 @@
                         <option value="Manufactura">Manufactura</option>
                         <option value="Energía">Energía</option>
                         <option value="Logística">Logística</option>
+                        <option value="Agua">Agua y Sanitario</option>
+                        <option value="Alimentos">Alimentos</option>
+                        <option value="Salud">Salud</option>
+                        <option value="Forestal">Forestal</option>
+                        <option value="Pesca y Acuicultura">Pesca y Acuicultura</option>
                     </select>
                 </div>
                 <div style="margin-bottom: 20px;">
@@ -998,6 +1009,7 @@
             { level: 9, title: "TRL 9: Sistema comercializado con éxito", desc: "Tecnología en producción continua y comercialización activa en el mercado." }
         ];
 
+        // BASE DE DATOS COMPLETA
         let startupsRegistry = [
             { 
                 nombre: "Lumina Photonics", 
@@ -1114,6 +1126,208 @@
                 nombre: "INSPIRATECH (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", 
                 queHace: "Sistema de sujeción especializado para cables de alta tensión.", 
                 industria: "Energía", comoHace: "Inv: Catherina Ester Álvarez Escarate", trlMax: 1, evidencias: {} 
+            },
+            // --- CAPACIDADES USM: SECTOR MANUFACTURA ---
+            { 
+                nombre: "Glass Bubbles (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", 
+                queHace: "Microesferas de vidrio funcionalizadas para aplicaciones industriales.", 
+                industria: "Manufactura", comoHace: "Inv: Claudio Abraham Acuña Pérez", trlMax: 1, evidencias: {} 
+            },
+            { 
+                nombre: "Cleanwax: Purificador de cera (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", 
+                queHace: "Sistema de purificación de cera.", 
+                industria: "Manufactura", comoHace: "Inv: Karen del Pilar Yañez Arellano", trlMax: 1, evidencias: {} 
+            },
+            { 
+                nombre: "Pintura nanoestructurada anticorrosión (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", 
+                queHace: "Pintura nanoestructurada para reducir la corrosión microbiana.", 
+                industria: "Manufactura", comoHace: "Inv: Carolina Ivón Parra González", trlMax: 1, evidencias: {} 
+            },
+            { 
+                nombre: "Máquina de fatiga multiaxial (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", 
+                queHace: "Desarrollo de equipo industrial para pruebas de fatiga multiaxial.", 
+                industria: "Manufactura", comoHace: "Inv: Alejandro Andrés Pacheco Sanjuán", trlMax: 1, evidencias: {} 
+            },
+            { 
+                nombre: "Pintura Microbial (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", 
+                queHace: "Desarrollo de recubrimientos y pintura microbial.", 
+                industria: "Manufactura", comoHace: "Inv: Rodolfo Ignacio Salazar Albornoz", trlMax: 1, evidencias: {} 
+            },
+            { 
+                nombre: "Proceso metalúrgico aleaciones de hierro (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", 
+                queHace: "Proceso metalúrgico avanzado para la obtención de aleaciones de hierro.", 
+                industria: "Manufactura", comoHace: "Inv: Claudio Eduardo Aguilar Ramírez", trlMax: 1, evidencias: {} 
+            },
+            { 
+                nombre: "Cancelación de señal en magnetómetros (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", 
+                queHace: "Método innovador de cancelación de señal en magnetómetros.", 
+                industria: "Manufactura", comoHace: "Inv: Claudio González", trlMax: 1, evidencias: {} 
+            },
+            { 
+                nombre: "Plantilla de calzado deportivo (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", 
+                queHace: "Desarrollo de plantilla avanzada para calzado deportivo.", 
+                industria: "Manufactura", comoHace: "Inv: Marcos David Zúñiga Barraza", trlMax: 1, evidencias: {} 
+            },
+            { 
+                nombre: "SSR Materials SpA: Coated metallic powder (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", 
+                queHace: "Polvo metálico recubierto para aplicaciones en manufactura avanzada.", 
+                industria: "Manufactura", comoHace: "Inv: Sheila Katherine Lascano Farak", trlMax: 1, evidencias: {} 
+            },
+            { 
+                nombre: "Celda para piezas con ductos preinstalados (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", 
+                queHace: "Celda de fabricación para crear piezas con ductos preinstalados.", 
+                industria: "Manufactura", comoHace: "Inv: Luis Felipe González Böhme", trlMax: 1, evidencias: {} 
+            },
+            { 
+                nombre: "Accesorio para Pre-fisuración por Fatiga (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", 
+                queHace: "Herramienta y accesorio industrial para pruebas de pre-fisuración por fatiga.", 
+                industria: "Manufactura", comoHace: "Inv: Egon Rolf Delgado Ramírez", trlMax: 1, evidencias: {} 
+            },
+            { 
+                nombre: "Membrana purificadora con nanomateriales (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", 
+                queHace: "Membrana con nanomateriales grafíticos para sistemas de purificación.", 
+                industria: "Manufactura", comoHace: "Inv: Carolina Ivón Parra González", trlMax: 1, evidencias: {} 
+            },
+            { 
+                nombre: "Optipump: Monitoreo de bombas (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", 
+                queHace: "Sistema de monitoreo avanzado para bombas industriales.", 
+                industria: "Manufactura", comoHace: "Inv: Marcelo Alfonso Soto Hernández", trlMax: 1, evidencias: {} 
+            },
+            { 
+                nombre: "Control inalámbrico de temperatura (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", 
+                queHace: "Sistema integral de registro y control inalámbrico de temperatura.", 
+                industria: "Manufactura", comoHace: "Inv: Fabricio Sánchez", trlMax: 1, evidencias: {} 
+            },
+            { 
+                nombre: "Materiales para pastillas de freno (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", 
+                queHace: "Desarrollo de nuevos materiales para la fabricación de pastillas de freno.", 
+                industria: "Manufactura", comoHace: "Inv: Claudio Eduardo Aguilar Ramírez", trlMax: 1, evidencias: {} 
+            },
+            // --- CAPACIDADES USM: SECTOR AGUA Y SANITARIO ---
+            { 
+                nombre: "Sistema de desalinización sin membranas (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", 
+                queHace: "Sistema de desalinización sin membranas para tratamiento de agua.", 
+                industria: "Agua", comoHace: "Inv: Christian Pablo Romero Vieyra", trlMax: 1, evidencias: {} 
+            },
+            { 
+                nombre: "Material biomimético superhidrofóbico (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", 
+                queHace: "Aplicación de material biomimético superhidrofóbico para el control de agua.", 
+                industria: "Agua", comoHace: "Inv: María Belén Barraza Sandoval", trlMax: 1, evidencias: {} 
+            },
+            { 
+                nombre: "IDRO: Plantas desalinizadoras (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", 
+                queHace: "Evaluación y optimización de plantas desalinizadoras.", 
+                industria: "Agua", comoHace: "Inv: Adrián Enrique Ortiz Rojas", trlMax: 1, evidencias: {} 
+            },
+            { 
+                nombre: "Sistema de remoción de Arsénico (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", 
+                queHace: "Sistema avanzado para la remoción de Arsénico en recursos hídricos.", 
+                industria: "Agua", comoHace: "Inv: Andrea Paola Lazo Acuña", trlMax: 1, evidencias: {} 
+            },
+            { 
+                nombre: "Pintura antifouling hidrofóbica (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", 
+                queHace: "Desarrollo de pintura antifouling hidrofóbica para entornos acuáticos.", 
+                industria: "Agua", comoHace: "Inv: Paloma Brichetto", trlMax: 1, evidencias: {} 
+            },
+            { 
+                nombre: "Desalinización por neblina (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", 
+                queHace: "Sistema de desalinización mediante ciclos de producción de neblina.", 
+                industria: "Agua", comoHace: "Inv: Paula Alejandra Guerra Pinto", trlMax: 1, evidencias: {} 
+            },
+            { 
+                nombre: "Reciclaje de membranas OI (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", 
+                queHace: "Desarrollo de procesos para el reciclaje de membranas de ósmosis inversa.", 
+                industria: "Agua", comoHace: "Inv: Paula Alejandra Guerra Pinto", trlMax: 1, evidencias: {} 
+            },
+            // --- CAPACIDADES USM: SECTOR AGROPECUARIA / AGROINDUSTRIA ---
+            { 
+                nombre: "Sistema SIIAPI (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", 
+                queHace: "Sistema para adaptación agropecuaria frente al cambio climático.", 
+                industria: "Agroindustria", comoHace: "Inv: Karen del Pilar Yañez Arellano", trlMax: 1, evidencias: {} 
+            },
+            { 
+                nombre: "Suplemento alimenticio para abejas (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", 
+                queHace: "Desarrollo de suplemento alimenticio especializado para abejas.", 
+                industria: "Agroindustria", comoHace: "Inv: Karen del Pilar Yañez Arellano", trlMax: 1, evidencias: {} 
+            },
+            { 
+                nombre: "IDA-Dog (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", 
+                queHace: "Sistema de aplicación localizada de biocomponentes en terrenos.", 
+                industria: "Agroindustria", comoHace: "Inv: Eduardo Andrés Piñones Zuleta", trlMax: 1, evidencias: {} 
+            },
+            { 
+                nombre: "Control biológico en vides (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", 
+                queHace: "Método avanzado de control biológico de hongos en vides.", 
+                industria: "Agroindustria", comoHace: "Inv: Michael Seeger Pfeiffer", trlMax: 1, evidencias: {} 
+            },
+            { 
+                nombre: "AvocadoWatch (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", 
+                queHace: "Sistema de inspección y detección de enfermedades en paltos.", 
+                industria: "Agroindustria", comoHace: "Inv: Melissa Eugenia Diago Mosquera", trlMax: 1, evidencias: {} 
+            },
+            { 
+                nombre: "EcoBloom (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", 
+                queHace: "Soluciones biotecnológicas integrales para producción y agricultura.", 
+                industria: "Agroindustria", comoHace: "Inv: Marcela Andrea Carvajal Tocornal", trlMax: 1, evidencias: {} 
+            },
+            { 
+                nombre: "SICCA (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", 
+                queHace: "Sistema inteligente de protección contra congelamiento.", 
+                industria: "Agroindustria", comoHace: "Inv: Danilo Alejandro Estay Barrientos", trlMax: 1, evidencias: {} 
+            },
+            // --- CAPACIDADES USM: SECTOR ALIMENTOS ---
+            { 
+                nombre: "Snack natural de manzana (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", 
+                queHace: "Desarrollo de un snack natural a base de manzana deshidratada.", 
+                industria: "Alimentos", comoHace: "Inv: Helena Alejandra Núñez Andrade", trlMax: 1, evidencias: {} 
+            },
+            { 
+                nombre: "Pre-tratamiento láser para liofilización (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", 
+                queHace: "Aplicación de tecnología láser como pre-tratamiento en procesos de liofilización.", 
+                industria: "Alimentos", comoHace: "Inv: Sergio Felipe Eduardo Almonacid Merino", trlMax: 1, evidencias: {} 
+            },
+            // --- CAPACIDADES USM: SECTOR SALUD ---
+            { 
+                nombre: "Syncovibe (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", 
+                queHace: "Dispositivo tecnológico para mitigar el estrés crónico.", 
+                industria: "Salud", comoHace: "Inv: Alejandro Weinstein Oppenheimer", trlMax: 1, evidencias: {} 
+            },
+            { 
+                nombre: "Repositorios Imágenes Médicas (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", 
+                queHace: "Repositorios interoperables para recuperación ágil de imágenes médicas.", 
+                industria: "Salud", comoHace: "Inv: Mauricio Alejandro Araya López", trlMax: 1, evidencias: {} 
+            },
+            { 
+                nombre: "Modelo decisiones cáncer biliar (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", 
+                queHace: "Modelo de soporte de decisiones clínicas sobre intervención de cáncer biliar.", 
+                industria: "Salud", comoHace: "Inv: Werner David Kristjanpoller Rodríguez", trlMax: 1, evidencias: {} 
+            },
+            { 
+                nombre: "Medidor succión lactantes (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", 
+                queHace: "Dispositivo especializado para medir la capacidad de succión en lactantes.", 
+                industria: "Salud", comoHace: "Inv: Alejandro Weinstein Oppenheimer", trlMax: 1, evidencias: {} 
+            },
+            { 
+                nombre: "IonCopper (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", 
+                queHace: "Sistema avanzado de purificación de aire.", 
+                industria: "Salud", comoHace: "Inv: Christian Pablo Romero Vieyra", trlMax: 1, evidencias: {} 
+            },
+            { 
+                nombre: "Pelador verduras adultos mayores (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", 
+                queHace: "Desarrollo de producto ergonómico para pelar verduras en adultos mayores.", 
+                industria: "Salud", comoHace: "Inv: Equipo de Investigación USM", trlMax: 1, evidencias: {} 
+            },
+            // --- CAPACIDADES USM: SECTOR FORESTAL ---
+            { 
+                nombre: "IgnoPhytoShield (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", 
+                queHace: "Desarrollo de retardantes naturales del fuego.", 
+                industria: "Forestal", comoHace: "Inv: Fabián Rodrigo Guerrero Castro", trlMax: 1, evidencias: {} 
+            },
+            // --- CAPACIDADES USM: SECTOR PESCA Y ACUICULTURA ---
+            { 
+                nombre: "Monitoreo procesos acuícolas (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", 
+                queHace: "Prototipo a gran escala para el monitoreo de procesos críticos en acuicultura.", 
+                industria: "Pesca y Acuicultura", comoHace: "Inv: Nicolás Alonso Jara Carvallo", trlMax: 1, evidencias: {} 
             }
         ];
 
