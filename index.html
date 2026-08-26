@@ -7,8 +7,10 @@
     <!-- Fuentes e Iconos de Lucide -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- Librería para leer el CSV de Google Sheets en tiempo real -->
+    
+    <!-- LIBRERÍA AGREGADA PARA LEER EXCEL EN TIEMPO REAL -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+
     <style>
         :root {
             --bg-sidebar: #17386d;
@@ -21,354 +23,1470 @@
             --primary-accent: #0f274e;
             --green-accent: #0f766e;
             --green-hover: #0d655e;
+            --green-light: #e6f4f1;
             --border-color: #e2e8f0;
             --font-mono: 'JetBrains Mono', monospace;
             --font-sans: 'Inter', sans-serif;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: var(--font-sans); background-color: var(--bg-body); color: var(--text-main); display: flex; min-height: 100vh; overflow-x: hidden; }
-        
-        aside { width: 260px; background-color: var(--bg-sidebar); color: #ffffff; display: flex; flex-direction: column; justify-content: space-between; padding: 24px 16px; flex-shrink: 0; }
-        .brand { padding: 0 8px 24px 8px; border-bottom: 1px solid rgba(255, 255, 255, 0.1); margin-bottom: 20px; display: flex; justify-content: center; }
-        .nav-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
-        .nav-item { padding: 12px 14px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 12px; font-size: 13.5px; font-weight: 500; color: rgba(255, 255, 255, 0.8); transition: all 0.2s ease; }
-        .nav-item:hover { background-color: rgba(255, 255, 255, 0.08); color: #fff; }
-        .nav-item.active { background-color: #ffffff; color: var(--primary); font-weight: 600; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-        .btn-sidebar-cta { background-color: var(--green-accent); color: white; border: none; padding: 14px; border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: background 0.2s; width: 100%; margin-top: auto; }
-        .btn-sidebar-cta:hover { background-color: var(--green-hover); }
-        
-        main { flex-grow: 1; display: flex; flex-direction: column; height: 100vh; overflow-y: auto; }
-        header { background-color: #ffffff; height: 64px; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; padding: 0 32px; position: sticky; top: 0; z-index: 10; }
-        .search-bar { display: flex; align-items: center; background-color: var(--bg-body); border: 1px solid var(--border-color); border-radius: 8px; padding: 8px 16px; width: 380px; gap: 10px; }
-        .search-bar input { border: none; background: transparent; outline: none; width: 100%; font-size: 13px; }
-        .top-menu { display: flex; align-items: center; gap: 24px; }
-        .top-nav-links { display: flex; gap: 20px; list-style: none; font-size: 13px; font-weight: 500; color: var(--text-muted); }
-        .top-nav-links li { cursor: pointer; padding: 6px 10px; border-radius: 6px; transition: all 0.2s; }
-        .top-nav-links li:hover { color: var(--primary); background-color: var(--bg-body); }
-        .top-nav-links li.active-top { color: var(--primary); font-weight: 700; background-color: #e0e7ff; }
-        .user-profile { display: flex; align-items: center; gap: 12px; padding-left: 16px; border-left: 1px solid var(--border-color); }
-        .avatar { width: 36px; height: 36px; border-radius: 50%; background-color: #ccc; object-fit: cover; }
-        
-        .content-container { padding: 32px; max-width: 1280px; margin: 0 auto; width: 100%; }
-        .view-section { display: none; }
-        .view-section.active { display: block; animation: fadeIn 0.25s ease-in-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
-        
-        .badge { font-family: var(--font-mono); font-size: 10px; padding: 3px 8px; border-radius: 4px; font-weight: 600; text-transform: uppercase; display: inline-block; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* BARRA LATERAL (SIDEBAR) */
+        aside {
+            width: 260px;
+            background-color: var(--bg-sidebar);
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 24px 16px;
+            flex-shrink: 0;
+        }
+
+        .brand {
+            padding: 0 8px 24px 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .nav-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .nav-item {
+            padding: 12px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 13.5px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.8);
+            transition: all 0.2s ease;
+        }
+
+        .nav-item:hover {
+            background-color: rgba(255, 255, 255, 0.08);
+            color: #fff;
+        }
+
+        .nav-item.active {
+            background-color: #ffffff;
+            color: var(--primary);
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .btn-sidebar-cta {
+            background-color: var(--green-accent);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: background 0.2s;
+            width: 100%;
+            margin-top: auto;
+        }
+
+        .btn-sidebar-cta:hover {
+            background-color: var(--green-hover);
+        }
+
+        /* AREA PRINCIPAL DE CONTENIDO */
+        main {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        /* HEADER SUPERIOR */
+        header {
+            background-color: #ffffff;
+            height: 64px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background-color: var(--bg-body);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 8px 16px;
+            width: 380px;
+            gap: 10px;
+        }
+
+        .search-bar input {
+            border: none;
+            background: transparent;
+            outline: none;
+            width: 100%;
+            font-size: 13px;
+        }
+
+        .top-menu {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .top-nav-links {
+            display: flex;
+            gap: 20px;
+            list-style: none;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-muted);
+        }
+
+        .top-nav-links li {
+            cursor: pointer;
+            padding: 6px 10px;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .top-nav-links li:hover {
+            color: var(--primary);
+            background-color: var(--bg-body);
+        }
+
+        .top-nav-links li.active-top {
+            color: var(--primary);
+            font-weight: 700;
+            background-color: #e0e7ff;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-left: 16px;
+            border-left: 1px solid var(--border-color);
+        }
+
+        .avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: #ccc;
+            object-fit: cover;
+        }
+
+        /* CONTENEDOR DE VISTAS */
+        .content-container {
+            padding: 32px;
+            max-width: 1280px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .view-section {
+            display: none;
+        }
+
+        .view-section.active {
+            display: block;
+            animation: fadeIn 0.25s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* COMPONENTES REUTILIZABLES */
+        .badge {
+            font-family: var(--font-mono);
+            font-size: 10px;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+            text-transform: uppercase;
+            display: inline-block;
+        }
+
         .badge-green { background: #d1fae5; color: #065f46; }
         .badge-blue { background: #dbeafe; color: #1e40af; }
         .badge-gray { background: #f1f5f9; color: #475569; }
-        .badge-orange { background: #ffedd5; color: #c2410c; }
-        
-        .btn-primary { background-color: var(--primary); color: white; border: none; padding: 10px 18px; border-radius: 6px; font-weight: 600; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
-        .btn-outline { background: transparent; border: 1px solid var(--border-color); color: var(--text-main); padding: 8px 14px; border-radius: 6px; font-weight: 500; font-size: 13px; cursor: pointer; }
-        
-        .card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 24px; margin-bottom: 20px; }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-weight: 500;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+
         .grid-2 { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; }
         .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+
+        /* MODALES FLOTANTES */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            width: 600px;
+            max-width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        /* ESTILOS ESPECÍFICOS TRL LINEAL */
+        .trl-step-card {
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 18px;
+            margin-bottom: 16px;
+            background: #ffffff;
+            transition: all 0.2s ease;
+        }
+        .trl-step-card.completed {
+            border-color: #10b981;
+            background-color: #f0fdf4;
+        }
+        .trl-step-card.current {
+            border-color: var(--primary);
+            box-shadow: 0 4px 12px rgba(23, 56, 109, 0.08);
+        }
+        .trl-step-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .evidence-upload-zone {
+            margin-top: 12px;
+            padding: 12px;
+            background: #f8fafc;
+            border: 1px dashed var(--border-color);
+            border-radius: 8px;
+        }
+
+        .kpi-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .kpi-card {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .kpi-value {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--primary);
+            font-family: var(--font-mono);
+        }
+
+        .kpi-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            letter-spacing: 0.5px;
+            font-family: var(--font-mono);
+        }
+
+        .startup-img-preview {
+            width: 100%;
+            height: 140px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 12px;
+        }
+
+        .filter-pill {
+            padding: 6px 14px;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            background: white;
+            font-size: 12px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .filter-pill.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .trl-gauge-card {
+            background: #1e293b;
+            color: white;
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+            position: sticky;
+            top: 80px;
+        }
+
+        .trl-circle {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 8px solid #10b981;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 20px auto;
+        }
+
+        .rubro-card {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: white;
+        }
+
+        .rubro-card:hover, .rubro-card.selected {
+            border-color: var(--primary);
+            background-color: #f8fafc;
+            box-shadow: 0 2px 8px rgba(23, 56, 109, 0.08);
+        }
+
+        .rubro-card.selected {
+            border-width: 2px;
+        }
+
+        textarea, input[type="text"], select {
+            width: 100%;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px;
+            font-family: inherit;
+            font-size: 13px;
+            outline: none;
+            background: #fff;
+        }
+
+        textarea:focus, input:focus, select:focus {
+            border-color: var(--primary);
+        }
+
+        /* FOOTER IMPACTO REGIONAL */
+        .footer-banner {
+            background-color: var(--primary-accent);
+            color: white;
+            border-radius: 12px;
+            padding: 24px 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
+        .metric-group {
+            display: flex;
+            gap: 40px;
+        }
+
+        .metric-item {
+            border-left: 2px solid rgba(255,255,255,0.2);
+            padding-left: 16px;
+        }
+
+        .metric-val {
+            font-size: 28px;
+            font-weight: 800;
+            font-family: var(--font-mono);
+        }
+
+        .metric-lbl {
+            font-size: 11px;
+            opacity: 0.7;
+            text-transform: uppercase;
+        }
         
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 1000; }
-        .modal-overlay.active { display: flex; }
-        .modal-content { background: white; padding: 30px; border-radius: 12px; width: 600px; max-width: 90%; max-height: 90vh; overflow-y: auto; }
-        
-        .kpi-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
-        .kpi-card { background: white; border: 1px solid var(--border-color); border-radius: 10px; padding: 20px; display: flex; align-items: center; justify-content: space-between; }
-        .kpi-value { font-size: 32px; font-weight: 800; color: var(--primary); font-family: var(--font-mono); }
-        .kpi-label { font-size: 11px; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.5px; font-family: var(--font-mono); }
-        
-        .filter-pill { padding: 6px 14px; border-radius: 20px; border: 1px solid var(--border-color); background: white; font-size: 12px; cursor: pointer; font-weight: 500; }
-        .filter-pill.active { background: var(--primary); color: white; border-color: var(--primary); }
-        
-        .rubro-card { border: 1px solid var(--border-color); border-radius: 8px; padding: 20px; text-align: center; cursor: pointer; transition: all 0.2s; background: white; }
-        .rubro-card:hover, .rubro-card.selected { border-color: var(--primary); background-color: #f8fafc; box-shadow: 0 2px 8px rgba(23, 56, 109, 0.08); }
-        .rubro-card.selected { border-width: 2px; }
-        
-        textarea, input[type="text"], select { width: 100%; border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; font-family: inherit; font-size: 13px; outline: none; background: #fff; }
-        textarea:focus, input:focus, select:focus { border-color: var(--primary); }
-        
-        .footer-banner { background-color: var(--primary-accent); color: white; border-radius: 12px; padding: 24px 32px; display: flex; align-items: center; justify-content: space-between; margin-top: 30px; }
-        .metric-group { display: flex; gap: 40px; }
-        .metric-item { border-left: 2px solid rgba(255,255,255,0.2); padding-left: 16px; }
-        .metric-val { font-size: 28px; font-weight: 800; font-family: var(--font-mono); }
-        .metric-lbl { font-size: 11px; opacity: 0.7; text-transform: uppercase; }
-        
-        .loader-text { font-size: 12px; color: var(--green-accent); font-weight: bold; margin-left: 10px; display: none; }
+        /* ESTILO PARA EL TEXTO DE CARGANDO */
+        .loader-text {
+            font-size: 12px;
+            color: var(--green-accent);
+            font-weight: bold;
+            margin-right: 10px;
+            display: none;
+        }
     </style>
 </head>
 <body>
+
+    <!-- SIDEBAR -->
     <aside>
         <div>
-            <div class="brand"><img src="logo.png" alt="Logo CIDERE" style="max-width: 100%; height: auto;"></div>
+            <div class="brand">
+                <img src="logo.png" alt="Logo CIDERE" style="max-width: 100%; height: auto;">
+            </div>
+
             <ul class="nav-list">
-                <li class="nav-item active" onclick="switchView('view-dashboard', this)"><i data-lucide="layout-dashboard"></i> Panel de Control</li>
-                <li class="nav-item" onclick="switchView('view-repositorio', this)"><i data-lucide="rocket"></i> Startups Regionales</li>
-                <li class="nav-item" onclick="switchView('view-desafio', this)"><i data-lucide="factory"></i> Desafíos Industria</li>
+                <li class="nav-item active" onclick="switchView('view-dashboard', this)">
+                    <i data-lucide="layout-dashboard"></i> Panel de Control
+                </li>
+                <li class="nav-item" onclick="switchView('view-repositorio', this)">
+                    <i data-lucide="rocket"></i> Startups Regionales
+                </li>
+                <li class="nav-item" onclick="switchView('view-ficha', this)">
+                    <i data-lucide="file-text"></i> Diagnóstico TRL
+                </li>
+                <li class="nav-item" onclick="switchView('view-desafio', this)">
+                    <i data-lucide="factory"></i> Desafíos Industria
+                </li>
+                <li class="nav-item" onclick="switchView('view-otl', this)">
+                    <i data-lucide="award"></i> OTL (Oficina Transferencia)
+                </li>
+                <li class="nav-item" onclick="switchView('view-mensajeria', this)">
+                    <i data-lucide="message-square"></i> Mensajería
+                </li>
             </ul>
         </div>
-        <button class="btn-sidebar-cta" onclick="openModal('modal-publicar-desafio')"><i data-lucide="plus"></i> Publicar Desafío</button>
+
+        <button class="btn-sidebar-cta" onclick="openModal('modal-publicar-desafio')">
+            <i data-lucide="plus"></i> Publicar Desafío
+        </button>
     </aside>
 
+    <!-- CONTENIDO PRINCIPAL -->
     <main>
+        <!-- HEADER TOP -->
         <header>
             <div class="search-bar">
                 <i data-lucide="search" size="16" style="color: var(--text-muted)"></i>
                 <input type="text" placeholder="Buscar proyectos, startups o desafíos en Biobío...">
             </div>
+
             <div class="top-menu">
                 <ul class="top-nav-links">
-                    <li onclick="switchView('view-mesa-innovacion', this)">Mesa de Innovación</li>
+                    <li onclick="switchView('view-mesa-innovacion', this)" id="btn-top-mesa">Mesa de Innovación</li>
+                    <li onclick="alert('Sección de Recursos en construcción...')">Recursos</li>
+                    <li onclick="alert('Calendario de Eventos en construcción...')">Eventos</li>
                 </ul>
-                <div class="user-profile"><img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=100&auto=format&fit=crop&q=80" class="avatar" alt="User"></div>
+                <i data-lucide="bell" size="18" style="color: var(--text-muted); cursor: pointer;" onclick="alert('No tienes nuevas notificaciones')"></i>
+                <i data-lucide="settings" size="18" style="color: var(--text-muted); cursor: pointer;" onclick="alert('Ajustes de cuenta...')"></i>
+                
+                <div class="user-profile">
+                    <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=100&auto=format&fit=crop&q=80" class="avatar" alt="User">
+                </div>
             </div>
         </header>
 
+        <!-- SECCIONES / PANTALLAS DE LA APLICACIÓN -->
         <div class="content-container">
-            <!-- DASHBOARD -->
+
+            <!-- VISTA: MESA DE INNOVACIÓN -->
+            <section id="view-mesa-innovacion" class="view-section">
+                <div class="card" style="background: linear-gradient(135deg, #17386d 0%, #0f274e 100%); color: white; padding: 32px; margin-bottom: 24px;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 20px;">
+                        <div>
+                            <span class="badge badge-green" style="background: rgba(16, 185, 129, 0.2); color: #a7f3d0; margin-bottom: 10px;">INSTANCIA ESTRATÉGICA CIDERE BIOBÍO</span>
+                            <h1 style="font-size: 28px; font-weight: 800; margin-bottom: 12px;">¿Qué es la Mesa de Innovación?</h1>
+                            <p style="font-size: 14px; opacity: 0.9; line-height: 1.6; max-width: 950px;">
+                                La <b>Mesa de Innovación de CIDERE Biobío</b> es el espacio articulador principal del ecosistema regional. Su propósito fundamental es conectar de forma directa los desafíos operacionales y tecnológicos de las empresas socias e industrias de la Región del Biobío con la capacidad de desarrollo, investigación y soluciones de la academia, startups y centros de I+D.
+                            </p>
+                        </div>
+                        <i data-lucide="building-2" size="56" style="opacity: 0.35; flex-shrink: 0;"></i>
+                    </div>
+
+                    <div style="margin-top: 28px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.15);">
+                        <h4 style="font-size: 12px; font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 1px; color: #a7f3d0; margin-bottom: 16px;">
+                            Directiva & Comité Ejecutivo de la Mesa
+                        </h4>
+                        <div class="grid-3" style="gap: 16px;">
+                            <div style="background: rgba(255,255,255,0.06); padding: 16px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
+                                <div style="font-size: 14px; font-weight: 700;">Presidencia de la Mesa</div>
+                                <div style="font-size: 12px; opacity: 0.85; margin-top: 4px;">Representante Sector Industrial Regional</div>
+                                <div style="font-size: 11px; color: #a7f3d0; margin-top: 8px; font-family: var(--font-mono);">Liderazgo Estratégico</div>
+                            </div>
+                            <div style="background: rgba(255,255,255,0.06); padding: 16px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
+                                <div style="font-size: 14px; font-weight: 700;">Vicepresidencia Academia</div>
+                                <div style="font-size: 12px; opacity: 0.85; margin-top: 4px;">Representante Red de Universidades</div>
+                                <div style="font-size: 11px; color: #a7f3d0; margin-top: 8px; font-family: var(--font-mono);">Vinculación I+D</div>
+                            </div>
+                            <div style="background: rgba(255,255,255,0.06); padding: 16px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
+                                <div style="font-size: 14px; font-weight: 700;">Secretaría Técnica CIDERE</div>
+                                <div style="font-size: 12px; opacity: 0.85; margin-top: 4px;">Equipo Ejecutivo CIDERE Biobío</div>
+                                <div style="font-size: 11px; color: #a7f3d0; margin-top: 8px; font-family: var(--font-mono);">Coordinación Operativa</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 style="font-size: 16px; margin-bottom: 8px;">Acciones de la Mesa de Innovación</h3>
+                    <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px;">Desde esta sección las empresas participantes pueden ingresar sus problemáticas oficiales para ser canalizadas por el comité de CIDERE.</p>
+                    <button class="btn-primary" onclick="openModal('modal-publicar-desafio')">
+                        <i data-lucide="plus"></i> Ingresar Nuevo Desafío a la Mesa
+                    </button>
+                </div>
+            </section>
+
+            <!-- PANTALLA 1: PANEL DE CONTROL -->
             <section id="view-dashboard" class="view-section active">
                 <div style="margin-bottom: 24px;">
                     <h1 style="font-size: 24px; font-weight: 700;">Panel de Innovación CIDERE</h1>
-                    <p style="color: var(--text-muted); font-size: 13px;">Sincronizado en tiempo real con Google Sheets <span id="sync-status" style="color: #10b981; font-weight: bold;">(Sincronizando...)</span></p>
+                    <p style="color: var(--text-muted); font-size: 13px;">Impulsando el desarrollo regional mediante la conexión entre Academia, Industria y Capital. <span id="sync-status" style="color: #10b981; font-weight: bold;">(Sincronizando Google Sheets...)</span></p>
                 </div>
+
                 <div class="kpi-container">
-                    <div class="kpi-card"><div><div class="kpi-label">Proyectos Activos</div><div class="kpi-value" id="kpi-proyectos">102</div></div><i data-lucide="flask-conical" size="32" style="color: var(--primary); opacity: 0.3;"></i></div>
-                    <div class="kpi-card"><div><div class="kpi-label">Desafíos Abiertos</div><div class="kpi-value" id="kpi-desafios">0</div></div><i data-lucide="factory" size="32" style="color: var(--primary); opacity: 0.3;"></i></div>
-                    <div class="kpi-card"><div><div class="kpi-label">Tasa de Éxito Match</div><div class="kpi-value">89%</div></div><i data-lucide="handshake" size="32" style="color: var(--primary); opacity: 0.3;"></i></div>
+                    <div class="kpi-card">
+                        <div>
+                            <div class="kpi-label">Proyectos Activos</div>
+                            <div class="kpi-value" id="kpi-proyectos">128</div>
+                        </div>
+                        <i data-lucide="flask-conical" size="32" style="color: var(--primary); opacity: 0.3;"></i>
+                    </div>
+                    <div class="kpi-card">
+                        <div>
+                            <div class="kpi-label">Desafíos Abiertos</div>
+                            <div class="kpi-value" id="kpi-desafios">42</div>
+                        </div>
+                        <i data-lucide="factory" size="32" style="color: var(--primary); opacity: 0.3;"></i>
+                    </div>
+                    <div class="kpi-card">
+                        <div>
+                            <div class="kpi-label">Tasa de Éxito Match</div>
+                            <div class="kpi-value">89%</div>
+                        </div>
+                        <i data-lucide="handshake" size="32" style="color: var(--primary); opacity: 0.3;"></i>
+                    </div>
                 </div>
 
                 <div class="grid-2">
-                    <!-- Desafíos dinámicos -->
+                    <div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                            <h3 style="font-size: 16px;">Startups Destacadas</h3>
+                            <a href="#" onclick="switchView('view-repositorio')" style="color: var(--primary); font-size: 12px; font-weight: 600; text-decoration: none;">Ver Todas</a>
+                        </div>
+
+                        <div class="card">
+                            <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=600&auto=format&fit=crop&q=80" class="startup-img-preview" alt="Photonics">
+                            <span class="badge badge-green">STARTUP</span>
+                            <div style="display: flex; justify-content: space-between; margin-top: 8px;">
+                                <h4 style="font-size: 16px;">Lumina Photonics</h4>
+                                <span style="font-family: var(--font-mono); font-size: 11px; font-weight: 600; color: var(--text-muted)">Nivel TRL Actual: <b style="color: var(--text-main)">5</b></span>
+                            </div>
+                            <p style="font-size: 13px; color: var(--text-muted); margin: 10px 0;">Desarrollo de interconexiones ópticas para centros de datos a gran escala, reduciendo el consumo energético en un 35%.</p>
+                            <div style="display: flex; gap: 10px; margin-top: 16px;">
+                                <button class="btn-outline" onclick="alert('Abriendo presentación Pitch en nueva pestaña...')">Ver Pitch</button>
+                                <button class="btn-primary" style="background-color: var(--green-accent)" onclick="switchView('view-mensajeria')">Solicitar Contacto</button>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <img src="https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?w=600&auto=format&fit=crop&q=80" class="startup-img-preview" alt="Biopolymer">
+                            <span class="badge badge-green">STARTUP</span>
+                            <div style="display: flex; justify-content: space-between; margin-top: 8px;">
+                                <h4 style="font-size: 16px;">BioPolymer Solutions</h4>
+                                <span style="font-family: var(--font-mono); font-size: 11px; font-weight: 600; color: var(--text-muted)">Nivel TRL Actual: <b style="color: var(--text-main)">3</b></span>
+                            </div>
+                            <p style="font-size: 13px; color: var(--text-muted); margin: 10px 0;">Alternativas biodegradables de alta resistencia para plásticos industriales utilizando micelio de hongos y rastrojo de madera.</p>
+                            <div style="display: flex; gap: 10px; margin-top: 16px;">
+                                <button class="btn-outline" onclick="alert('Abriendo presentación Pitch en nueva pestaña...')">Ver Pitch</button>
+                                <button class="btn-primary" style="background-color: var(--green-accent)" onclick="switchView('view-mensajeria')">Solicitar Contacto</button>
+                            </div>
+                        </div>
+                    </div>
+
                     <div>
                         <div class="card" style="background: var(--primary); color: white;">
                             <h3 style="font-size: 15px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
-                                <i data-lucide="factory" size="18"></i> Desafíos Recientes (Desde Sheets)
+                                <i data-lucide="factory" size="18"></i> Desafíos de la Región (Vía Sheets)
                             </h3>
+                            
+                            <!-- DIV DONDE SE CARGARÁN LOS DESAFÍOS DEL EXCEL -->
                             <div id="lista-desafios-dashboard">
-                                <!-- Se llenará automáticamente -->
-                                <p style="font-size: 12px; opacity: 0.7;">Buscando desafíos en Google Sheets...</p>
+                                <div style="border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 12px; margin-bottom: 12px;">
+                                    <span class="badge badge-green" style="background: rgba(255,255,255,0.2); color: white;">INDUSTRIA</span>
+                                    <h5 style="margin-top: 6px; font-size: 14px;">Flota Logística Cero Emisiones</h5>
+                                    <p style="font-size: 12px; opacity: 0.8; margin-top: 4px;">Empresa logística local busca sistemas de propulsión de hidrógeno para camiones de alto tonelaje.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <h4 style="font-size: 14px; margin-bottom: 12px;">Actividad Reciente</h4>
+                            <ul style="font-size: 12px; color: var(--text-muted); list-style: none; display: flex; flex-direction: column; gap: 10px;">
+                                <li><b>Universidad</b> cargó el prototipo "BioSensor-B".</li>
+                                <li><b>Empresa Regional</b> respondió a su solicitud de vinculación.</li>
+                                <li><b>Nuevo Desafío:</b> Gestión Hídrica Sostenible (Provincia de Arauco).</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PANTALLA 2: REPOSITORIO DE STARTUPS -->
+            <section id="view-repositorio" class="view-section">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px;">
+                    <div>
+                        <h1 style="font-size: 24px; font-weight: 700;">Startups y Desarrollos Regionales</h1>
+                        <p style="color: var(--text-muted); font-size: 13px; margin-top: 4px;">Plataforma centralizada gestionada por CIDERE Biobío para proyectos de I+D y Startups.</p>
+                    </div>
+                    <button class="btn-primary" style="background-color: var(--green-accent)" onclick="openModal('modal-subir-desarrollo')">
+                        <i data-lucide="upload-cloud" size="16"></i> Subir Nuevo Desarrollo
+                    </button>
+                </div>
+
+                <!-- FILTROS ACTUALIZADOS CON TODOS LOS SECTORES -->
+                <div style="display: flex; gap: 10px; margin-bottom: 24px; overflow-x: auto; padding-bottom: 8px;">
+                    <button class="filter-pill active" onclick="filtrarStartups('Todos', this)">Todos los Proyectos</button>
+                    <button class="filter-pill" onclick="filtrarStartups('Agroindustria', this)">Agroindustria</button>
+                    <button class="filter-pill" onclick="filtrarStartups('Manufactura', this)">Manufactura</button>
+                    <button class="filter-pill" onclick="filtrarStartups('Energía', this)">Energía</button>
+                    <button class="filter-pill" onclick="filtrarStartups('Logística', this)">Logística</button>
+                    <button class="filter-pill" onclick="filtrarStartups('Agua y Sanitario', this)">Agua y Sanitario</button>
+                    <button class="filter-pill" onclick="filtrarStartups('Alimentos', this)">Alimentos</button>
+                    <button class="filter-pill" onclick="filtrarStartups('Salud', this)">Salud</button>
+                    <button class="filter-pill" onclick="filtrarStartups('Forestal', this)">Forestal</button>
+                    <button class="filter-pill" onclick="filtrarStartups('Pesca y Acuicultura', this)">Pesca y Acuicultura</button>
+                </div>
+
+                <!-- Contenedor vacío. Se llenará dinámicamente con JavaScript al cargar -->
+                <div id="lista-startups" class="grid-3">
+                </div>
+            </section>
+
+            <!-- PANTALLA 3: DIAGNÓSTICO TRL LINEAL CON EVIDENCIAS -->
+            <section id="view-ficha" class="view-section">
+                <div style="margin-bottom: 16px;">
+                    <span class="badge badge-green">MEDICIÓN Y EVIDENCIAS DE MADUREZ</span>
+                    <h1 style="font-size: 24px; font-weight: 700; margin-top: 4px;">Evaluación Lineal TRL (Nivel 1 al 9)</h1>
+                    <p style="font-size: 13px; color: var(--text-muted);">Selecciona tu startup, carga las evidencias requeridas para cada nivel y valida en secuencia lineal el TRL verificado.</p>
+                </div>
+
+                <!-- Seleccionar empresa registrada -->
+                <div class="card" style="margin-bottom: 24px;">
+                    <label style="font-size: 13px; font-weight: 600; display: block; margin-bottom: 8px;">Seleccionar Startup para Evaluación TRL:</label>
+                    <select id="select-empresa-trl" onchange="cargarEmpresaTRLLineal(this.value)">
+                        <option value="">-- Seleccione un proyecto registrado --</option>
+                    </select>
+                </div>
+
+                <div class="grid-2">
+                    <!-- CUESTIONARIO LINEAL DEL TRL 1 AL 9 -->
+                    <div>
+                        <div class="card">
+                            <h3 id="trl-empresa-titulo-lineal" style="font-size: 16px; margin-bottom: 4px;">Seleccione una Startup</h3>
+                            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 20px;">Para consolidar cada nivel, debes marcar el cumplimiento e ingresar las evidencias que acrediten el estado.</p>
+
+                            <!-- CONTENEDOR GENERADO POR JS CON LOS 9 NIVELES -->
+                            <div id="cuestionario-lineal-container"></div>
+                        </div>
+                    </div>
+
+                    <!-- PANEL LATERAL DE INDICADOR TRC / EVIDENCIAS -->
+                    <div>
+                        <div class="trl-gauge-card">
+                            <div style="font-size: 11px; font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 1px;">TRL Lineal Validado</div>
+                            <div class="trl-circle">
+                                <span id="trl-score-num" style="font-size: 38px; font-weight: 800;">1</span>
+                                <span id="trl-score-label" style="font-size: 9px; text-transform: uppercase; opacity: 0.8; text-align: center; padding: 0 4px;">INVESTIGACIÓN INICIAL</span>
+                            </div>
+                            <p style="font-size: 11px; opacity: 0.8; margin-top: 8px;" id="trl-evidencias-conteo">Evidencias cargadas: 0 / 9</p>
+                            
+                            <div style="margin-top: 20px; text-align: left; background: rgba(255,255,255,0.05); padding: 12px; border-radius: 8px;">
+                                <div style="font-size: 11px; font-weight: 700; margin-bottom: 6px; color: #a7f3d0;">Línea de Tiempo del Progreso:</div>
+                                <div id="checklist-resumen-trl" style="font-size: 11px; display: flex; flex-direction: column; gap: 4px; opacity: 0.9;">
+                                    <!-- Generado dinámicamente -->
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <!-- REPOSITORIO STARTUPS -->
-            <section id="view-repositorio" class="view-section">
+            <!-- PANTALLA 4: DESAFÍOS INDUSTRIA -->
+            <section id="view-desafio" class="view-section">
+                <div style="margin-bottom: 20px;">
+                    <span class="badge badge-green" style="margin-bottom: 6px;">DESAFÍOS REGIONALES</span>
+                    <h1 style="font-size: 24px; font-weight: 700;">Planteamiento de Desafío Biobío</h1>
+                    <p style="color: var(--text-muted); font-size: 13px;">Describe tu problemática operativa o tecnológica en la región. CIDERE Biobío conecta tu necesidad con el ecosistema de soluciones locales.</p>
+                </div>
+
+                <div class="card">
+                    <h3 style="font-size: 14px; margin-bottom: 12px; font-family: var(--font-mono); color: var(--primary);">Rubro de la Empresa</h3>
+                    
+                    <!-- Cuadrícula 3x3 con los 9 rubros -->
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px;">
+                        <div class="rubro-card selected" onclick="selectRubro(this)">
+                            <i data-lucide="tractor" size="24" style="margin-bottom: 8px; color: var(--primary)"></i>
+                            <div style="font-size: 13px; font-weight: 600;">Agroindustria</div>
+                        </div>
+                        <div class="rubro-card" onclick="selectRubro(this)">
+                            <i data-lucide="building-2" size="24" style="margin-bottom: 8px; color: var(--primary)"></i>
+                            <div style="font-size: 13px; font-weight: 600;">Manufactura</div>
+                        </div>
+                        <div class="rubro-card" onclick="selectRubro(this)">
+                            <i data-lucide="zap" size="24" style="margin-bottom: 8px; color: var(--primary)"></i>
+                            <div style="font-size: 13px; font-weight: 600;">Energía</div>
+                        </div>
+                        <div class="rubro-card" onclick="selectRubro(this)">
+                            <i data-lucide="truck" size="24" style="margin-bottom: 8px; color: var(--primary)"></i>
+                            <div style="font-size: 13px; font-weight: 600;">Logística</div>
+                        </div>
+                        <div class="rubro-card" onclick="selectRubro(this)">
+                            <i data-lucide="droplets" size="24" style="margin-bottom: 8px; color: var(--primary)"></i>
+                            <div style="font-size: 13px; font-weight: 600;">Agua y Sanitario</div>
+                        </div>
+                        <div class="rubro-card" onclick="selectRubro(this)">
+                            <i data-lucide="utensils" size="24" style="margin-bottom: 8px; color: var(--primary)"></i>
+                            <div style="font-size: 13px; font-weight: 600;">Alimentos</div>
+                        </div>
+                        <div class="rubro-card" onclick="selectRubro(this)">
+                            <i data-lucide="heart-pulse" size="24" style="margin-bottom: 8px; color: var(--primary)"></i>
+                            <div style="font-size: 13px; font-weight: 600;">Salud</div>
+                        </div>
+                        <div class="rubro-card" onclick="selectRubro(this)">
+                            <i data-lucide="tree-pine" size="24" style="margin-bottom: 8px; color: var(--primary)"></i>
+                            <div style="font-size: 13px; font-weight: 600;">Forestal</div>
+                        </div>
+                        <div class="rubro-card" onclick="selectRubro(this)">
+                            <i data-lucide="fish" size="24" style="margin-bottom: 8px; color: var(--primary)"></i>
+                            <div style="font-size: 13px; font-weight: 600;">Pesca y Acuicultura</div>
+                        </div>
+                    </div>
+
+                    <h3 style="font-size: 14px; margin-bottom: 8px; font-family: var(--font-mono); color: var(--primary);">Descripción del Desafío</h3>
+                    <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 8px;">Ejemplo: "Necesitamos optimizar la trazabilidad de la madera en la zona sur para reducir pérdidas logísticas".</p>
+                    
+                    <textarea id="input-descripcion-desafio" placeholder="Describe tu necesidad aquí..."></textarea>
+
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border-color);">
+                        <div style="display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text-muted);">
+                            <i data-lucide="shield-check" size="14"></i> Confidencialidad garantizada bajo marco CIDERE
+                        </div>
+                        <button class="btn-primary" style="background-color: var(--primary); padding: 12px 24px;" onclick="encontrarSolucionesEjemplo()">
+                            Encontrar Soluciones <i data-lucide="globe" size="14"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="resultado-soluciones-ejemplo" class="card" style="display: none; background: #f0fdf4; border-color: #0f766e;">
+                    <h3 style="font-size: 15px; color: #065f46; margin-bottom: 8px;"><i data-lucide="check-circle" size="16"></i> Soluciones Identificadas en el Ecosistema</h3>
+                    <p style="font-size: 13px; color: var(--text-main);" id="texto-solucion-generada">Cargando sugerencia...</p>
+                </div>
+            </section>
+
+            <!-- PANTALLA 5: OTL -->
+            <section id="view-otl" class="view-section">
                 <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px;">
                     <div>
-                        <h1 style="font-size: 24px; font-weight: 700;">Startups y Desarrollos Regionales</h1>
-                        <p style="color: var(--text-muted); font-size: 13px; margin-top: 4px;">Proyectos dinámicos sincronizados desde tu base de datos.</p>
+                        <span class="badge badge-blue" style="margin-bottom: 6px;">VINCULACIÓN ACADÉMICA</span>
+                        <h1 style="font-size: 24px; font-weight: 700;">Oficina de Transferencia y Licenciamiento (OTL)</h1>
+                        <p style="color: var(--text-muted); font-size: 13px; margin-top: 4px;">Espacio exclusivo para que las OTL publiquen noticias, boletines y su oferta tecnológica e innovación.</p>
                     </div>
-                    <button class="btn-primary" style="background-color: var(--green-accent)" onclick="openModal('modal-subir-desarrollo')">
-                        <i data-lucide="upload-cloud" size="16"></i> Subir Nuevo Desarrollo
+                    <button class="btn-primary" onclick="openModal('modal-publicar-otl')">
+                        <i data-lucide="plus" size="16"></i> Subir Noticia / Oferta OTL
                     </button>
                 </div>
-                <div style="display: flex; gap: 10px; margin-bottom: 24px; overflow-x: auto; padding-bottom: 8px;">
-                    <button class="filter-pill active" onclick="filtrarStartups('Todos', this)">Todos los Proyectos</button>
-                    <button class="filter-pill" onclick="filtrarStartups('Agroindustria', this)">Agroindustria</button>
-                    <button class="filter-pill" onclick="filtrarStartups('Manufactura', this)">Manufactura</button>
-                    <button class="filter-pill" onclick="filtrarStartups('Energía', this)">Energía</button>
-                    <button class="filter-pill" onclick="filtrarStartups('Forestal', this)">Forestal</button>
+
+                <div class="grid-2">
+                    <div>
+                        <h3 style="font-size: 16px; margin-bottom: 14px;">Noticias y Novedades OTL</h3>
+                        <div class="card">
+                            <span class="badge badge-gray">BOLETÍN OFICIAL</span>
+                            <h4 style="font-size: 15px; margin-top: 6px;">Nueva Cartera de Patentes Universitarias en Biotecnología</h4>
+                            <p style="font-size: 12px; color: var(--text-muted); margin: 6px 0;">La red de OTL regionales abre convocatoria para licenciar tecnologías de valorización de residuos industriales.</p>
+                            <div style="font-size: 11px; font-family: var(--font-mono); color: var(--primary); margin-top: 10px;">📄 Oferta_Tecnologica_OTL_2026.pdf (Descargable)</div>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 style="font-size: 16px; margin-bottom: 14px;">Directorio de Oferta Tecnológica</h3>
+                        <div class="card" style="background: var(--primary); color: white;">
+                            <h4 style="font-size: 14px; margin-bottom: 8px;">Conexión Directa Academia-Empresa</h4>
+                            <p style="font-size: 12px; opacity: 0.8; margin-bottom: 14px;">Accede a los portafolios completos validados por las oficinas de transferencia de la región del Biobío.</p>
+                            <button class="btn-primary" style="background: white; color: var(--primary);" onclick="alert('Iniciando descarga del Dossier OTL...')">Descargar Dossier Completo</button>
+                        </div>
+                    </div>
                 </div>
-                <div id="lista-startups" class="grid-3"></div>
             </section>
+
+            <!-- PANTALLA 6: MENSAJERÍA -->
+            <section id="view-mensajeria" class="view-section">
+                <h1 style="font-size: 24px; font-weight: 700; margin-bottom: 8px;">Mensajería y Enlaces</h1>
+                <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 24px;">Bandeja de comunicación directa entre Empresas, Startups y la Mesa de Innovación CIDERE.</p>
+                <div class="card" style="text-align: center; padding: 40px;">
+                    <i data-lucide="message-square" size="48" style="color: var(--text-muted); opacity: 0.4; margin-bottom: 12px;"></i>
+                    <h3 style="font-size: 16px;">Sin mensajes nuevos</h3>
+                    <p style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">Las interacciones generadas desde "Encontrar Soluciones" o "Solicitar Contacto" aparecerán aquí.</p>
+                </div>
+            </section>
+
+            <!-- FOOTER COMÚN -->
+            <div class="footer-banner">
+                <div>
+                    <h4 style="font-size: 14px; text-transform: uppercase; font-family: var(--font-mono);">Impacto Regional CIDERE</h4>
+                    <p style="font-size: 12px; opacity: 0.8;">Ecosistema de Innovación de la Región del Biobío</p>
+                </div>
+                <div class="metric-group">
+                    <div class="metric-item">
+                        <div class="metric-val">1,248</div>
+                        <div class="metric-lbl">Proyectos Activos</div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="metric-val">84</div>
+                        <div class="metric-lbl">Patentes Biobío</div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="metric-val">312</div>
+                        <div class="metric-lbl">Empresas Socias</div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </main>
 
-    <!-- MODAL: STARTUP -->
+    <!-- MODAL: SUBIR NUEVO DESARROLLO -->
     <div id="modal-subir-desarrollo" class="modal-overlay">
         <div class="modal-content">
             <h2 style="font-size: 18px; margin-bottom: 16px; color: var(--primary);">Registrar Nuevo Desarrollo / Startup</h2>
-            <form onsubmit="guardarEnSheets(event, 'Startup')">
-                <div style="margin-bottom: 14px;"><label>Contacto:</label><input type="text" id="reg-contacto" required></div>
-                <div style="margin-bottom: 14px;"><label>Nombre Startup:</label><input type="text" id="reg-nombre" required></div>
-                <div style="margin-bottom: 14px;"><label>¿Qué hacemos?:</label><textarea id="reg-que-hacemos" required></textarea></div>
-                <div style="margin-bottom: 14px;"><label>Industria:</label>
-                    <select id="reg-industria" required><option>Agroindustria</option><option>Manufactura</option><option>Energía</option><option>Forestal</option></select>
+            <form onsubmit="registrarNuevoDesarrollo(event)">
+                <div style="margin-bottom: 14px;">
+                    <label style="font-size: 12px; font-weight: 600;">Datos de Contacto (Email / Teléfono):</label>
+                    <input type="text" id="reg-contacto" required placeholder="ej. contacto@innovabiobiodes.cl">
                 </div>
-                <div style="margin-bottom: 20px;"><label>¿Cómo lo hacemos?:</label><input type="text" id="reg-como-hacemos" required></div>
-                
-                <div style="display: flex; justify-content: flex-end; align-items: center; gap: 10px;">
+                <div style="margin-bottom: 14px;">
+                    <label style="font-size: 12px; font-weight: 600;">Nombre de la Startup / Desarrollo:</label>
+                    <input type="text" id="reg-nombre" required placeholder="ej. EcoNano Tech">
+                </div>
+                <div style="margin-bottom: 14px;">
+                    <label style="font-size: 12px; font-weight: 600;">¿Qué hacemos? (Descripción del servicio/producto):</label>
+                    <textarea id="reg-que-hacemos" required placeholder="Describa la solución tecnológica..." style="height: 80px;"></textarea>
+                </div>
+                <div style="margin-bottom: 14px;">
+                    <label style="font-size: 12px; font-weight: 600;">¿Para quién lo hacemos? (Industria objetivo):</label>
+                    <select id="reg-industria" required>
+                        <option value="Agroindustria">Agroindustria</option>
+                        <option value="Manufactura">Manufactura</option>
+                        <option value="Energía">Energía</option>
+                        <option value="Logística">Logística</option>
+                        <option value="Agua y Sanitario">Agua y Sanitario</option>
+                        <option value="Alimentos">Alimentos</option>
+                        <option value="Salud">Salud</option>
+                        <option value="Forestal">Forestal</option>
+                        <option value="Pesca y Acuicultura">Pesca y Acuicultura</option>
+                    </select>
+                </div>
+                <div style="margin-bottom: 20px;">
+                    <label style="font-size: 12px; font-weight: 600;">¿Cómo lo hacemos? (Tecnología base):</label>
+                    <input type="text" id="reg-como-hacemos" required placeholder="ej. Uso de sensores IoT y algoritmos analíticos">
+                </div>
+                <div style="display: flex; justify-content: flex-end; gap: 10px; align-items: center;">
                     <span id="loader-startup" class="loader-text">Guardando en Sheets...</span>
                     <button type="button" class="btn-outline" onclick="closeModal('modal-subir-desarrollo')">Cancelar</button>
-                    <button type="submit" class="btn-primary" style="background-color: var(--green-accent);">Guardar</button>
+                    <button type="submit" class="btn-primary" style="background-color: var(--green-accent);">Guardar en Ecosistema</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- MODAL: DESAFÍO -->
+    <!-- MODAL: PUBLICAR DESAFÍO -->
     <div id="modal-publicar-desafio" class="modal-overlay">
         <div class="modal-content">
-            <h2 style="font-size: 18px; margin-bottom: 16px; color: var(--primary);">Ingresar Desafío (Mesa de Innovación)</h2>
-            <form onsubmit="guardarEnSheets(event, 'Desafio')">
-                <div style="margin-bottom: 14px;"><label>Empresa Solicitante:</label><input type="text" id="des-empresa" required></div>
-                <div style="margin-bottom: 14px;"><label>Rubro:</label>
-                    <select id="des-rubro" required><option>Agroindustria</option><option>Manufactura</option><option>Energía</option><option>Forestal</option></select>
+            <h2 style="font-size: 18px; margin-bottom: 16px; color: var(--primary);">Ingresar Desafío (Mesa de Innovación CIDERE)</h2>
+            <form onsubmit="guardarDesafioMesa(event)">
+                <div style="margin-bottom: 14px;">
+                    <label style="font-size: 12px; font-weight: 600;">Nombre de la Empresa Solicitante:</label>
+                    <input type="text" id="des-empresa" required placeholder="ej. Empresa Industrial del Biobío S.A.">
                 </div>
-                <div style="margin-bottom: 14px;"><label>Título del Desafío:</label><input type="text" id="des-titulo" required></div>
-                <div style="margin-bottom: 20px;"><label>Descripción:</label><textarea id="des-desc" required style="height: 90px;"></textarea></div>
-                
-                <div style="display: flex; justify-content: flex-end; align-items: center; gap: 10px;">
-                    <span id="loader-desafio" class="loader-text">Guardando en Sheets...</span>
+                <div style="margin-bottom: 14px;">
+                    <label style="font-size: 12px; font-weight: 600;">Sector / Industria:</label>
+                    <select id="des-rubro" required>
+                        <option value="Agroindustria">Agroindustria</option>
+                        <option value="Manufactura">Manufactura</option>
+                        <option value="Energía">Energía</option>
+                        <option value="Logística">Logística</option>
+                        <option value="Agua y Sanitario">Agua y Sanitario</option>
+                        <option value="Alimentos">Alimentos</option>
+                        <option value="Salud">Salud</option>
+                        <option value="Forestal">Forestal</option>
+                        <option value="Pesca y Acuicultura">Pesca y Acuicultura</option>
+                    </select>
+                </div>
+                <div style="margin-bottom: 14px;">
+                    <label style="font-size: 12px; font-weight: 600;">Título del Desafío Operativo/Tecnológico:</label>
+                    <input type="text" id="des-titulo" required placeholder="ej. Reducción de huella hídrica en procesos de enfriamiento">
+                </div>
+                <div style="margin-bottom: 20px;">
+                    <label style="font-size: 12px; font-weight: 600;">Detalle de la Problemática y Requerimiento:</label>
+                    <textarea id="des-desc" required placeholder="Formato oficial de la Mesa de Innovación CIDERE..." style="height: 90px;"></textarea>
+                </div>
+                <div style="display: flex; justify-content: flex-end; gap: 10px; align-items: center;">
+                    <span id="loader-desafio" class="loader-text">Enviando a Sheets...</span>
                     <button type="button" class="btn-outline" onclick="closeModal('modal-publicar-desafio')">Cancelar</button>
-                    <button type="submit" class="btn-primary">Enviar a la Mesa</button>
+                    <button type="submit" class="btn-primary">Enviar a Mesa de Innovación</button>
                 </div>
             </form>
         </div>
     </div>
 
+    <!-- MODAL: PUBLICAR NOTICIA OTL -->
+    <div id="modal-publicar-otl" class="modal-overlay">
+        <div class="modal-content">
+            <h2 style="font-size: 18px; margin-bottom: 16px; color: var(--primary);">Subir Noticia o Portafolio OTL</h2>
+            <form onsubmit="guardarNoticiaOTL(event)">
+                <div style="margin-bottom: 14px;">
+                    <label style="font-size: 12px; font-weight: 600;">Título de la Publicación:</label>
+                    <input type="text" required placeholder="ej. Nuevo desarrollo patentado en materiales avanzados">
+                </div>
+                <div style="margin-bottom: 14px;">
+                    <label style="font-size: 12px; font-weight: 600;">Resumen o Noticia:</label>
+                    <textarea required placeholder="Contenido informativo para las empresas del ecosistema..." style="height: 80px;"></textarea>
+                </div>
+                <div style="margin-bottom: 20px;">
+                    <label style="font-size: 12px; font-weight: 600;">Adjuntar Archivo PDF de Oferta Tecnológica:</label>
+                    <input type="file" accept=".pdf" style="border:none; padding:4px 0;">
+                </div>
+                <div style="display: flex; justify-content: flex-end; gap: 10px;">
+                    <button type="button" class="btn-outline" onclick="closeModal('modal-publicar-otl')">Cancelar</button>
+                    <button type="submit" class="btn-primary">Publicar en OTL</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT Y LÓGICA LINEAL TRL -->
     <script>
         lucide.createIcons();
 
         // ==========================================
-        // CONFIGURACIÓN DE TUS ENLACES (MAGIA)
+        // CONEXIONES CON GOOGLE SHEETS
         // ==========================================
         const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwiEnVp_RVbU4aVno-eF4ZcxAXTYLKgv8rmupOtNEljpRwu8_rYXiq0B5DqxomIFOYsYA/exec";
         const CSV_STARTUPS = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ9bjV9qSRsPyVgCceJH3oKnkmMkJ2kd_aIE-FEQcUXhd7Tdo_BnRsMLtfSe7CMCETDOn5Il4kmfD5n/pub?gid=174902125&single=true&output=csv";
         const CSV_DESAFIOS = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ9bjV9qSRsPyVgCceJH3oKnkmMkJ2kd_aIE-FEQcUXhd7Tdo_BnRsMLtfSe7CMCETDOn5Il4kmfD5n/pub?gid=1430585904&single=true&output=csv";
 
-        // BASE DE DATOS INICIAL (102 Proyectos)
-        let startupsRegistry = [
-            { nombre: "Lumina Photonics", tipo: "Startup", contacto: "contacto@luminaphotonics.cl", queHace: "Interconexiones ópticas para centros de datos.", industria: "Energía", comoHace: "Óptica avanzada", trlMax: 5 },
-            { nombre: "BioPolymer Solutions", tipo: "Startup", contacto: "info@biopolymer.cl", queHace: "Plásticos biodegradables con micelio.", industria: "Agroindustria", comoHace: "Biotecnología fúngica", trlMax: 3 },
-            { nombre: "Calefactor a pellet (USM)", tipo: "Universidad", contacto: "usm@cl", queHace: "Desarrollo de calefactores sustentables.", industria: "Energía", comoHace: "I+D", trlMax: 4 },
-            { nombre: "Adhesivo Harina de Lupino (UBB)", tipo: "Universidad", contacto: "ubb@cl", queHace: "Adhesivo natural sin formaldehído.", industria: "Forestal", comoHace: "I+D", trlMax: 4 }
-            // (Aquí asumo los 102 que ya teníamos. Por simplicidad visual en el código dejé 4, pero tú puedes dejar tu lista completa original aquí si quieres).
+        // Estructura oficial TRL 1 al 9
+        const trlDefinitions = [
+            { level: 1, title: "TRL 1: Principios básicos observados", desc: "Investigación científica inicial y observation de principios teóricos fundamentales." },
+            { level: 2, title: "TRL 2: Concepto tecnológico formulado", desc: "Formulación teórica del concepto tecnológico o aplicación práctica." },
+            { level: 3, title: "TRL 3: Prueba de concepto experimental", desc: "Demostración analítica y experimental de la función en entorno de laboratorio." },
+            { level: 4, title: "TRL 4: Validación de componentes en laboratorio", desc: "Integración básica de componentes para comprobar que funcionan juntos en laboratorio." },
+            { level: 5, title: "TRL 5: Validación en entorno relevante/simulado", desc: "Componentes validados en un entorno simulado o relevante a la industria objetivo." },
+            { level: 6, title: "TRL 6: Demostración de prototipo relevante", desc: "Prototipo funcional probado en condiciones operativas cercanas a las reales." },
+            { level: 7, title: "TRL 7: Demostración en entorno operativo real", desc: "Prueba del sistema completo en entorno operacional real (planta, campo o cliente piloto)." },
+            { level: 8, title: "TRL 8: Sistema completo y certificado", desc: "Desarrollo tecnológico finalizado, certificado y listo para su implementación." },
+            { level: 9, title: "TRL 9: Sistema comercializado con éxito", desc: "Tecnología en producción continua y comercialización activa en el mercado." }
         ];
 
-        // LECTURA EN TIEMPO REAL DESDE GOOGLE SHEETS
+        // BASE DE DATOS COMPLETA (Tus 102 Proyectos Originales)
+        let startupsRegistry = [
+            { nombre: "Lumina Photonics", tipo: "Startup", contacto: "contacto@luminaphotonics.cl", queHace: "Interconexiones ópticas para centros de datos.", industria: "Energía", comoHace: "Óptica avanzada", trlMax: 5, evidencias: { 1: "paper_optica_2023.pdf", 2: "concepto_teorico_v1.pdf", 3: "informe_lab_prueba.pdf", 4: "validacion_componentes.pdf", 5: "simulacion_entorno_real.pdf" } },
+            { nombre: "BioPolymer Solutions", tipo: "Startup", contacto: "info@biopolymer.cl", queHace: "Plásticos biodegradables con micelio.", industria: "Agroindustria", comoHace: "Biotecnología fúngica", trlMax: 3, evidencias: { 1: "articulo_micelio_udec.pdf", 2: "formulacion_polimero.pdf", 3: "prueba_concepto_lab.pdf" } },
+            { nombre: "Calefactor a pellet sustentable (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", queHace: "Desarrollo de calefactores a pellet sustentables y de bajo costo.", industria: "Energía", comoHace: "Inv: Guillermo Felipe Larson Muñoz", trlMax: 1, evidencias: {} },
+            { nombre: "Fragilizador de hidrógeno (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", queHace: "Tecnología de fragilización de hidrógeno.", industria: "Energía", comoHace: "Inv: Germán Javier Amador Díaz", trlMax: 1, evidencias: {} },
+            { nombre: "Advanced Sustainable Fuel - ASF (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", queHace: "Desarrollo de combustibles sostenibles avanzados.", industria: "Energía", comoHace: "Inv: Iván Andrés Cornejo García", trlMax: 1, evidencias: {} },
+            { nombre: "Limpiador de Paneles Solares (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", queHace: "Sistema automatizado para la limpieza y mantenimiento de paneles solares.", industria: "Energía", comoHace: "Inv: Christian Orellana", trlMax: 1, evidencias: {} },
+            { nombre: "Plataforma impacto macroeconómico (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", queHace: "Plataforma SaaS para evaluación de impacto macroeconómico de transformaciones energéticas.", industria: "Energía", comoHace: "Inv: George Williams Kerrigan Puig", trlMax: 1, evidencias: {} },
+            { nombre: "Transformador estado sólido modular (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", queHace: "Transformador en estado sólido completamente modular.", industria: "Energía", comoHace: "Inv: Felipe Ruiz", trlMax: 1, evidencias: {} },
+            { nombre: "Plataforma de control digital BRAIN (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", queHace: "Desarrollo de plataforma avanzada de control digital para sistemas energéticos.", industria: "Energía", comoHace: "Inv: Pablo Andrés Lezana Illesca", trlMax: 1, evidencias: {} },
+            { nombre: "Co-optimización Sistemas Eléctricos (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", queHace: "Herramienta de co-optimización de Sistemas Eléctricos de Potencia.", industria: "Energía", comoHace: "Inv: Leonardo Esteban Gacitúa Rocha", trlMax: 1, evidencias: {} },
+            { nombre: "Serie Low-E: Estufa a leña (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", queHace: "Diseño de estufa a leña de baja emisión contaminante.", industria: "Energía", comoHace: "Inv: Fabián Rodrigo Guerrero Castro", trlMax: 1, evidencias: {} },
+            { nombre: "App Solar (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", queHace: "Aplicación móvil orientada a la gestión y uso de energía solar.", industria: "Energía", comoHace: "Inv: Patricio Valdivia Lefort", trlMax: 1, evidencias: {} },
+            { nombre: "Captura aérea directa de CO2 (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", queHace: "Desarrollo de proceso tecnológico para la captura aérea directa de dióxido de carbono.", industria: "Energía", comoHace: "Inv: Gonzalo Alexis Núñez Montoya", trlMax: 1, evidencias: {} },
+            { nombre: "Quemador Dual Amoniaco-Hidrógeno (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", queHace: "Quemador dual adaptado para amoniaco e hidrógeno verde.", industria: "Energía", comoHace: "Inv: Mario Gonzalo Toledo Torres", trlMax: 1, evidencias: {} },
+            { nombre: "Planificación de transmisión resiliente (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", queHace: "Herramienta de apoyo a la planificación de transmisión eléctrica resiliente.", industria: "Energía", comoHace: "Inv: Ricardo Javier Álvarez Malebran", trlMax: 1, evidencias: {} },
+            { nombre: "Energy Converter Green Hydrogen (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", queHace: "Convertidor de energía integrado para la producción de hidrógeno verde.", industria: "Energía", comoHace: "Inv: Andrés Felipe Mora Castro", trlMax: 1, evidencias: {} },
+            { nombre: "Smart Transformer redes bidireccionales (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", queHace: "Transformador inteligente para la gestión de redes bidireccionales.", industria: "Energía", comoHace: "Inv: Equipo de Investigación USM", trlMax: 1, evidencias: {} },
+            { nombre: "Generador de hidrógeno verde (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", queHace: "Desarrollo tecnológico de equipo generador de hidrógeno verde.", industria: "Energía", comoHace: "Inv: Paula Rojas Alvarado", trlMax: 1, evidencias: {} },
+            { nombre: "Reactor bifuncional Hidrógeno Verde (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", queHace: "Nuevo reactor bifuncional para la conversión y producción de Hidrógeno Verde.", industria: "Energía", comoHace: "Inv: Iván Andrés Cornejo García", trlMax: 1, evidencias: {} },
+            { nombre: "Quemadores de amoniaco verde (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", queHace: "Desarrollo tecnológico de quemadores optimizados para amoniaco verde.", industria: "Energía", comoHace: "Inv: Claudio Muñoz", trlMax: 1, evidencias: {} },
+            { nombre: "INSPIRATECH (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", queHace: "Sistema de sujeción especializado para cables de alta tensión.", industria: "Energía", comoHace: "Inv: Catherina Ester Álvarez Escarate", trlMax: 1, evidencias: {} },
+            { nombre: "Glass Bubbles (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", queHace: "Microesferas de vidrio funcionalizadas para aplicaciones industriales.", industria: "Manufactura", comoHace: "Inv: Claudio Abraham Acuña Pérez", trlMax: 1, evidencias: {} },
+            { nombre: "Cleanwax: Purificador de cera (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", queHace: "Sistema de purificación de cera.", industria: "Manufactura", comoHace: "Inv: Karen del Pilar Yañez Arellano", trlMax: 1, evidencias: {} },
+            { nombre: "Pintura nanoestructurada anticorrosión (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", queHace: "Pintura nanoestructurada para reducir la corrosión microbiana.", industria: "Manufactura", comoHace: "Inv: Carolina Ivón Parra González", trlMax: 1, evidencias: {} },
+            { nombre: "Máquina de fatiga multiaxial (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", queHace: "Desarrollo de equipo industrial para pruebas de fatiga multiaxial.", industria: "Manufactura", comoHace: "Inv: Alejandro Andrés Pacheco Sanjuán", trlMax: 1, evidencias: {} },
+            { nombre: "Pintura Microbial (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", queHace: "Desarrollo de recubrimientos y pintura microbial.", industria: "Manufactura", comoHace: "Inv: Rodolfo Ignacio Salazar Albornoz", trlMax: 1, evidencias: {} },
+            { nombre: "Proceso metalúrgico aleaciones de hierro (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", queHace: "Proceso metalúrgico avanzado para la obtención de aleaciones de hierro.", industria: "Manufactura", comoHace: "Inv: Claudio Eduardo Aguilar Ramírez", trlMax: 1, evidencias: {} },
+            { nombre: "Cancelación de señal en magnetómetros (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", queHace: "Método innovador de cancelación de señal en magnetómetros.", industria: "Manufactura", comoHace: "Inv: Claudio González", trlMax: 1, evidencias: {} },
+            { nombre: "Plantilla de calzado deportivo (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", queHace: "Desarrollo de plantilla avanzada para calzado deportivo.", industria: "Manufactura", comoHace: "Inv: Marcos David Zúñiga Barraza", trlMax: 1, evidencias: {} },
+            { nombre: "SSR Materials SpA (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", queHace: "Polvo metálico recubierto para aplicaciones en manufactura avanzada.", industria: "Manufactura", comoHace: "Inv: Sheila Katherine Lascano Farak", trlMax: 1, evidencias: {} },
+            { nombre: "Celda para piezas preinstaladas (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", queHace: "Celda de fabricación para crear piezas con ductos preinstalados.", industria: "Manufactura", comoHace: "Inv: Luis Felipe González Böhme", trlMax: 1, evidencias: {} },
+            { nombre: "Accesorio para Pre-fisuración (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", queHace: "Herramienta y accesorio industrial para pruebas de pre-fisuración por fatiga.", industria: "Manufactura", comoHace: "Inv: Egon Rolf Delgado Ramírez", trlMax: 1, evidencias: {} },
+            { nombre: "Membrana purificadora (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", queHace: "Membrana con nanomateriales grafíticos para sistemas de purificación.", industria: "Manufactura", comoHace: "Inv: Carolina Ivón Parra González", trlMax: 1, evidencias: {} },
+            { nombre: "Optipump: Monitoreo (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", queHace: "Sistema de monitoreo avanzado para bombas industriales.", industria: "Manufactura", comoHace: "Inv: Marcelo Alfonso Soto Hernández", trlMax: 1, evidencias: {} },
+            { nombre: "Control inalámbrico temperatura (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", queHace: "Sistema integral de registro y control inalámbrico de temperatura.", industria: "Manufactura", comoHace: "Inv: Fabricio Sánchez", trlMax: 1, evidencias: {} },
+            { nombre: "Materiales pastillas de freno (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", queHace: "Desarrollo de nuevos materiales para la fabricación de pastillas de freno.", industria: "Manufactura", comoHace: "Inv: Claudio Eduardo Aguilar Ramírez", trlMax: 1, evidencias: {} },
+            { nombre: "Sistema desalinización (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", queHace: "Sistema de desalinización sin membranas para tratamiento de agua.", industria: "Agua y Sanitario", comoHace: "Inv: Christian Pablo Romero Vieyra", trlMax: 1, evidencias: {} },
+            { nombre: "Material biomimético (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", queHace: "Aplicación de material biomimético superhidrofóbico para el control de agua.", industria: "Agua y Sanitario", comoHace: "Inv: María Belén Barraza Sandoval", trlMax: 1, evidencias: {} },
+            { nombre: "IDRO: Plantas desalinizadoras (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", queHace: "Evaluación y optimización de plantas desalinizadoras.", industria: "Agua y Sanitario", comoHace: "Inv: Adrián Enrique Ortiz Rojas", trlMax: 1, evidencias: {} },
+            { nombre: "Remoción de Arsénico (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", queHace: "Sistema avanzado para la remoción de Arsénico en recursos hídricos.", industria: "Agua y Sanitario", comoHace: "Inv: Andrea Paola Lazo Acuña", trlMax: 1, evidencias: {} },
+            { nombre: "Pintura antifouling hidrofóbica (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", queHace: "Desarrollo de pintura antifouling hidrofóbica para entornos acuáticos.", industria: "Agua y Sanitario", comoHace: "Inv: Paloma Brichetto", trlMax: 1, evidencias: {} },
+            { nombre: "Desalinización por neblina (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", queHace: "Sistema de desalinización mediante ciclos de producción de neblina.", industria: "Agua y Sanitario", comoHace: "Inv: Paula Alejandra Guerra Pinto", trlMax: 1, evidencias: {} },
+            { nombre: "Reciclaje de membranas OI (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", queHace: "Desarrollo de procesos para el reciclaje de membranas de ósmosis inversa.", industria: "Agua y Sanitario", comoHace: "Inv: Paula Alejandra Guerra Pinto", trlMax: 1, evidencias: {} },
+            { nombre: "Sistema SIIAPI (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", queHace: "Sistema para adaptación agropecuaria frente al cambio climático.", industria: "Agroindustria", comoHace: "Inv: Karen del Pilar Yañez Arellano", trlMax: 1, evidencias: {} },
+            { nombre: "Suplemento alimenticio abejas (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", queHace: "Desarrollo de suplemento alimenticio especializado para abejas.", industria: "Agroindustria", comoHace: "Inv: Karen del Pilar Yañez Arellano", trlMax: 1, evidencias: {} },
+            { nombre: "IDA-Dog (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", queHace: "Sistema de aplicación localizada de biocomponentes en terrenos.", industria: "Agroindustria", comoHace: "Inv: Eduardo Andrés Piñones Zuleta", trlMax: 1, evidencias: {} },
+            { nombre: "Control biológico en vides (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", queHace: "Método avanzado de control biológico de hongos en vides.", industria: "Agroindustria", comoHace: "Inv: Michael Seeger Pfeiffer", trlMax: 1, evidencias: {} },
+            { nombre: "AvocadoWatch (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", queHace: "Sistema de inspección y detección de enfermedades en paltos.", industria: "Agroindustria", comoHace: "Inv: Melissa Eugenia Diago Mosquera", trlMax: 1, evidencias: {} },
+            { nombre: "EcoBloom (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", queHace: "Soluciones biotecnológicas integrales para producción y agricultura.", industria: "Agroindustria", comoHace: "Inv: Marcela Andrea Carvajal Tocornal", trlMax: 1, evidencias: {} },
+            { nombre: "SICCA (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", queHace: "Sistema inteligente de protección contra congelamiento.", industria: "Agroindustria", comoHace: "Inv: Danilo Alejandro Estay Barrientos", trlMax: 1, evidencias: {} },
+            { nombre: "Snack natural de manzana (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", queHace: "Desarrollo de un snack natural a base de manzana deshidratada.", industria: "Alimentos", comoHace: "Inv: Helena Alejandra Núñez Andrade", trlMax: 1, evidencias: {} },
+            { nombre: "Pre-tratamiento láser (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", queHace: "Aplicación de tecnología láser como pre-tratamiento en procesos de liofilización.", industria: "Alimentos", comoHace: "Inv: Sergio Felipe Eduardo Almonacid Merino", trlMax: 1, evidencias: {} },
+            { nombre: "Syncovibe (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", queHace: "Dispositivo tecnológico para mitigar el estrés crónico.", industria: "Salud", comoHace: "Inv: Alejandro Weinstein Oppenheimer", trlMax: 1, evidencias: {} },
+            { nombre: "Repositorios Imágenes Médicas (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", queHace: "Repositorios interoperables para recuperación ágil de imágenes médicas.", industria: "Salud", comoHace: "Inv: Mauricio Alejandro Araya López", trlMax: 1, evidencias: {} },
+            { nombre: "Modelo cáncer biliar (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", queHace: "Modelo de soporte de decisiones clínicas sobre intervención de cáncer biliar.", industria: "Salud", comoHace: "Inv: Werner David Kristjanpoller Rodríguez", trlMax: 1, evidencias: {} },
+            { nombre: "Medidor succión lactantes (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", queHace: "Dispositivo especializado para medir la capacidad de succión en lactantes.", industria: "Salud", comoHace: "Inv: Alejandro Weinstein Oppenheimer", trlMax: 1, evidencias: {} },
+            { nombre: "IonCopper (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", queHace: "Sistema avanzado de purificación de aire.", industria: "Salud", comoHace: "Inv: Christian Pablo Romero Vieyra", trlMax: 1, evidencias: {} },
+            { nombre: "Pelador verduras ergonómico (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", queHace: "Desarrollo de producto ergonómico para pelar verduras en adultos mayores.", industria: "Salud", comoHace: "Inv: Equipo de Investigación USM", trlMax: 1, evidencias: {} },
+            { nombre: "IgnoPhytoShield (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", queHace: "Desarrollo de retardantes naturales del fuego.", industria: "Forestal", comoHace: "Inv: Fabián Rodrigo Guerrero Castro", trlMax: 1, evidencias: {} },
+            { nombre: "Monitoreo acuícola (USM)", tipo: "Universidad", contacto: "pendiente@usm.cl", queHace: "Prototipo a gran escala para el monitoreo de procesos críticos en acuicultura.", industria: "Pesca y Acuicultura", comoHace: "Inv: Nicolás Alonso Jara Carvallo", trlMax: 1, evidencias: {} },
+            { nombre: "Adhesivo Harina de Lupino (UBB)", tipo: "Universidad", contacto: "otlubb@ubiobio.cl", queHace: "Adhesivo natural para fabricar paneles de madera sin formaldehído.", industria: "Forestal", comoHace: "OTL UBB / Titular: UBB-UDEC", trlMax: 4, evidencias: {} },
+            { nombre: "Adhesivo Proteína Unicelular (UBB)", tipo: "Universidad", contacto: "otlubb@ubiobio.cl", queHace: "Adhesivo fabricado con proteínas de levadura para uso en madera y paneles.", industria: "Forestal", comoHace: "OTL UBB", trlMax: 4, evidencias: {} },
+            { nombre: "Nanocelulosa para construcción (UBB)", tipo: "Universidad", contacto: "otlubb@ubiobio.cl", queHace: "Film o fibra de nanocelulosa a partir de Chusquea quila para revestimientos.", industria: "Forestal", comoHace: "OTL UBB / Titular: UBB-UCT", trlMax: 4, evidencias: {} },
+            { nombre: "Nanocaracterización de celulosa (UBB)", tipo: "Universidad", contacto: "otlubb@ubiobio.cl", queHace: "Proceso de nanocaracterización mecánica y morfológica de fibras lignocelulósicas.", industria: "Forestal", comoHace: "OTL UBB", trlMax: 4, evidencias: {} },
+            { nombre: "Medición nanométrica en madera (UBB)", tipo: "Universidad", contacto: "otlubb@ubiobio.cl", queHace: "Metodología de caracterización de árboles no destructiva a nivel nanométrico.", industria: "Forestal", comoHace: "OTL UBB", trlMax: 4, evidencias: {} },
+            { nombre: "Selección de trozas E. nitens (UBB)", tipo: "Universidad", contacto: "otlubb@ubiobio.cl", queHace: "Tecnología de parámetros para seleccionar trozas para debobinado.", industria: "Forestal", comoHace: "OTL UBB", trlMax: 8, evidencias: {} },
+            { nombre: "Tratamiento térmico y secado (UBB)", tipo: "Universidad", contacto: "otlubb@ubiobio.cl", queHace: "Secado y reducción de tensiones de crecimiento en madera aserrada.", industria: "Forestal", comoHace: "OTL UBB", trlMax: 8, evidencias: {} },
+            { nombre: "Aislación de hongos por PCR (UBB)", tipo: "Universidad", contacto: "otlubb@ubiobio.cl", queHace: "Aislamiento e identificación de hongos madereros mediante biología molecular.", industria: "Forestal", comoHace: "OTL UBB", trlMax: 4, evidencias: {} },
+            { nombre: "NANOFOR: Calidad de celulosa (UBB)", tipo: "Universidad", contacto: "otlubb@ubiobio.cl", queHace: "Evaluación de calidad y rendimiento de la fibra mediante nanotecnología.", industria: "Forestal", comoHace: "OTL UBB", trlMax: 4, evidencias: {} },
+            { nombre: "Secado convencional de madera (UBB)", tipo: "Universidad", contacto: "otlubb@ubiobio.cl", queHace: "Servicio de presecado y secado que respeta límites de temperaturas.", industria: "Forestal", comoHace: "OTL UBB", trlMax: 9, evidencias: {} },
+            { nombre: "Segregación clones E. nitens (UBB)", tipo: "Universidad", contacto: "otlubb@ubiobio.cl", queHace: "Metodología para selección de clones con bajo agrietamiento.", industria: "Forestal", comoHace: "OTL UBB", trlMax: 8, evidencias: {} },
+            { nombre: "Cabezales extrusión madera-plástico (UBB)", tipo: "Universidad", contacto: "otlubb@ubiobio.cl", queHace: "Dispositivo para extrusión de perfiles compuestos madera-plástico.", industria: "Manufactura", comoHace: "OTL UBB", trlMax: 4, evidencias: {} },
+            { nombre: "Pisos con madera densificada (UBB)", tipo: "Universidad", contacto: "otlubb@ubiobio.cl", queHace: "Fabricación de pisos de ingeniería termo-higromecánicos con maderas de rápido crecimiento.", industria: "Manufactura", comoHace: "OTL UBB", trlMax: 8, evidencias: {} },
+            { nombre: "Unión rígida CLT: Cartela (UBB)", tipo: "Universidad", contacto: "otlubb@ubiobio.cl", queHace: "Solución estructural mediante un nudo rígido prefabricado por CNC.", industria: "Manufactura", comoHace: "OTL UBB", trlMax: 8, evidencias: {} },
+            { nombre: "Bloques hormigón termorresistentes (UBB)", tipo: "Universidad", contacto: "otlubb@ubiobio.cl", queHace: "Sistema constructivo de bloques con calidad térmica e hídrica mejorada.", industria: "Manufactura", comoHace: "OTL UBB", trlMax: 8, evidencias: {} },
+            { nombre: "Material aislante biobasado (UBB)", tipo: "Universidad", contacto: "otlubb@ubiobio.cl", queHace: "Aislante térmico y acústico a partir de fibras naturales forestales.", industria: "Manufactura", comoHace: "OTL UBB", trlMax: 4, evidencias: {} },
+            { nombre: "Aislante térmico infrarrojo (UBB)", tipo: "Universidad", contacto: "otlubb@ubiobio.cl", queHace: "Aislante a partir de corteza de Eucaliptus con compuesto atenuante de radiación.", industria: "Manufactura", comoHace: "OTL UBB", trlMax: 4, evidencias: {} },
+            { nombre: "Cálculo de uniones tipo clavija (UBB)", tipo: "Universidad", contacto: "otlubb@ubiobio.cl", queHace: "Servicio de caracterización y cálculo de conectores para edificios de madera.", industria: "Manufactura", comoHace: "OTL UBB", trlMax: 9, evidencias: {} },
+            { nombre: "Placas contralaminadas (UBB)", tipo: "Universidad", contacto: "otlubb@ubiobio.cl", queHace: "Servicio de diseño y construcción de placas contralaminadas de alta estabilidad.", industria: "Manufactura", comoHace: "OTL UBB", trlMax: 9, evidencias: {} },
+            { nombre: "Escáner de defectos en paneles (UBB)", tipo: "Universidad", contacto: "otlubb@ubiobio.cl", queHace: "Sistema con cámaras multiespectrales para clasificar defectos superficiales.", industria: "Manufactura", comoHace: "OTL UBB", trlMax: 4, evidencias: {} },
+            { nombre: "Pavimento asfáltico auto-reparable (UBB)", tipo: "Universidad", contacto: "otlubb@ubiobio.cl", queHace: "Asfalto con aditivos metálicos que sella sus grietas usando calentamiento electromagnético.", industria: "Manufactura", comoHace: "OTL UBB", trlMax: 4, evidencias: {} },
+            { nombre: "Verificación de hermeticidad NTM (UBB)", tipo: "Universidad", contacto: "otlubb@ubiobio.cl", queHace: "Software para detectar la hermeticidad de una construcción en su etapa de diseño.", industria: "Energía", comoHace: "OTL UBB", trlMax: 9, evidencias: {} },
+            { nombre: "Sistema de Edificación Pasiva (UBB)", tipo: "Universidad", contacto: "otlubb@ubiobio.cl", queHace: "Paquete tecnológico para aprovechar el sol y aislar térmicamente viviendas herméticas.", industria: "Energía", comoHace: "OTL UBB", trlMax: 9, evidencias: {} },
+            { nombre: "Humedales flujo sub superficial (UBB)", tipo: "Universidad", contacto: "otlubb@ubiobio.cl", queHace: "Tratamiento de aguas residuales de alto rendimiento para materia orgánica y nutrientes.", industria: "Agua y Sanitario", comoHace: "OTL UBB", trlMax: 9, evidencias: {} },
+            { nombre: "SepGeo Rellenos Sanitarios (UBB)", tipo: "Universidad", contacto: "otlubb@ubiobio.cl", queHace: "Software para evaluación espacial en la instalación de disposición de residuos sólidos.", industria: "Agua y Sanitario", comoHace: "OTL UBB", trlMax: 4, evidencias: {} },
+            { nombre: "SIGEUBB Gestión Estratégica (UBB)", tipo: "Universidad", contacto: "otlubb@ubiobio.cl", queHace: "Sistema de Información de Gestión Estratégica en línea para control de procesos.", industria: "Logística", comoHace: "OTL UBB", trlMax: 9, evidencias: {} },
+            { nombre: "Packaging sustentable higos (UBB)", tipo: "Universidad", contacto: "otlubb@ubiobio.cl", queHace: "Bandeja de pulpa moldeada ecológica para transporte y apilamiento de alimentos perecederos.", industria: "Logística", comoHace: "OTL UBB", trlMax: 4, evidencias: {} },
+            { nombre: "Rutas óptimas ante Tsunami (UBB)", tipo: "Universidad", contacto: "otlubb@ubiobio.cl", queHace: "Software interactivo de localización de albergues de emergencia y vías de evacuación.", industria: "Logística", comoHace: "OTL UBB", trlMax: 7, evidencias: {} },
+            { nombre: "App de Movilidad Urbana (UBB)", tipo: "Universidad", contacto: "otlubb@ubiobio.cl", queHace: "Aplicación móvil Android que recolecta y proporciona datos de movilidad urbana basada en usuarios.", industria: "Logística", comoHace: "OTL UBB", trlMax: 4, evidencias: {} },
+            { nombre: "Teledetección urbana con Drones (UBB)", tipo: "Universidad", contacto: "otlubb@ubiobio.cl", queHace: "Plataforma de percepción remota y GIS para analizar imágenes capturadas por drones.", industria: "Logística", comoHace: "OTL UBB", trlMax: 4, evidencias: {} },
+            { nombre: "Evaluación flotas de residuos (UBB)", tipo: "Universidad", contacto: "otlubb@ubiobio.cl", queHace: "Sistema para estimar el costo de operación de recolección utilizando rastreo GPS.", industria: "Logística", comoHace: "OTL UBB", trlMax: 3, evidencias: {} },
+            { nombre: "Análisis Impacto Ambiental (UBB)", tipo: "Universidad", contacto: "otlubb@ubiobio.cl", queHace: "Aplicación web de impacto ambiental para proyectos urbanos usando datos georreferenciados.", industria: "Logística", comoHace: "OTL UBB", trlMax: 7, evidencias: {} },
+            { nombre: "Visualizador capas Web Map (UBB)", tipo: "Universidad", contacto: "otlubb@ubiobio.cl", queHace: "App web de escritorio para visualización geográfica con tecnología WMS.", industria: "Logística", comoHace: "OTL UBB", trlMax: 9, evidencias: {} },
+            { nombre: "SIMUR Simulador CMC (UBB)", tipo: "Universidad", contacto: "otlubb@ubiobio.cl", queHace: "Simulador de escenarios económicos, productivos y sociales en entornos urbanos.", industria: "Logística", comoHace: "OTL UBB", trlMax: 4, evidencias: {} },
+            { nombre: "SepGeo Idea Comercial (UBB)", tipo: "Universidad", contacto: "otlubb@ubiobio.cl", queHace: "Software que usa geomarketing para evaluar instalaciones de establecimientos comerciales.", industria: "Logística", comoHace: "OTL UBB", trlMax: 4, evidencias: {} },
+            { nombre: "SepGeo Idea Deportiva (UBB)", tipo: "Universidad", contacto: "otlubb@ubiobio.cl", queHace: "Evaluación económica espacial para proyectos de infraestructura deportiva.", industria: "Logística", comoHace: "OTL UBB", trlMax: 4, evidencias: {} },
+            { nombre: "SepGeo Inmobiliaria (UBB)", tipo: "Universidad", contacto: "otlubb@ubiobio.cl", queHace: "Software para evaluar la factibilidad técnica, económica y espacial de proyectos inmobiliarios.", industria: "Logística", comoHace: "OTL UBB", trlMax: 4, evidencias: {} },
+            { nombre: "Tostador de chips de madera (UBB)", tipo: "Universidad", contacto: "otlubb@ubiobio.cl", queHace: "Tostador automático por convección de chips de madera para envejecimiento de vinos.", industria: "Alimentos", comoHace: "OTL UBB", trlMax: 4, evidencias: {} },
+            { nombre: "Snack fortificado al vacío (UBB)", tipo: "Universidad", contacto: "otlubb@ubiobio.cl", queHace: "Snack de manzanas enriquecido con componentes bioactivos mediante impregnación al vacío.", industria: "Alimentos", comoHace: "OTL UBB", trlMax: 4, evidencias: {} },
+            { nombre: "Programa Bebidas Azucaradas (UBB)", tipo: "Universidad", contacto: "otlubb@ubiobio.cl", queHace: "Programa educativo planificado para desincentivar el consumo de bebidas azucaradas en niños.", industria: "Salud", comoHace: "OTL UBB", trlMax: 9, evidencias: {} },
+            { nombre: "Plataforma Telemédica TAS (UBB)", tipo: "Universidad", contacto: "otlubb@ubiobio.cl", queHace: "Plataforma web y modelo de control de gestión para seguimiento de servicios telemédicos.", industria: "Salud", comoHace: "OTL UBB", trlMax: 7, evidencias: {} },
+            { nombre: "Ventiladero para apiarios (UBB)", tipo: "Universidad", contacto: "otlubb@ubiobio.cl", queHace: "Ventiladero de colmenas para controlar clima y evitar insectos no deseados.", industria: "Agroindustria", comoHace: "OTL UBB", trlMax: 4, evidencias: {} }
+        ];
+
+        let empresaSeleccionadaActual = null;
+
+        // ==========================================
+        // LEER DATOS DESDE GOOGLE SHEETS
+        // ==========================================
         function cargarDatosDesdeSheets() {
-            // 1. Cargar Startups
+            document.getElementById('sync-status').innerText = "(Sincronizando Google Sheets...)";
+            
+            // 1. Cargar Startups y Universidades
             Papa.parse(CSV_STARTUPS, {
                 download: true,
                 complete: function(results) {
                     const filas = results.data;
-                    // Saltamos la fila 1 si es que tiene encabezados (ID, Nombre, Tipo...)
                     for(let i = 1; i < filas.length; i++) {
-                        if(filas[i].length >= 5 && filas[i][1]) { // Verifica que no esté vacía
-                            startupsRegistry.push({
-                                nombre: filas[i][1],
-                                tipo: filas[i][2],
-                                industria: filas[i][3],
-                                queHace: filas[i][4],
-                                comoHace: filas[i][5],
-                                trlMax: filas[i][6] || 1,
-                                contacto: filas[i][7]
-                            });
+                        if(filas[i].length >= 5 && filas[i][1]) {
+                            // Evitar duplicados si ya está en la lista inicial
+                            if(!startupsRegistry.find(s => s.nombre === filas[i][1])) {
+                                startupsRegistry.push({
+                                    nombre: filas[i][1],
+                                    tipo: filas[i][2] || "Startup",
+                                    industria: filas[i][3],
+                                    queHace: filas[i][4],
+                                    comoHace: filas[i][5],
+                                    trlMax: parseInt(filas[i][6]) || 1,
+                                    contacto: filas[i][7],
+                                    evidencias: {}
+                                });
+                            }
                         }
                     }
                     actualizarListasStartups();
                     document.getElementById('kpi-proyectos').innerText = startupsRegistry.length;
+                    
+                    // Asegurarnos de que el select del TRL se actualice también
+                    const selectTrl = document.getElementById('select-empresa-trl');
+                    selectTrl.innerHTML = `<option value="">-- Seleccione un proyecto registrado --</option>`;
+                    startupsRegistry.forEach(s => {
+                        selectTrl.innerHTML += `<option value="${s.nombre}">${s.nombre} (${s.industria})</option>`;
+                    });
                 }
             });
 
-            // 2. Cargar Desafíos
+            // 2. Cargar Desafíos de la Mesa
             Papa.parse(CSV_DESAFIOS, {
                 download: true,
                 complete: function(results) {
                     const filas = results.data;
                     const contenedor = document.getElementById('lista-desafios-dashboard');
-                    contenedor.innerHTML = '';
+                    contenedor.innerHTML = ''; // Limpiamos los ejemplos manuales
                     let conteo = 0;
 
                     for(let i = 1; i < filas.length; i++) {
-                        if(filas[i].length >= 4 && filas[i][1]) { // Verifica que haya empresa
+                        if(filas[i].length >= 4 && filas[i][1]) {
                             conteo++;
                             contenedor.innerHTML += `
                                 <div style="border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 12px; margin-bottom: 12px;">
-                                    <span class="badge badge-orange" style="background: rgba(255,255,255,0.2); color: white;">NUEVO DESAFÍO</span>
-                                    <h5 style="margin-top: 6px; font-size: 14px;">${filas[i][3]} (${filas[i][2]})</h5>
+                                    <span class="badge badge-green" style="background: rgba(255,255,255,0.2); color: white;">INDUSTRIA</span>
+                                    <h5 style="margin-top: 6px; font-size: 14px;">${filas[i][3]}</h5>
                                     <p style="font-size: 12px; opacity: 0.8; margin-top: 4px;"><b>${filas[i][1]}:</b> ${filas[i][4]}</p>
                                 </div>
                             `;
                         }
                     }
-                    if(conteo === 0) contenedor.innerHTML = '<p style="font-size:12px;">No hay desafíos registrados en la hoja de Sheets.</p>';
+                    if(conteo === 0) contenedor.innerHTML = '<p style="font-size:12px;">No hay desafíos registrados en la hoja aún.</p>';
                     document.getElementById('kpi-desafios').innerText = conteo;
+                    
                     document.getElementById('sync-status').innerText = "(Sincronizado ✔)";
                 }
             });
         }
 
-        // ESCRITURA HACIA GOOGLE SHEETS (FORMULARIOS)
-        function guardarEnSheets(event, tipo) {
+        // ==========================================
+        // FUNCIONES DE GUARDADO (HACIA GOOGLE SHEETS)
+        // ==========================================
+        function registrarNuevoDesarrollo(event) {
             event.preventDefault();
-            
+            document.getElementById('loader-startup').style.display = 'inline';
+
             const formData = new FormData();
-            formData.append('tipoFormulario', tipo);
+            formData.append('tipoFormulario', 'Startup');
+            formData.append('contacto', document.getElementById('reg-contacto').value);
+            formData.append('nombre', document.getElementById('reg-nombre').value);
+            formData.append('queHace', document.getElementById('reg-que-hacemos').value);
+            formData.append('industria', document.getElementById('reg-industria').value);
+            formData.append('comoHace', document.getElementById('reg-como-hacemos').value);
 
-            if(tipo === 'Startup') {
-                document.getElementById('loader-startup').style.display = 'inline';
-                formData.append('contacto', document.getElementById('reg-contacto').value);
-                formData.append('nombre', document.getElementById('reg-nombre').value);
-                formData.append('queHace', document.getElementById('reg-que-hacemos').value);
-                formData.append('industria', document.getElementById('reg-industria').value);
-                formData.append('comoHace', document.getElementById('reg-como-hacemos').value);
-            } else {
-                document.getElementById('loader-desafio').style.display = 'inline';
-                formData.append('empresa', document.getElementById('des-empresa').value);
-                formData.append('rubro', document.getElementById('des-rubro').value);
-                formData.append('titulo', document.getElementById('des-titulo').value);
-                formData.append('descripcion', document.getElementById('des-desc').value);
-            }
-
-            // Enviamos los datos silenciosamente a Google Apps Script
             fetch(APPS_SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: formData })
             .then(() => {
-                alert("¡Guardado exitosamente en tu Google Sheets!");
+                alert("¡Desarrollo guardado exitosamente en tu Base de Datos!");
                 document.getElementById('loader-startup').style.display = 'none';
-                document.getElementById('loader-desafio').style.display = 'none';
-                closeModal(tipo === 'Startup' ? 'modal-subir-desarrollo' : 'modal-publicar-desafio');
-                
-                // Recargar los datos automáticamente para que aparezca en pantalla
-                document.getElementById('sync-status').innerText = "(Actualizando...)";
-                setTimeout(cargarDatosDesdeSheets, 2000); // Esperamos 2 segundos para que Google guarde
+                closeModal('modal-subir-desarrollo');
+                cargarDatosDesdeSheets(); // Recargamos para que aparezca al instante
             })
             .catch(error => {
                 alert("Hubo un error de conexión.");
+                document.getElementById('loader-startup').style.display = 'none';
             });
         }
 
-        // Funciones de interfaz
+        function guardarDesafioMesa(event) {
+            event.preventDefault();
+            document.getElementById('loader-desafio').style.display = 'inline';
+
+            const formData = new FormData();
+            formData.append('tipoFormulario', 'Desafio');
+            formData.append('empresa', document.getElementById('des-empresa').value);
+            formData.append('rubro', document.getElementById('des-rubro').value);
+            formData.append('titulo', document.getElementById('des-titulo').value);
+            formData.append('descripcion', document.getElementById('des-desc').value);
+
+            fetch(APPS_SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: formData })
+            .then(() => {
+                alert("¡Desafío enviado a la Mesa de Innovación exitosamente!");
+                document.getElementById('loader-desafio').style.display = 'none';
+                closeModal('modal-publicar-desafio');
+                cargarDatosDesdeSheets();
+            })
+            .catch(error => {
+                alert("Hubo un error de conexión.");
+                document.getElementById('loader-desafio').style.display = 'none';
+            });
+        }
+
+        // ==========================================
+        // FUNCIONES VISUALES (INTERFAZ ORIGINAL)
+        // ==========================================
         function switchView(viewId, element = null) {
             document.querySelectorAll('.view-section').forEach(section => section.classList.remove('active'));
-            document.getElementById(viewId).classList.add('active');
+            const target = document.getElementById(viewId);
+            if (target) target.classList.add('active');
+
             document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-            if (element) element.classList.add('active');
-        }
-        function openModal(id) { document.getElementById(id).classList.add('active'); }
-        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+            document.querySelectorAll('.top-nav-links li').forEach(item => item.classList.remove('active-top'));
 
-        function filtrarStartups(industria, btnElement) {
-            document.querySelectorAll('.filter-pill').forEach(btn => btn.classList.remove('active'));
-            btnElement.classList.add('active');
-            actualizarListasStartups(industria);
+            if (element) {
+                if(element.classList.contains('nav-item')) {
+                    element.classList.add('active');
+                } else {
+                    element.classList.add('active-top');
+                }
+            }
         }
 
-        function actualizarListasStartups(filtro = 'Todos') {
-            const contenedor = document.getElementById('lista-startups');
-            contenedor.innerHTML = '';
+        function openModal(modalId) { document.getElementById(modalId).classList.add('active'); }
+        function closeModal(modalId) { document.getElementById(modalId).classList.remove('active'); }
+        
+        function selectRubro(element) {
+            document.querySelectorAll('.rubro-card').forEach(card => card.classList.remove('selected'));
+            element.classList.add('selected');
+        }
+
+        // Renderizar el cuestionario lineal TRL 1-9
+        function renderizarCuestionarioTRLLineal() {
+            const container = document.getElementById('cuestionario-lineal-container');
+            container.innerHTML = '';
+
+            trlDefinitions.forEach(step => {
+                const trlMax = empresaSeleccionadaActual ? empresaSeleccionadaActual.trlMax : 1;
+                const isCompleted = step.level <= trlMax;
+                const evidenciaArchivo = empresaSeleccionadaActual && empresaSeleccionadaActual.evidencias && empresaSeleccionadaActual.evidencias[step.level] 
+                    ? empresaSeleccionadaActual.evidencias[step.level] 
+                    : null;
+
+                container.innerHTML += `
+                    <div class="trl-step-card ${isCompleted ? 'completed' : ''}">
+                        <div class="trl-step-header">
+                            <div>
+                                <span class="badge ${isCompleted ? 'badge-green' : 'badge-gray'}">NIVEL ${step.level}</span>
+                                <h4 style="font-size: 14px; margin-top: 4px;">${step.title}</h4>
+                            </div>
+                            <input type="checkbox" style="width: 18px; height: 18px; cursor: pointer;" 
+                                ${isCompleted ? 'checked' : ''} 
+                                onchange="actualizarEstadoTRLLineal(${step.level}, this.checked)">
+                        </div>
+                        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px;">${step.desc}</p>
+
+                        <!-- Zona de Carga de Indicios y Evidencias -->
+                        <div class="evidence-upload-zone">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <span style="font-size: 11px; font-weight: 600; color: var(--text-main);">
+                                    <i data-lucide="paperclip" size="12"></i> Indicio o Evidencia de Respaldo:
+                                </span>
+                                ${evidenciaArchivo ? `<span style="font-size: 10px; font-family: var(--font-mono); color: #0f766e; font-weight: 700;">✔ ${evidenciaArchivo}</span>` : `<span style="font-size: 10px; color: var(--text-muted);">Sin evidencia adjunta</span>`}
+                            </div>
+                            <div style="display: flex; gap: 8px; margin-top: 8px;">
+                                <input type="file" style="font-size: 11px; border: none; padding: 0;" onchange="adjuntarEvidenciaTRL(${step.level}, this)">
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            lucide.createIcons();
+            actualizarResumenTRLLineal();
+        }
+
+        function cargarEmpresaTRLLineal(nombre) {
+            empresaSeleccionadaActual = startupsRegistry.find(s => s.nombre === nombre) || null;
+            document.getElementById('trl-empresa-titulo-lineal').innerText = empresaSeleccionadaActual 
+                ? `Evaluación de: ${empresaSeleccionadaActual.nombre}` 
+                : "Seleccione una Startup";
+            renderizarCuestionarioTRLLineal();
+        }
+
+        function actualizarEstadoTRLLineal(level, checked) {
+            if(!empresaSeleccionadaActual) {
+                alert("Por favor seleccione primero un proyecto para evaluar.");
+                renderizarCuestionarioTRLLineal();
+                return;
+            }
+
+            if(checked) {
+                empresaSeleccionadaActual.trlMax = Math.max(empresaSeleccionadaActual.trlMax, level);
+            } else {
+                empresaSeleccionadaActual.trlMax = Math.max(1, level - 1);
+            }
+            renderizarCuestionarioTRLLineal();
+        }
+
+        function adjuntarEvidenciaTRL(level, inputElement) {
+            if(!empresaSeleccionadaActual) {
+                alert("Selecciona un proyecto primero.");
+                return;
+            }
+            if(!empresaSeleccionadaActual.evidencias) empresaSeleccionadaActual.evidencias = {};
+
+            if(inputElement.files && inputElement.files[0]) {
+                const filename = inputElement.files[0].name;
+                empresaSeleccionadaActual.evidencias[level] = filename;
+                alert(`Evidencia "${filename}" subida con éxito para el TRL ${level}`);
+                renderizarCuestionarioTRLLineal();
+            }
+        }
+
+        function actualizarResumenTRLLineal() {
+            const trlActual = empresaSeleccionadaActual ? empresaSeleccionadaActual.trlMax : 1;
+            document.getElementById('trl-score-num').innerText = trlActual;
             
-            const filtradas = filtro === 'Todos' ? startupsRegistry : startupsRegistry.filter(s => s.industria === filtro);
-            
-            filtradas.forEach(s => {
-                contenedor.innerHTML += `
-                    <div class="card">
-                        <span class="badge ${s.tipo === 'Universidad' ? 'badge-blue' : 'badge-green'}" style="margin-bottom: 8px;">${s.tipo ? s.tipo.toUpperCase() : 'STARTUP'}</span>
-                        <h4 style="font-size: 15px;">${s.nombre}</h4>
-                        <p style="font-size: 11px; color: var(--text-muted); margin: 4px 0 10px 0;">Contacto: ${s.contacto || 'No disponible'}</p>
-                        <p style="font-size: 12px; color: var(--text-muted);"><b>Qué hacemos:</b> ${s.queHace}</p>
-                        <p style="font-size: 12px; color: var(--text-muted); margin-top:4px;"><b>Industria:</b> ${s.industria}</p>
+            const defActual = trlDefinitions.find(t => t.level === trlActual);
+            document.getElementById('trl-score-label').innerText = defActual ? defActual.title.split(':')[1] : '';
+
+            const evidenciasConteo = (empresaSeleccionadaActual && empresaSeleccionadaActual.evidencias) ? Object.keys(empresaSeleccionadaActual.evidencias).length : 0;
+            document.getElementById('trl-evidencias-conteo').innerText = `Evidencias cargadas: ${evidenciasConteo} / 9`;
+
+            const resumenContainer = document.getElementById('checklist-resumen-trl');
+            resumenContainer.innerHTML = '';
+            trlDefinitions.forEach(t => {
+                const ok = t.level <= trlActual;
+                resumenContainer.innerHTML += `
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <span>${ok ? '🟢' : '⚪'} TRL ${t.level}</span>
+                        <span style="opacity: 0.7; font-size:10px;">${empresaSeleccionadaActual && empresaSeleccionadaActual.evidencias && empresaSeleccionadaActual.evidencias[t.level] ? 'Evidencia ✔' : 'Pendiente'}</span>
                     </div>
                 `;
             });
         }
 
-        // Al iniciar la página
+        function actualizarListasStartups() {
+            const contenedor = document.getElementById('lista-startups');
+            contenedor.innerHTML = '';
+            startupsRegistry.forEach(s => {
+                contenedor.innerHTML += `
+                    <div class="card">
+                        <span class="badge ${s.tipo === 'Universidad' ? 'badge-blue' : 'badge-green'}" style="margin-bottom: 8px;">${s.tipo ? s.tipo.toUpperCase() : 'STARTUP'}</span>
+                        <h4 style="font-size: 15px;">${s.nombre}</h4>
+                        <p style="font-size: 11px; color: var(--text-muted); margin: 4px 0 10px 0;">Contacto: ${s.contacto}</p>
+                        <p style="font-size: 12px; color: var(--text-muted);"><b>Qué hacemos:</b> ${s.queHace}</p>
+                        <p style="font-size: 12px; color: var(--text-muted); margin-top:4px;"><b>Industria:</b> ${s.industria}</p>
+                        <div style="margin-top: 14px; font-weight: 600; font-size: 12px; color: var(--primary);">TRL Validado: ${s.trlMax}</div>
+                    </div>
+                `;
+            });
+            lucide.createIcons();
+        }
+
+        function encontrarSolucionesEjemplo() {
+            const descripcion = document.getElementById('input-descripcion-desafio').value;
+            const boxResultado = document.getElementById('resultado-soluciones-ejemplo');
+            const textoSolucion = document.getElementById('texto-solucion-generada');
+            
+            boxResultado.style.display = 'block';
+            textoSolucion.innerHTML = `Basado en el desafío ingresado ("<i>${descripcion || 'Optimización sectorial'}</i>"), la Mesa de Innovación CIDERE identificó opciones relevantes en el ecosistema para vinculación directa.`;
+            lucide.createIcons();
+        }
+
+        function guardarNoticiaOTL(event) {
+            event.preventDefault();
+            closeModal('modal-publicar-otl');
+            alert("¡Noticia y portafolio PDF subido con éxito a la OTL!");
+        }
+
+        function filtrarStartups(industria, btnElement) {
+            document.querySelectorAll('.filter-pill').forEach(btn => btn.classList.remove('active'));
+            btnElement.classList.add('active');
+
+            const contenedor = document.getElementById('lista-startups');
+            contenedor.innerHTML = '';
+            
+            const filtradas = industria === 'Todos' ? startupsRegistry : startupsRegistry.filter(s => s.industria === industria);
+            
+            if(filtradas.length === 0) {
+                contenedor.innerHTML = '<p style="color: var(--text-muted); font-size: 13px;">No hay startups registradas en esta industria aún.</p>';
+                return;
+            }
+
+            filtradas.forEach(s => {
+                contenedor.innerHTML += `
+                    <div class="card">
+                        <span class="badge ${s.tipo === 'Universidad' ? 'badge-blue' : 'badge-green'}" style="margin-bottom: 8px;">${s.tipo ? s.tipo.toUpperCase() : 'STARTUP'}</span>
+                        <h4 style="font-size: 15px;">${s.nombre}</h4>
+                        <p style="font-size: 11px; color: var(--text-muted); margin: 4px 0 10px 0;">Contacto: ${s.contacto}</p>
+                        <p style="font-size: 12px; color: var(--text-muted);"><b>Qué hacemos:</b> ${s.queHace}</p>
+                        <p style="font-size: 12px; color: var(--text-muted); margin-top:4px;"><b>Industria:</b> ${s.industria}</p>
+                        <div style="margin-top: 14px; font-weight: 600; font-size: 12px; color: var(--primary);">TRL Validado: ${s.trlMax}</div>
+                    </div>
+                `;
+            });
+        }
+
+        // ==========================================
+        // INICIALIZACIÓN
+        // ==========================================
         window.onload = function() {
-            actualizarListasStartups();
-            cargarDatosDesdeSheets();
+            renderizarCuestionarioTRLLineal();
+            actualizarListasStartups(); // Carga la lista inicial
+            cargarDatosDesdeSheets(); // Va a buscar si hay datos nuevos en el Excel
         };
     </script>
 </body>
