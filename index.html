@@ -29,471 +29,97 @@
             --font-sans: 'Inter', sans-serif;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            font-family: var(--font-sans);
-            background-color: var(--bg-body);
-            color: var(--text-main);
-            display: flex;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: var(--font-sans); background-color: var(--bg-body); color: var(--text-main); display: flex; min-height: 100vh; overflow-x: hidden; }
 
         /* BARRA LATERAL (SIDEBAR) */
-        aside {
-            width: 260px;
-            background-color: var(--bg-sidebar);
-            color: #ffffff;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            padding: 24px 16px;
-            flex-shrink: 0;
-        }
-
-        .brand {
-            padding: 0 8px 24px 8px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: center;
-        }
-
-        .nav-list {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        .nav-item {
-            padding: 12px 14px;
-            border-radius: 8px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 13.5px;
-            font-weight: 500;
-            color: rgba(255, 255, 255, 0.8);
-            transition: all 0.2s ease;
-        }
-
-        .nav-item:hover {
-            background-color: rgba(255, 255, 255, 0.08);
-            color: #fff;
-        }
-
-        .nav-item.active {
-            background-color: #ffffff;
-            color: var(--primary);
-            font-weight: 600;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-
-        .btn-sidebar-cta {
-            background-color: var(--green-accent);
-            color: white;
-            border: none;
-            padding: 14px;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            transition: background 0.2s;
-            width: 100%;
-            margin-top: auto;
-        }
-
-        .btn-sidebar-cta:hover {
-            background-color: var(--green-hover);
-        }
+        aside { width: 260px; background-color: var(--bg-sidebar); color: #ffffff; display: flex; flex-direction: column; justify-content: space-between; padding: 24px 16px; flex-shrink: 0; }
+        .brand { padding: 0 8px 24px 8px; border-bottom: 1px solid rgba(255, 255, 255, 0.1); margin-bottom: 20px; display: flex; justify-content: center; }
+        .nav-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+        .nav-item { padding: 12px 14px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 12px; font-size: 13.5px; font-weight: 500; color: rgba(255, 255, 255, 0.8); transition: all 0.2s ease; }
+        .nav-item:hover { background-color: rgba(255, 255, 255, 0.08); color: #fff; }
+        .nav-item.active { background-color: #ffffff; color: var(--primary); font-weight: 600; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        
+        .btn-sidebar-cta { background-color: var(--green-accent); color: white; border: none; padding: 14px; border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: background 0.2s; width: 100%; margin-top: auto; }
+        .btn-sidebar-cta:hover { background-color: var(--green-hover); }
 
         /* AREA PRINCIPAL DE CONTENIDO */
-        main {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-            overflow-y: auto;
-        }
-
-        /* HEADER SUPERIOR */
-        header {
-            background-color: #ffffff;
-            height: 64px;
-            border-bottom: 1px solid var(--border-color);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 32px;
-            position: sticky;
-            top: 0;
-            z-index: 10;
-        }
-
-        .search-bar {
-            display: flex;
-            align-items: center;
-            background-color: var(--bg-body);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 8px 16px;
-            width: 380px;
-            gap: 10px;
-        }
-
-        .search-bar input {
-            border: none;
-            background: transparent;
-            outline: none;
-            width: 100%;
-            font-size: 13px;
-        }
-
-        .top-menu {
-            display: flex;
-            align-items: center;
-            gap: 24px;
-        }
-
-        .top-nav-links {
-            display: flex;
-            gap: 20px;
-            list-style: none;
-            font-size: 13px;
-            font-weight: 500;
-            color: var(--text-muted);
-        }
-
-        .top-nav-links li {
-            cursor: pointer;
-            padding: 6px 10px;
-            border-radius: 6px;
-            transition: all 0.2s;
-        }
-
-        .top-nav-links li:hover {
-            color: var(--primary);
-            background-color: var(--bg-body);
-        }
-
-        .top-nav-links li.active-top {
-            color: var(--primary);
-            font-weight: 700;
-            background-color: #e0e7ff;
-        }
-
-        .user-profile {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding-left: 16px;
-            border-left: 1px solid var(--border-color);
-        }
-
-        .avatar {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background-color: #ccc;
-            object-fit: cover;
-        }
+        main { flex-grow: 1; display: flex; flex-direction: column; height: 100vh; overflow-y: auto; }
+        header { background-color: #ffffff; height: 64px; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; padding: 0 32px; position: sticky; top: 0; z-index: 10; }
+        
+        .search-bar { display: flex; align-items: center; background-color: var(--bg-body); border: 1px solid var(--border-color); border-radius: 8px; padding: 8px 16px; width: 380px; gap: 10px; }
+        .search-bar input { border: none; background: transparent; outline: none; width: 100%; font-size: 13px; }
+        
+        .top-menu { display: flex; align-items: center; gap: 24px; }
+        .top-nav-links { display: flex; gap: 20px; list-style: none; font-size: 13px; font-weight: 500; color: var(--text-muted); }
+        .top-nav-links li { cursor: pointer; padding: 6px 10px; border-radius: 6px; transition: all 0.2s; }
+        .top-nav-links li:hover { color: var(--primary); background-color: var(--bg-body); }
+        .top-nav-links li.active-top { color: var(--primary); font-weight: 700; background-color: #e0e7ff; }
+        
+        .user-profile { display: flex; align-items: center; gap: 12px; padding-left: 16px; border-left: 1px solid var(--border-color); }
+        .avatar { width: 36px; height: 36px; border-radius: 50%; background-color: #ccc; object-fit: cover; }
 
         /* CONTENEDOR DE VISTAS */
-        .content-container {
-            padding: 32px;
-            max-width: 1280px;
-            margin: 0 auto;
-            width: 100%;
-        }
-
-        .view-section {
-            display: none;
-        }
-
-        .view-section.active {
-            display: block;
-            animation: fadeIn 0.25s ease-in-out;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(4px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        .content-container { padding: 32px; max-width: 1280px; margin: 0 auto; width: 100%; }
+        .view-section { display: none; }
+        .view-section.active { display: block; animation: fadeIn 0.25s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
 
         /* COMPONENTES REUTILIZABLES */
-        .badge {
-            font-family: var(--font-mono);
-            font-size: 10px;
-            padding: 3px 8px;
-            border-radius: 4px;
-            font-weight: 600;
-            text-transform: uppercase;
-            display: inline-block;
-        }
-
+        .badge { font-family: var(--font-mono); font-size: 10px; padding: 3px 8px; border-radius: 4px; font-weight: 600; text-transform: uppercase; display: inline-block; }
         .badge-green { background: #d1fae5; color: #065f46; }
         .badge-blue { background: #dbeafe; color: #1e40af; }
         .badge-gray { background: #f1f5f9; color: #475569; }
 
-        .btn-primary {
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            padding: 10px 18px;
-            border-radius: 6px;
-            font-weight: 600;
-            font-size: 13px;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
+        .btn-primary { background-color: var(--primary); color: white; border: none; padding: 10px 18px; border-radius: 6px; font-weight: 600; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
+        .btn-outline { background: transparent; border: 1px solid var(--border-color); color: var(--text-main); padding: 8px 14px; border-radius: 6px; font-weight: 500; font-size: 13px; cursor: pointer; }
 
-        .btn-outline {
-            background: transparent;
-            border: 1px solid var(--border-color);
-            color: var(--text-main);
-            padding: 8px 14px;
-            border-radius: 6px;
-            font-weight: 500;
-            font-size: 13px;
-            cursor: pointer;
-        }
-
-        .card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 24px;
-            margin-bottom: 20px;
-        }
-
+        .card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 24px; margin-bottom: 20px; }
         .grid-2 { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; }
         .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
         .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
 
         /* MODALES FLOTANTES */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-        }
-        .modal-overlay.active {
-            display: flex;
-        }
-        .modal-content {
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            width: 600px;
-            max-width: 90%;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 1000; }
+        .modal-overlay.active { display: flex; }
+        .modal-content { background: white; padding: 30px; border-radius: 12px; width: 600px; max-width: 90%; max-height: 90vh; overflow-y: auto; }
 
         /* ESTILOS ESPECÍFICOS TRL LINEAL */
-        .trl-step-card {
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            padding: 18px;
-            margin-bottom: 16px;
-            background: #ffffff;
-            transition: all 0.2s ease;
-        }
-        .trl-step-card.completed {
-            border-color: #10b981;
-            background-color: #f0fdf4;
-        }
-        .trl-step-card.current {
-            border-color: var(--primary);
-            box-shadow: 0 4px 12px rgba(23, 56, 109, 0.08);
-        }
-        .trl-step-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-        .evidence-upload-zone {
-            margin-top: 12px;
-            padding: 12px;
-            background: #f8fafc;
-            border: 1px dashed var(--border-color);
-            border-radius: 8px;
-        }
+        .trl-step-card { border: 1px solid var(--border-color); border-radius: 10px; padding: 18px; margin-bottom: 16px; background: #ffffff; transition: all 0.2s ease; }
+        .trl-step-card.completed { border-color: #10b981; background-color: #f0fdf4; }
+        .trl-step-card.current { border-color: var(--primary); box-shadow: 0 4px 12px rgba(23, 56, 109, 0.08); }
+        .trl-step-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .evidence-upload-zone { margin-top: 12px; padding: 12px; background: #f8fafc; border: 1px dashed var(--border-color); border-radius: 8px; }
 
-        .kpi-container {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 16px;
-            margin-bottom: 24px;
-        }
+        .kpi-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
+        .kpi-card { background: white; border: 1px solid var(--border-color); border-radius: 10px; padding: 20px; display: flex; align-items: center; justify-content: space-between; }
+        .kpi-value { font-size: 32px; font-weight: 800; color: var(--primary); font-family: var(--font-mono); }
+        .kpi-label { font-size: 11px; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.5px; font-family: var(--font-mono); }
 
-        .kpi-card {
-            background: white;
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            padding: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
+        .startup-img-preview { width: 100%; height: 140px; object-fit: cover; border-radius: 8px; margin-bottom: 12px; }
 
-        .kpi-value {
-            font-size: 32px;
-            font-weight: 800;
-            color: var(--primary);
-            font-family: var(--font-mono);
-        }
+        .filter-pill { padding: 6px 14px; border-radius: 20px; border: 1px solid var(--border-color); background: white; font-size: 12px; cursor: pointer; font-weight: 500; }
+        .filter-pill.active { background: var(--primary); color: white; border-color: var(--primary); }
 
-        .kpi-label {
-            font-size: 11px;
-            text-transform: uppercase;
-            color: var(--text-muted);
-            letter-spacing: 0.5px;
-            font-family: var(--font-mono);
-        }
+        .trl-gauge-card { background: #1e293b; color: white; border-radius: 12px; padding: 24px; text-align: center; position: sticky; top: 80px; }
+        .trl-circle { width: 120px; height: 120px; border-radius: 50%; border: 8px solid #10b981; display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 20px auto; }
 
-        .startup-img-preview {
-            width: 100%;
-            height: 140px;
-            object-fit: cover;
-            border-radius: 8px;
-            margin-bottom: 12px;
-        }
+        .rubro-card { border: 1px solid var(--border-color); border-radius: 8px; padding: 20px; text-align: center; cursor: pointer; transition: all 0.2s; background: white; }
+        .rubro-card:hover, .rubro-card.selected { border-color: var(--primary); background-color: #f8fafc; box-shadow: 0 2px 8px rgba(23, 56, 109, 0.08); }
+        .rubro-card.selected { border-width: 2px; }
 
-        .filter-pill {
-            padding: 6px 14px;
-            border-radius: 20px;
-            border: 1px solid var(--border-color);
-            background: white;
-            font-size: 12px;
-            cursor: pointer;
-            font-weight: 500;
-        }
-
-        .filter-pill.active {
-            background: var(--primary);
-            color: white;
-            border-color: var(--primary);
-        }
-
-        .trl-gauge-card {
-            background: #1e293b;
-            color: white;
-            border-radius: 12px;
-            padding: 24px;
-            text-align: center;
-            position: sticky;
-            top: 80px;
-        }
-
-        .trl-circle {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            border: 8px solid #10b981;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            margin: 20px auto;
-        }
-
-        .rubro-card {
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 20px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.2s;
-            background: white;
-        }
-
-        .rubro-card:hover, .rubro-card.selected {
-            border-color: var(--primary);
-            background-color: #f8fafc;
-            box-shadow: 0 2px 8px rgba(23, 56, 109, 0.08);
-        }
-
-        .rubro-card.selected {
-            border-width: 2px;
-        }
-
-        textarea, input[type="text"], select {
-            width: 100%;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 12px;
-            font-family: inherit;
-            font-size: 13px;
-            outline: none;
-            background: #fff;
-        }
-
-        textarea:focus, input:focus, select:focus {
-            border-color: var(--primary);
-        }
+        textarea, input[type="text"], select { width: 100%; border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; font-family: inherit; font-size: 13px; outline: none; background: #fff; }
+        textarea:focus, input:focus, select:focus { border-color: var(--primary); }
 
         /* FOOTER IMPACTO REGIONAL */
-        .footer-banner {
-            background-color: var(--primary-accent);
-            color: white;
-            border-radius: 12px;
-            padding: 24px 32px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-top: 30px;
-        }
-
-        .metric-group {
-            display: flex;
-            gap: 40px;
-        }
-
-        .metric-item {
-            border-left: 2px solid rgba(255,255,255,0.2);
-            padding-left: 16px;
-        }
-
-        .metric-val {
-            font-size: 28px;
-            font-weight: 800;
-            font-family: var(--font-mono);
-        }
-
-        .metric-lbl {
-            font-size: 11px;
-            opacity: 0.7;
-            text-transform: uppercase;
-        }
+        .footer-banner { background-color: var(--primary-accent); color: white; border-radius: 12px; padding: 24px 32px; display: flex; align-items: center; justify-content: space-between; margin-top: 30px; }
+        .metric-group { display: flex; gap: 40px; }
+        .metric-item { border-left: 2px solid rgba(255,255,255,0.2); padding-left: 16px; }
+        .metric-val { font-size: 28px; font-weight: 800; font-family: var(--font-mono); }
+        .metric-lbl { font-size: 11px; opacity: 0.7; text-transform: uppercase; }
         
         /* ESTILO PARA EL TEXTO DE CARGANDO */
-        .loader-text {
-            font-size: 12px;
-            color: var(--green-accent);
-            font-weight: bold;
-            margin-right: 10px;
-            display: none;
-        }
+        .loader-text { font-size: 12px; color: var(--green-accent); font-weight: bold; margin-right: 10px; display: none; }
     </style>
 </head>
 <body>
@@ -518,8 +144,9 @@
                 <li class="nav-item" onclick="switchView('view-desafio', this)">
                     <i data-lucide="factory"></i> Desafíos Industria
                 </li>
-                <li class="nav-item" onclick="switchView('view-otl', this)">
-                    <i data-lucide="award"></i> OTL (Oficina Transferencia)
+                <!-- AQUI SE ACTUALIZÓ A IES -->
+                <li class="nav-item" onclick="switchView('view-ies', this)">
+                    <i data-lucide="graduation-cap"></i> IES (Universidades)
                 </li>
                 <li class="nav-item" onclick="switchView('view-mensajeria', this)">
                     <i data-lucide="message-square"></i> Mensajería
@@ -713,7 +340,7 @@
                     </button>
                 </div>
 
-                <!-- FILTROS ACTUALIZADOS CON TODOS LOS SECTORES -->
+                <!-- FILTROS -->
                 <div style="display: flex; gap: 10px; margin-bottom: 24px; overflow-x: auto; padding-bottom: 8px;">
                     <button class="filter-pill active" onclick="filtrarStartups('Todos', this)">Todos los Proyectos</button>
                     <button class="filter-pill" onclick="filtrarStartups('Agroindustria', this)">Agroindustria</button>
@@ -727,7 +354,7 @@
                     <button class="filter-pill" onclick="filtrarStartups('Pesca y Acuicultura', this)">Pesca y Acuicultura</button>
                 </div>
 
-                <!-- Contenedor vacío. Se llenará dinámicamente con JavaScript al cargar -->
+                <!-- Contenedor Startups -->
                 <div id="lista-startups" class="grid-3">
                 </div>
             </section>
@@ -737,12 +364,12 @@
                 <div style="margin-bottom: 16px;">
                     <span class="badge badge-green">MEDICIÓN Y EVIDENCIAS DE MADUREZ</span>
                     <h1 style="font-size: 24px; font-weight: 700; margin-top: 4px;">Evaluación Lineal TRL (Nivel 1 al 9)</h1>
-                    <p style="font-size: 13px; color: var(--text-muted);">Selecciona tu startup, carga las evidencias requeridas para cada nivel y valida en secuencia lineal el TRL verificado.</p>
+                    <p style="font-size: 13px; color: var(--text-muted);">Selecciona tu startup o proyecto, carga las evidencias requeridas para cada nivel y valida en secuencia lineal el TRL verificado.</p>
                 </div>
 
                 <!-- Seleccionar empresa registrada -->
                 <div class="card" style="margin-bottom: 24px;">
-                    <label style="font-size: 13px; font-weight: 600; display: block; margin-bottom: 8px;">Seleccionar Startup para Evaluación TRL:</label>
+                    <label style="font-size: 13px; font-weight: 600; display: block; margin-bottom: 8px;">Seleccionar Startup/IES para Evaluación TRL:</label>
                     <select id="select-empresa-trl" onchange="cargarEmpresaTRLLineal(this.value)">
                         <option value="">-- Seleccione un proyecto registrado --</option>
                     </select>
@@ -752,10 +379,9 @@
                     <!-- CUESTIONARIO LINEAL DEL TRL 1 AL 9 -->
                     <div>
                         <div class="card">
-                            <h3 id="trl-empresa-titulo-lineal" style="font-size: 16px; margin-bottom: 4px;">Seleccione una Startup</h3>
+                            <h3 id="trl-empresa-titulo-lineal" style="font-size: 16px; margin-bottom: 4px;">Seleccione un Proyecto</h3>
                             <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 20px;">Para consolidar cada nivel, debes marcar el cumplimiento e ingresar las evidencias que acrediten el estado.</p>
 
-                            <!-- CONTENEDOR GENERADO POR JS CON LOS 9 NIVELES -->
                             <div id="cuestionario-lineal-container"></div>
                         </div>
                     </div>
@@ -792,7 +418,6 @@
                 <div class="card">
                     <h3 style="font-size: 14px; margin-bottom: 12px; font-family: var(--font-mono); color: var(--primary);">Rubro de la Empresa</h3>
                     
-                    <!-- Cuadrícula 3x3 con los 9 rubros -->
                     <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px;">
                         <div class="rubro-card selected" onclick="selectRubro(this)">
                             <i data-lucide="tractor" size="24" style="margin-bottom: 8px; color: var(--primary)"></i>
@@ -853,37 +478,32 @@
                 </div>
             </section>
 
-            <!-- PANTALLA 5: OTL -->
-            <section id="view-otl" class="view-section">
+            <!-- PANTALLA 5: IES (Capacidades Universitarias) -->
+            <section id="view-ies" class="view-section">
                 <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px;">
                     <div>
-                        <span class="badge badge-blue" style="margin-bottom: 6px;">VINCULACIÓN ACADÉMICA</span>
-                        <h1 style="font-size: 24px; font-weight: 700;">Oficina de Transferencia y Licenciamiento (OTL)</h1>
-                        <p style="color: var(--text-muted); font-size: 13px; margin-top: 4px;">Espacio exclusivo para que las OTL publiquen noticias, boletines y su oferta tecnológica e innovación.</p>
+                        <span class="badge badge-blue" style="margin-bottom: 6px;">OFERTA TECNOLÓGICA ACADÉMICA</span>
+                        <h1 style="font-size: 24px; font-weight: 700;">Instituciones de Educación Superior (IES)</h1>
+                        <p style="color: var(--text-muted); font-size: 13px; margin-top: 4px;">Capacidades, investigaciones y tecnologías desarrolladas por las universidades de la región.</p>
                     </div>
-                    <button class="btn-primary" onclick="openModal('modal-publicar-otl')">
-                        <i data-lucide="plus" size="16"></i> Subir Noticia / Oferta OTL
-                    </button>
                 </div>
 
-                <div class="grid-2">
-                    <div>
-                        <h3 style="font-size: 16px; margin-bottom: 14px;">Noticias y Novedades OTL</h3>
-                        <div class="card">
-                            <span class="badge badge-gray">BOLETÍN OFICIAL</span>
-                            <h4 style="font-size: 15px; margin-top: 6px;">Nueva Cartera de Patentes Universitarias en Biotecnología</h4>
-                            <p style="font-size: 12px; color: var(--text-muted); margin: 6px 0;">La red de OTL regionales abre convocatoria para licenciar tecnologías de valorización de residuos industriales.</p>
-                            <div style="font-size: 11px; font-family: var(--font-mono); color: var(--primary); margin-top: 10px;">📄 Oferta_Tecnologica_OTL_2026.pdf (Descargable)</div>
-                        </div>
-                    </div>
-                    <div>
-                        <h3 style="font-size: 16px; margin-bottom: 14px;">Directorio de Oferta Tecnológica</h3>
-                        <div class="card" style="background: var(--primary); color: white;">
-                            <h4 style="font-size: 14px; margin-bottom: 8px;">Conexión Directa Academia-Empresa</h4>
-                            <p style="font-size: 12px; opacity: 0.8; margin-bottom: 14px;">Accede a los portafolios completos validados por las oficinas de transferencia de la región del Biobío.</p>
-                            <button class="btn-primary" style="background: white; color: var(--primary);" onclick="alert('Iniciando descarga del Dossier OTL...')">Descargar Dossier Completo</button>
-                        </div>
-                    </div>
+                <!-- FILTROS IES -->
+                <div style="display: flex; gap: 10px; margin-bottom: 24px; overflow-x: auto; padding-bottom: 8px;">
+                    <button class="filter-pill active" id="btn-ies-todos" onclick="filtrarIES('Todos', this)">Todas las Capacidades</button>
+                    <button class="filter-pill" onclick="filtrarIES('Agroindustria', this)">Agroindustria</button>
+                    <button class="filter-pill" onclick="filtrarIES('Manufactura', this)">Manufactura</button>
+                    <button class="filter-pill" onclick="filtrarIES('Energía', this)">Energía</button>
+                    <button class="filter-pill" onclick="filtrarIES('Logística', this)">Logística</button>
+                    <button class="filter-pill" onclick="filtrarIES('Agua y Sanitario', this)">Agua y Sanitario</button>
+                    <button class="filter-pill" onclick="filtrarIES('Alimentos', this)">Alimentos</button>
+                    <button class="filter-pill" onclick="filtrarIES('Salud', this)">Salud</button>
+                    <button class="filter-pill" onclick="filtrarIES('Forestal', this)">Forestal</button>
+                    <button class="filter-pill" onclick="filtrarIES('Pesca y Acuicultura', this)">Pesca y Acuicultura</button>
+                </div>
+
+                <!-- Contenedor de Universidades -->
+                <div id="lista-ies" class="grid-3">
                 </div>
             </section>
 
@@ -906,7 +526,7 @@
                 </div>
                 <div class="metric-group">
                     <div class="metric-item">
-                        <div class="metric-val">1,248</div>
+                        <div class="metric-val" id="footer-metric-proyectos">1,248</div>
                         <div class="metric-lbl">Proyectos Activos</div>
                     </div>
                     <div class="metric-item">
@@ -1007,32 +627,8 @@
         </div>
     </div>
 
-    <!-- MODAL: PUBLICAR NOTICIA OTL -->
-    <div id="modal-publicar-otl" class="modal-overlay">
-        <div class="modal-content">
-            <h2 style="font-size: 18px; margin-bottom: 16px; color: var(--primary);">Subir Noticia o Portafolio OTL</h2>
-            <form onsubmit="guardarNoticiaOTL(event)">
-                <div style="margin-bottom: 14px;">
-                    <label style="font-size: 12px; font-weight: 600;">Título de la Publicación:</label>
-                    <input type="text" required placeholder="ej. Nuevo desarrollo patentado en materiales avanzados">
-                </div>
-                <div style="margin-bottom: 14px;">
-                    <label style="font-size: 12px; font-weight: 600;">Resumen o Noticia:</label>
-                    <textarea required placeholder="Contenido informativo para las empresas del ecosistema..." style="height: 80px;"></textarea>
-                </div>
-                <div style="margin-bottom: 20px;">
-                    <label style="font-size: 12px; font-weight: 600;">Adjuntar Archivo PDF de Oferta Tecnológica:</label>
-                    <input type="file" accept=".pdf" style="border:none; padding:4px 0;">
-                </div>
-                <div style="display: flex; justify-content: flex-end; gap: 10px;">
-                    <button type="button" class="btn-outline" onclick="closeModal('modal-publicar-otl')">Cancelar</button>
-                    <button type="submit" class="btn-primary">Publicar en OTL</button>
-                </div>
-            </form>
-        </div>
-    </div>
 
-    <!-- JAVASCRIPT Y LÓGICA LINEAL TRL -->
+    <!-- JAVASCRIPT Y LÓGICA DE DATOS -->
     <script>
         lucide.createIcons();
 
@@ -1043,7 +639,6 @@
         const CSV_STARTUPS = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ9bjV9qSRsPyVgCceJH3oKnkmMkJ2kd_aIE-FEQcUXhd7Tdo_BnRsMLtfSe7CMCETDOn5Il4kmfD5n/pub?gid=174902125&single=true&output=csv";
         const CSV_DESAFIOS = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ9bjV9qSRsPyVgCceJH3oKnkmMkJ2kd_aIE-FEQcUXhd7Tdo_BnRsMLtfSe7CMCETDOn5Il4kmfD5n/pub?gid=1430585904&single=true&output=csv";
 
-        // Estructura oficial TRL 1 al 9
         const trlDefinitions = [
             { level: 1, title: "TRL 1: Principios básicos observados", desc: "Investigación científica inicial y observation de principios teóricos fundamentales." },
             { level: 2, title: "TRL 2: Concepto tecnológico formulado", desc: "Formulación teórica del concepto tecnológico o aplicación práctica." },
@@ -1177,7 +772,6 @@
                     const filas = results.data;
                     for(let i = 1; i < filas.length; i++) {
                         if(filas[i].length >= 5 && filas[i][1]) {
-                            // Evitar duplicados si ya está en la lista inicial
                             if(!startupsRegistry.find(s => s.nombre === filas[i][1])) {
                                 startupsRegistry.push({
                                     nombre: filas[i][1],
@@ -1192,10 +786,14 @@
                             }
                         }
                     }
-                    actualizarListasStartups();
-                    document.getElementById('kpi-proyectos').innerText = startupsRegistry.length;
                     
-                    // Asegurarnos de que el select del TRL se actualice también
+                    // Actualizar ambas pantallas
+                    actualizarListasStartups();
+                    actualizarListasIES();
+                    
+                    document.getElementById('kpi-proyectos').innerText = startupsRegistry.length;
+                    document.getElementById('footer-metric-proyectos').innerText = startupsRegistry.length;
+                    
                     const selectTrl = document.getElementById('select-empresa-trl');
                     selectTrl.innerHTML = `<option value="">-- Seleccione un proyecto registrado --</option>`;
                     startupsRegistry.forEach(s => {
@@ -1210,7 +808,7 @@
                 complete: function(results) {
                     const filas = results.data;
                     const contenedor = document.getElementById('lista-desafios-dashboard');
-                    contenedor.innerHTML = ''; // Limpiamos los ejemplos manuales
+                    contenedor.innerHTML = ''; 
                     let conteo = 0;
 
                     for(let i = 1; i < filas.length; i++) {
@@ -1227,14 +825,13 @@
                     }
                     if(conteo === 0) contenedor.innerHTML = '<p style="font-size:12px;">No hay desafíos registrados en la hoja aún.</p>';
                     document.getElementById('kpi-desafios').innerText = conteo;
-                    
                     document.getElementById('sync-status').innerText = "(Sincronizado ✔)";
                 }
             });
         }
 
         // ==========================================
-        // FUNCIONES DE GUARDADO (HACIA GOOGLE SHEETS)
+        // FUNCIONES DE GUARDADO
         // ==========================================
         function registrarNuevoDesarrollo(event) {
             event.preventDefault();
@@ -1253,7 +850,7 @@
                 alert("¡Desarrollo guardado exitosamente en tu Base de Datos!");
                 document.getElementById('loader-startup').style.display = 'none';
                 closeModal('modal-subir-desarrollo');
-                cargarDatosDesdeSheets(); // Recargamos para que aparezca al instante
+                cargarDatosDesdeSheets();
             })
             .catch(error => {
                 alert("Hubo un error de conexión.");
@@ -1286,7 +883,7 @@
         }
 
         // ==========================================
-        // FUNCIONES VISUALES (INTERFAZ ORIGINAL)
+        // FUNCIONES VISUALES E INTERFAZ
         // ==========================================
         function switchView(viewId, element = null) {
             document.querySelectorAll('.view-section').forEach(section => section.classList.remove('active'));
@@ -1313,7 +910,85 @@
             element.classList.add('selected');
         }
 
-        // Renderizar el cuestionario lineal TRL 1-9
+        // ==========================================
+        // DIBUJAR Y FILTRAR TARJETAS SEPARADAS
+        // ==========================================
+        
+        // 1. Dibuja SOLO STARTUPS
+        function actualizarListasStartups(filtro = 'Todos') {
+            const contenedor = document.getElementById('lista-startups');
+            contenedor.innerHTML = '';
+            
+            let startups = startupsRegistry.filter(s => s.tipo === 'Startup' || s.tipo === 'STARTUP');
+            if(filtro !== 'Todos') startups = startups.filter(s => s.industria === filtro);
+            
+            if(startups.length === 0) {
+                contenedor.innerHTML = '<p style="font-size: 13px; color: gray;">No hay Startups en esta industria.</p>';
+                return;
+            }
+
+            startups.forEach(s => {
+                contenedor.innerHTML += `
+                    <div class="card">
+                        <span class="badge badge-green" style="margin-bottom: 8px;">STARTUP</span>
+                        <h4 style="font-size: 15px;">${s.nombre}</h4>
+                        <p style="font-size: 11px; color: var(--text-muted); margin: 4px 0 10px 0;">Contacto: ${s.contacto || 'No disponible'}</p>
+                        <p style="font-size: 12px; color: var(--text-muted);"><b>Qué hacemos:</b> ${s.queHace}</p>
+                        <p style="font-size: 12px; color: var(--text-muted); margin-top:4px;"><b>Industria:</b> ${s.industria}</p>
+                        <div style="margin-top: 14px; font-weight: 600; font-size: 12px; color: var(--primary);">TRL Validado: ${s.trlMax}</div>
+                    </div>
+                `;
+            });
+            lucide.createIcons();
+        }
+
+        // 2. Dibuja SOLO IES / UNIVERSIDADES
+        function actualizarListasIES(filtro = 'Todos') {
+            const contenedor = document.getElementById('lista-ies');
+            contenedor.innerHTML = '';
+            
+            let universidades = startupsRegistry.filter(s => s.tipo === 'Universidad' || s.tipo === 'UNIVERSIDAD');
+            if(filtro !== 'Todos') universidades = universidades.filter(s => s.industria === filtro);
+            
+            if(universidades.length === 0) {
+                contenedor.innerHTML = '<p style="font-size: 13px; color: gray;">No hay capacidades universitarias en esta industria.</p>';
+                return;
+            }
+
+            universidades.forEach(s => {
+                contenedor.innerHTML += `
+                    <div class="card">
+                        <span class="badge badge-blue" style="margin-bottom: 8px;">IES / UNIVERSIDAD</span>
+                        <h4 style="font-size: 15px;">${s.nombre}</h4>
+                        <p style="font-size: 11px; color: var(--text-muted); margin: 4px 0 10px 0;">Contacto OTL: ${s.contacto || 'No disponible'}</p>
+                        <p style="font-size: 12px; color: var(--text-muted);"><b>Capacidad / Proyecto:</b> ${s.queHace}</p>
+                        <p style="font-size: 12px; color: var(--text-muted); margin-top:4px;"><b>Industria:</b> ${s.industria}</p>
+                        <div style="margin-top: 14px; font-weight: 600; font-size: 12px; color: var(--primary);">TRL Validado: ${s.trlMax}</div>
+                    </div>
+                `;
+            });
+            lucide.createIcons();
+        }
+
+        // Filtro para botones Startups
+        function filtrarStartups(industria, btnElement) {
+            const botones = document.getElementById('view-repositorio').querySelectorAll('.filter-pill');
+            botones.forEach(btn => btn.classList.remove('active'));
+            btnElement.classList.add('active');
+            actualizarListasStartups(industria);
+        }
+
+        // Filtro para botones IES
+        function filtrarIES(industria, btnElement) {
+            const botones = document.getElementById('view-ies').querySelectorAll('.filter-pill');
+            botones.forEach(btn => btn.classList.remove('active'));
+            btnElement.classList.add('active');
+            actualizarListasIES(industria);
+        }
+
+        // ==========================================
+        // CUESTIONARIO TRL
+        // ==========================================
         function renderizarCuestionarioTRLLineal() {
             const container = document.getElementById('cuestionario-lineal-container');
             container.innerHTML = '';
@@ -1337,8 +1012,6 @@
                                 onchange="actualizarEstadoTRLLineal(${step.level}, this.checked)">
                         </div>
                         <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px;">${step.desc}</p>
-
-                        <!-- Zona de Carga de Indicios y Evidencias -->
                         <div class="evidence-upload-zone">
                             <div style="display: flex; justify-content: space-between; align-items: center;">
                                 <span style="font-size: 11px; font-weight: 600; color: var(--text-main);">
@@ -1361,7 +1034,7 @@
             empresaSeleccionadaActual = startupsRegistry.find(s => s.nombre === nombre) || null;
             document.getElementById('trl-empresa-titulo-lineal').innerText = empresaSeleccionadaActual 
                 ? `Evaluación de: ${empresaSeleccionadaActual.nombre}` 
-                : "Seleccione una Startup";
+                : "Seleccione un Proyecto";
             renderizarCuestionarioTRLLineal();
         }
 
@@ -1371,7 +1044,6 @@
                 renderizarCuestionarioTRLLineal();
                 return;
             }
-
             if(checked) {
                 empresaSeleccionadaActual.trlMax = Math.max(empresaSeleccionadaActual.trlMax, level);
             } else {
@@ -1398,7 +1070,6 @@
         function actualizarResumenTRLLineal() {
             const trlActual = empresaSeleccionadaActual ? empresaSeleccionadaActual.trlMax : 1;
             document.getElementById('trl-score-num').innerText = trlActual;
-            
             const defActual = trlDefinitions.find(t => t.level === trlActual);
             document.getElementById('trl-score-label').innerText = defActual ? defActual.title.split(':')[1] : '';
 
@@ -1418,66 +1089,13 @@
             });
         }
 
-        function actualizarListasStartups() {
-            const contenedor = document.getElementById('lista-startups');
-            contenedor.innerHTML = '';
-            startupsRegistry.forEach(s => {
-                contenedor.innerHTML += `
-                    <div class="card">
-                        <span class="badge ${s.tipo === 'Universidad' ? 'badge-blue' : 'badge-green'}" style="margin-bottom: 8px;">${s.tipo ? s.tipo.toUpperCase() : 'STARTUP'}</span>
-                        <h4 style="font-size: 15px;">${s.nombre}</h4>
-                        <p style="font-size: 11px; color: var(--text-muted); margin: 4px 0 10px 0;">Contacto: ${s.contacto}</p>
-                        <p style="font-size: 12px; color: var(--text-muted);"><b>Qué hacemos:</b> ${s.queHace}</p>
-                        <p style="font-size: 12px; color: var(--text-muted); margin-top:4px;"><b>Industria:</b> ${s.industria}</p>
-                        <div style="margin-top: 14px; font-weight: 600; font-size: 12px; color: var(--primary);">TRL Validado: ${s.trlMax}</div>
-                    </div>
-                `;
-            });
-            lucide.createIcons();
-        }
-
         function encontrarSolucionesEjemplo() {
             const descripcion = document.getElementById('input-descripcion-desafio').value;
             const boxResultado = document.getElementById('resultado-soluciones-ejemplo');
             const textoSolucion = document.getElementById('texto-solucion-generada');
-            
             boxResultado.style.display = 'block';
             textoSolucion.innerHTML = `Basado en el desafío ingresado ("<i>${descripcion || 'Optimización sectorial'}</i>"), la Mesa de Innovación CIDERE identificó opciones relevantes en el ecosistema para vinculación directa.`;
             lucide.createIcons();
-        }
-
-        function guardarNoticiaOTL(event) {
-            event.preventDefault();
-            closeModal('modal-publicar-otl');
-            alert("¡Noticia y portafolio PDF subido con éxito a la OTL!");
-        }
-
-        function filtrarStartups(industria, btnElement) {
-            document.querySelectorAll('.filter-pill').forEach(btn => btn.classList.remove('active'));
-            btnElement.classList.add('active');
-
-            const contenedor = document.getElementById('lista-startups');
-            contenedor.innerHTML = '';
-            
-            const filtradas = industria === 'Todos' ? startupsRegistry : startupsRegistry.filter(s => s.industria === industria);
-            
-            if(filtradas.length === 0) {
-                contenedor.innerHTML = '<p style="color: var(--text-muted); font-size: 13px;">No hay startups registradas en esta industria aún.</p>';
-                return;
-            }
-
-            filtradas.forEach(s => {
-                contenedor.innerHTML += `
-                    <div class="card">
-                        <span class="badge ${s.tipo === 'Universidad' ? 'badge-blue' : 'badge-green'}" style="margin-bottom: 8px;">${s.tipo ? s.tipo.toUpperCase() : 'STARTUP'}</span>
-                        <h4 style="font-size: 15px;">${s.nombre}</h4>
-                        <p style="font-size: 11px; color: var(--text-muted); margin: 4px 0 10px 0;">Contacto: ${s.contacto}</p>
-                        <p style="font-size: 12px; color: var(--text-muted);"><b>Qué hacemos:</b> ${s.queHace}</p>
-                        <p style="font-size: 12px; color: var(--text-muted); margin-top:4px;"><b>Industria:</b> ${s.industria}</p>
-                        <div style="margin-top: 14px; font-weight: 600; font-size: 12px; color: var(--primary);">TRL Validado: ${s.trlMax}</div>
-                    </div>
-                `;
-            });
         }
 
         // ==========================================
@@ -1485,8 +1103,9 @@
         // ==========================================
         window.onload = function() {
             renderizarCuestionarioTRLLineal();
-            actualizarListasStartups(); // Carga la lista inicial
-            cargarDatosDesdeSheets(); // Va a buscar si hay datos nuevos en el Excel
+            actualizarListasStartups(); // Dibuja las startups
+            actualizarListasIES();      // Dibuja las universidades
+            cargarDatosDesdeSheets();   // Va a buscar los datos nuevos
         };
     </script>
 </body>
