@@ -4,11 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Plataforma CIDERE Biobío - MVP Interactivo</title>
-    <!-- Fuentes e Iconos de Lucide -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
-    
-    <!-- LIBRERÍA AGREGADA PARA LEER EXCEL EN TIEMPO REAL -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 
     <style>
@@ -59,13 +56,11 @@
         .user-profile { display: flex; align-items: center; gap: 12px; padding-left: 16px; border-left: 1px solid var(--border-color); }
         .avatar { width: 36px; height: 36px; border-radius: 50%; background-color: #ccc; object-fit: cover; }
 
-        /* CONTENEDOR DE VISTAS */
         .content-container { padding: 32px; max-width: 1280px; margin: 0 auto; width: 100%; }
         .view-section { display: none; }
         .view-section.active { display: block; animation: fadeIn 0.25s ease-in-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* COMPONENTES REUTILIZABLES */
         .badge { font-family: var(--font-mono); font-size: 10px; padding: 3px 8px; border-radius: 4px; font-weight: 600; text-transform: uppercase; display: inline-block; }
         .badge-green { background: #d1fae5; color: #065f46; }
         .badge-blue { background: #dbeafe; color: #1e40af; }
@@ -79,15 +74,12 @@
         .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
         .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
 
-        /* MODALES FLOTANTES */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 1000; }
         .modal-overlay.active { display: flex; }
         .modal-content { background: white; padding: 30px; border-radius: 12px; width: 600px; max-width: 90%; max-height: 90vh; overflow-y: auto; }
 
-        /* ESTILOS ESPECÍFICOS TRL LINEAL */
         .trl-step-card { border: 1px solid var(--border-color); border-radius: 10px; padding: 18px; margin-bottom: 16px; background: #ffffff; transition: all 0.2s ease; }
         .trl-step-card.completed { border-color: #10b981; background-color: #f0fdf4; }
-        .trl-step-card.current { border-color: var(--primary); box-shadow: 0 4px 12px rgba(23, 56, 109, 0.08); }
         .trl-step-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
         .evidence-upload-zone { margin-top: 12px; padding: 12px; background: #f8fafc; border: 1px dashed var(--border-color); border-radius: 8px; }
 
@@ -111,14 +103,12 @@
         textarea, input[type="text"], select { width: 100%; border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; font-family: inherit; font-size: 13px; outline: none; background: #fff; }
         textarea:focus, input:focus, select:focus { border-color: var(--primary); }
 
-        /* FOOTER IMPACTO REGIONAL */
         .footer-banner { background-color: var(--primary-accent); color: white; border-radius: 12px; padding: 24px 32px; display: flex; align-items: center; justify-content: space-between; margin-top: 30px; }
         .metric-group { display: flex; gap: 40px; }
         .metric-item { border-left: 2px solid rgba(255,255,255,0.2); padding-left: 16px; }
         .metric-val { font-size: 28px; font-weight: 800; font-family: var(--font-mono); }
         .metric-lbl { font-size: 11px; opacity: 0.7; text-transform: uppercase; }
         
-        /* ESTILO PARA EL TEXTO DE CARGANDO */
         .loader-text { font-size: 12px; color: var(--green-accent); font-weight: bold; margin-right: 10px; display: none; }
     </style>
 </head>
@@ -160,7 +150,7 @@
 
     <!-- CONTENIDO PRINCIPAL -->
     <main>
-        <!-- HEADER TOP CON BUSCADOR DINÁMICO (POR ENTER) -->
+        <!-- HEADER TOP CON BUSCADOR -->
         <header>
             <div class="search-bar">
                 <i data-lucide="search" size="16" style="color: var(--text-muted)"></i>
@@ -182,7 +172,6 @@
             </div>
         </header>
 
-        <!-- SECCIONES / PANTALLAS DE LA APLICACIÓN -->
         <div class="content-container">
 
             <!-- VISTA: MESA DE INNOVACIÓN -->
@@ -193,33 +182,10 @@
                             <span class="badge badge-green" style="background: rgba(16, 185, 129, 0.2); color: #a7f3d0; margin-bottom: 10px;">INSTANCIA ESTRATÉGICA CIDERE BIOBÍO</span>
                             <h1 style="font-size: 28px; font-weight: 800; margin-bottom: 12px;">¿Qué es la Mesa de Innovación?</h1>
                             <p style="font-size: 14px; opacity: 0.9; line-height: 1.6; max-width: 950px;">
-                                La <b>Mesa de Innovación de CIDERE Biobío</b> es el espacio articulador principal del ecosistema regional. Su propósito fundamental es conectar de forma directa los desafíos operacionales y tecnológicos de las empresas socias e industrias de la Región del Biobío con la capacidad de desarrollo, investigación y soluciones de la academia, startups y centros de I+D.
+                                La Mesa de Innovación de CIDERE Biobío conecta los desafíos operacionales de las empresas socias con la capacidad de desarrollo del ecosistema.
                             </p>
                         </div>
                         <i data-lucide="building-2" size="56" style="opacity: 0.35; flex-shrink: 0;"></i>
-                    </div>
-
-                    <div style="margin-top: 28px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.15);">
-                        <h4 style="font-size: 12px; font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 1px; color: #a7f3d0; margin-bottom: 16px;">
-                            Directiva & Comité Ejecutivo de la Mesa
-                        </h4>
-                        <div class="grid-3" style="gap: 16px;">
-                            <div style="background: rgba(255,255,255,0.06); padding: 16px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
-                                <div style="font-size: 14px; font-weight: 700;">Presidencia de la Mesa</div>
-                                <div style="font-size: 12px; opacity: 0.85; margin-top: 4px;">Representante Sector Industrial Regional</div>
-                                <div style="font-size: 11px; color: #a7f3d0; margin-top: 8px; font-family: var(--font-mono);">Liderazgo Estratégico</div>
-                            </div>
-                            <div style="background: rgba(255,255,255,0.06); padding: 16px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
-                                <div style="font-size: 14px; font-weight: 700;">Vicepresidencia Academia</div>
-                                <div style="font-size: 12px; opacity: 0.85; margin-top: 4px;">Representante Red de Universidades</div>
-                                <div style="font-size: 11px; color: #a7f3d0; margin-top: 8px; font-family: var(--font-mono);">Vinculación I+D</div>
-                            </div>
-                            <div style="background: rgba(255,255,255,0.06); padding: 16px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
-                                <div style="font-size: 14px; font-weight: 700;">Secretaría Técnica CIDERE</div>
-                                <div style="font-size: 12px; opacity: 0.85; margin-top: 4px;">Equipo Ejecutivo CIDERE Biobío</div>
-                                <div style="font-size: 11px; color: #a7f3d0; margin-top: 8px; font-family: var(--font-mono);">Coordinación Operativa</div>
-                            </div>
-                        </div>
                     </div>
                 </div>
 
@@ -242,14 +208,14 @@
                 <div class="kpi-container">
                     <div class="kpi-card">
                         <div>
-                            <div class="kpi-label">Proyectos Activos</div>
+                            <div class="kpi-label">Proyectos Aprobados</div>
                             <div class="kpi-value" id="kpi-proyectos">0</div>
                         </div>
                         <i data-lucide="flask-conical" size="32" style="color: var(--primary); opacity: 0.3;"></i>
                     </div>
                     <div class="kpi-card">
                         <div>
-                            <div class="kpi-label">Desafíos Abiertos</div>
+                            <div class="kpi-label">Desafíos Activos</div>
                             <div class="kpi-value" id="kpi-desafios">0</div>
                         </div>
                         <i data-lucide="factory" size="32" style="color: var(--primary); opacity: 0.3;"></i>
@@ -269,9 +235,9 @@
                             <h3 style="font-size: 16px;">Startups Destacadas</h3>
                             <a href="#" onclick="switchView('view-repositorio')" style="color: var(--primary); font-size: 12px; font-weight: 600; text-decoration: none;">Ver Todas</a>
                         </div>
-
+                        
+                        <!-- Tarjetas fijas de ejemplo para diseño (puedes dejarlas o quitarlas luego) -->
                         <div class="card">
-                            <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=600&auto=format&fit=crop&q=80" class="startup-img-preview" alt="Photonics">
                             <span class="badge badge-green">STARTUP</span>
                             <div style="display: flex; justify-content: space-between; margin-top: 8px;">
                                 <h4 style="font-size: 16px;">Lumina Photonics</h4>
@@ -279,22 +245,7 @@
                             </div>
                             <p style="font-size: 13px; color: var(--text-muted); margin: 10px 0;">Desarrollo de interconexiones ópticas para centros de datos a gran escala, reduciendo el consumo energético en un 35%.</p>
                             <div style="display: flex; gap: 10px; margin-top: 16px;">
-                                <button class="btn-outline" onclick="alert('Abriendo presentación Pitch en nueva pestaña...')">Ver Pitch</button>
-                                <button class="btn-primary" style="background-color: var(--green-accent)" onclick="switchView('view-mensajeria')">Solicitar Contacto</button>
-                            </div>
-                        </div>
-
-                        <div class="card">
-                            <img src="https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?w=600&auto=format&fit=crop&q=80" class="startup-img-preview" alt="Biopolymer">
-                            <span class="badge badge-green">STARTUP</span>
-                            <div style="display: flex; justify-content: space-between; margin-top: 8px;">
-                                <h4 style="font-size: 16px;">BioPolymer Solutions</h4>
-                                <span style="font-family: var(--font-mono); font-size: 11px; font-weight: 600; color: var(--text-muted)">Nivel TRL Actual: <b style="color: var(--text-main)">3</b></span>
-                            </div>
-                            <p style="font-size: 13px; color: var(--text-muted); margin: 10px 0;">Alternativas biodegradables de alta resistencia para plásticos industriales utilizando micelio de hongos y rastrojo de madera.</p>
-                            <div style="display: flex; gap: 10px; margin-top: 16px;">
-                                <button class="btn-outline" onclick="alert('Abriendo presentación Pitch en nueva pestaña...')">Ver Pitch</button>
-                                <button class="btn-primary" style="background-color: var(--green-accent)" onclick="switchView('view-mensajeria')">Solicitar Contacto</button>
+                                <button class="btn-primary" style="background-color: var(--green-accent)" onclick="solicitarContactoReal('contacto@luminaphotonics.cl', 'Lumina Photonics')">Solicitar Contacto</button>
                             </div>
                         </div>
                     </div>
@@ -302,22 +253,13 @@
                     <div>
                         <div class="card" style="background: var(--primary); color: white;">
                             <h3 style="font-size: 15px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
-                                <i data-lucide="factory" size="18"></i> Desafíos de la Región (Vía Sheets)
+                                <i data-lucide="factory" size="18"></i> Desafíos de la Región
                             </h3>
                             
                             <!-- DIV DONDE SE CARGARÁN LOS DESAFÍOS DEL EXCEL -->
                             <div id="lista-desafios-dashboard">
                                 <!-- Se llena vía script -->
                             </div>
-                        </div>
-
-                        <div class="card">
-                            <h4 style="font-size: 14px; margin-bottom: 12px;">Actividad Reciente</h4>
-                            <ul style="font-size: 12px; color: var(--text-muted); list-style: none; display: flex; flex-direction: column; gap: 10px;">
-                                <li><b>Universidad</b> cargó el prototipo "BioSensor-B".</li>
-                                <li><b>Empresa Regional</b> respondió a su solicitud de vinculación.</li>
-                                <li><b>Nuevo Desafío:</b> Gestión Hídrica Sostenible (Provincia de Arauco).</li>
-                            </ul>
                         </div>
                     </div>
                 </div>
@@ -357,48 +299,33 @@
                 </div>
             </section>
 
-            <!-- PANTALLA 3: DIAGNÓSTICO TRL LINEAL CON EVIDENCIAS -->
+            <!-- PANTALLA 3: DIAGNÓSTICO TRL -->
             <section id="view-ficha" class="view-section">
                 <div style="margin-bottom: 16px;">
                     <span class="badge badge-green">MEDICIÓN Y EVIDENCIAS DE MADUREZ</span>
                     <h1 style="font-size: 24px; font-weight: 700; margin-top: 4px;">Evaluación Lineal TRL (Nivel 1 al 9)</h1>
-                    <p style="font-size: 13px; color: var(--text-muted);">Selecciona tu startup o proyecto, carga las evidencias requeridas para cada nivel y valida en secuencia lineal el TRL verificado.</p>
                 </div>
 
-                <!-- Seleccionar empresa registrada -->
                 <div class="card" style="margin-bottom: 24px;">
-                    <label style="font-size: 13px; font-weight: 600; display: block; margin-bottom: 8px;">Seleccionar Startup/IES para Evaluación TRL:</label>
+                    <label style="font-size: 13px; font-weight: 600; display: block; margin-bottom: 8px;">Seleccionar Startup/IES (Aprobada) para Evaluación:</label>
                     <select id="select-empresa-trl" onchange="cargarEmpresaTRLLineal(this.value)">
                         <option value="">-- Seleccione un proyecto registrado --</option>
                     </select>
                 </div>
 
                 <div class="grid-2">
-                    <!-- CUESTIONARIO LINEAL DEL TRL 1 AL 9 -->
                     <div>
                         <div class="card">
                             <h3 id="trl-empresa-titulo-lineal" style="font-size: 16px; margin-bottom: 4px;">Seleccione un Proyecto</h3>
-                            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 20px;">Para consolidar cada nivel, debes marcar el cumplimiento e ingresar las evidencias que acrediten el estado.</p>
-
                             <div id="cuestionario-lineal-container"></div>
                         </div>
                     </div>
-
-                    <!-- PANEL LATERAL DE INDICADOR TRC / EVIDENCIAS -->
                     <div>
                         <div class="trl-gauge-card">
                             <div style="font-size: 11px; font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 1px;">TRL Lineal Validado</div>
                             <div class="trl-circle">
                                 <span id="trl-score-num" style="font-size: 38px; font-weight: 800;">1</span>
                                 <span id="trl-score-label" style="font-size: 9px; text-transform: uppercase; opacity: 0.8; text-align: center; padding: 0 4px;">INVESTIGACIÓN INICIAL</span>
-                            </div>
-                            <p style="font-size: 11px; opacity: 0.8; margin-top: 8px;" id="trl-evidencias-conteo">Evidencias cargadas: 0 / 9</p>
-                            
-                            <div style="margin-top: 20px; text-align: left; background: rgba(255,255,255,0.05); padding: 12px; border-radius: 8px;">
-                                <div style="font-size: 11px; font-weight: 700; margin-bottom: 6px; color: #a7f3d0;">Línea de Tiempo del Progreso:</div>
-                                <div id="checklist-resumen-trl" style="font-size: 11px; display: flex; flex-direction: column; gap: 4px; opacity: 0.9;">
-                                    <!-- Generado dinámicamente -->
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -410,102 +337,57 @@
                 <div style="margin-bottom: 20px;">
                     <span class="badge badge-green" style="margin-bottom: 6px;">DESAFÍOS REGIONALES</span>
                     <h1 style="font-size: 24px; font-weight: 700;">Planteamiento de Desafío Biobío</h1>
-                    <p style="color: var(--text-muted); font-size: 13px;">Describe tu problemática operativa o tecnológica en la región. CIDERE Biobío conecta tu necesidad con el ecosistema de soluciones locales.</p>
                 </div>
 
                 <div class="card">
                     <h3 style="font-size: 14px; margin-bottom: 12px; font-family: var(--font-mono); color: var(--primary);">Rubro de la Empresa</h3>
                     
                     <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px;">
-                        <div class="rubro-card selected" onclick="selectRubro(this)">
-                            <i data-lucide="tractor" size="24" style="margin-bottom: 8px; color: var(--primary)"></i>
-                            <div style="font-size: 13px; font-weight: 600;">Agroindustria</div>
-                        </div>
-                        <div class="rubro-card" onclick="selectRubro(this)">
-                            <i data-lucide="building-2" size="24" style="margin-bottom: 8px; color: var(--primary)"></i>
-                            <div style="font-size: 13px; font-weight: 600;">Manufactura</div>
-                        </div>
-                        <div class="rubro-card" onclick="selectRubro(this)">
-                            <i data-lucide="zap" size="24" style="margin-bottom: 8px; color: var(--primary)"></i>
-                            <div style="font-size: 13px; font-weight: 600;">Energía</div>
-                        </div>
-                        <div class="rubro-card" onclick="selectRubro(this)">
-                            <i data-lucide="truck" size="24" style="margin-bottom: 8px; color: var(--primary)"></i>
-                            <div style="font-size: 13px; font-weight: 600;">Logística</div>
-                        </div>
-                        <div class="rubro-card" onclick="selectRubro(this)">
-                            <i data-lucide="droplets" size="24" style="margin-bottom: 8px; color: var(--primary)"></i>
-                            <div style="font-size: 13px; font-weight: 600;">Agua y Sanitario</div>
-                        </div>
-                        <div class="rubro-card" onclick="selectRubro(this)">
-                            <i data-lucide="utensils" size="24" style="margin-bottom: 8px; color: var(--primary)"></i>
-                            <div style="font-size: 13px; font-weight: 600;">Alimentos</div>
-                        </div>
-                        <div class="rubro-card" onclick="selectRubro(this)">
-                            <i data-lucide="heart-pulse" size="24" style="margin-bottom: 8px; color: var(--primary)"></i>
-                            <div style="font-size: 13px; font-weight: 600;">Salud</div>
-                        </div>
-                        <div class="rubro-card" onclick="selectRubro(this)">
-                            <i data-lucide="tree-pine" size="24" style="margin-bottom: 8px; color: var(--primary)"></i>
-                            <div style="font-size: 13px; font-weight: 600;">Forestal</div>
-                        </div>
-                        <div class="rubro-card" onclick="selectRubro(this)">
-                            <i data-lucide="fish" size="24" style="margin-bottom: 8px; color: var(--primary)"></i>
-                            <div style="font-size: 13px; font-weight: 600;">Pesca y Acuicultura</div>
-                        </div>
+                        <div class="rubro-card selected" onclick="selectRubro(this)"><div style="font-size: 13px; font-weight: 600;">Agroindustria</div></div>
+                        <div class="rubro-card" onclick="selectRubro(this)"><div style="font-size: 13px; font-weight: 600;">Manufactura</div></div>
+                        <div class="rubro-card" onclick="selectRubro(this)"><div style="font-size: 13px; font-weight: 600;">Energía</div></div>
+                        <div class="rubro-card" onclick="selectRubro(this)"><div style="font-size: 13px; font-weight: 600;">Logística</div></div>
+                        <div class="rubro-card" onclick="selectRubro(this)"><div style="font-size: 13px; font-weight: 600;">Agua y Sanitario</div></div>
+                        <div class="rubro-card" onclick="selectRubro(this)"><div style="font-size: 13px; font-weight: 600;">Alimentos</div></div>
+                        <div class="rubro-card" onclick="selectRubro(this)"><div style="font-size: 13px; font-weight: 600;">Salud</div></div>
+                        <div class="rubro-card" onclick="selectRubro(this)"><div style="font-size: 13px; font-weight: 600;">Forestal</div></div>
+                        <div class="rubro-card" onclick="selectRubro(this)"><div style="font-size: 13px; font-weight: 600;">Minería</div></div>
                     </div>
 
                     <h3 style="font-size: 14px; margin-bottom: 8px; font-family: var(--font-mono); color: var(--primary);">Descripción del Desafío</h3>
-                    <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 8px;">Ejemplo: "Necesitamos optimizar la trazabilidad de la madera en la zona sur para reducir pérdidas logísticas".</p>
-                    
                     <textarea id="input-descripcion-desafio" placeholder="Describe tu necesidad aquí..."></textarea>
 
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border-color);">
-                        <div style="display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text-muted);">
-                            <i data-lucide="shield-check" size="14"></i> Confidencialidad garantizada bajo marco CIDERE
-                        </div>
                         <button class="btn-primary" style="background-color: var(--primary); padding: 12px 24px;" onclick="encontrarSolucionesEjemplo()">
-                            Encontrar Soluciones <i data-lucide="globe" size="14"></i>
+                            Encontrar Soluciones
                         </button>
                     </div>
                 </div>
 
                 <div id="resultado-soluciones-ejemplo" class="card" style="display: none; background: #f0fdf4; border-color: #0f766e;">
-                    <h3 style="font-size: 15px; color: #065f46; margin-bottom: 8px;"><i data-lucide="check-circle" size="16"></i> Soluciones Identificadas en el Ecosistema</h3>
+                    <h3 style="font-size: 15px; color: #065f46; margin-bottom: 8px;">Soluciones Identificadas en el Ecosistema</h3>
                     <p style="font-size: 13px; color: var(--text-main);" id="texto-solucion-generada">Cargando sugerencia...</p>
                 </div>
             </section>
 
-            <!-- PANTALLA 5: IES (Capacidades Universitarias) -->
+            <!-- PANTALLA 5: IES -->
             <section id="view-ies" class="view-section">
                 <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px;">
                     <div>
                         <span class="badge badge-blue" style="margin-bottom: 6px;">OFERTA TECNOLÓGICA ACADÉMICA</span>
                         <h1 style="font-size: 24px; font-weight: 700;">Instituciones de Educación Superior (IES)</h1>
-                        <p style="color: var(--text-muted); font-size: 13px; margin-top: 4px;">Capacidades, investigaciones y tecnologías desarrolladas por las universidades de la región.</p>
                     </div>
                 </div>
 
-                <!-- FILTROS IES -->
                 <div style="display: flex; gap: 10px; margin-bottom: 24px; overflow-x: auto; padding-bottom: 8px;">
-                    <button class="filter-pill active" id="btn-ies-todos" onclick="filtrarIES('Todos', this)">Todas las Capacidades</button>
+                    <button class="filter-pill active" id="btn-ies-todos" onclick="filtrarIES('Todos', this)">Todas</button>
                     <button class="filter-pill" onclick="filtrarIES('Agroindustria', this)">Agroindustria</button>
                     <button class="filter-pill" onclick="filtrarIES('Manufactura', this)">Manufactura</button>
-                    <button class="filter-pill" onclick="filtrarIES('Energía', this)">Energía</button>
-                    <button class="filter-pill" onclick="filtrarIES('Logística', this)">Logística</button>
-                    <button class="filter-pill" onclick="filtrarIES('Agua y Sanitario', this)">Agua y Sanitario</button>
-                    <button class="filter-pill" onclick="filtrarIES('Alimentos', this)">Alimentos</button>
-                    <button class="filter-pill" onclick="filtrarIES('Salud', this)">Salud</button>
-                    <button class="filter-pill" onclick="filtrarIES('Forestal', this)">Forestal</button>
-                    <button class="filter-pill" onclick="filtrarIES('Pesca y Acuicultura', this)">Pesca y Acuicultura</button>
-                    <button class="filter-pill" onclick="filtrarIES('Minería', this)">Minería</button>
                     <button class="filter-pill" onclick="filtrarIES('Tecnología / Software', this)">Tecnología / Software</button>
-                    <button class="filter-pill" onclick="filtrarIES('Servicios B2B', this)">Servicios B2B</button>
+                    <!-- Puedes agregar más botones aquí si lo deseas -->
                 </div>
 
-                <!-- Contenedor de Universidades -->
-                <div id="lista-ies" class="grid-3">
-                </div>
+                <div id="lista-ies" class="grid-3"></div>
             </section>
 
             <!-- PANTALLA 6: MENSAJERÍA -->
@@ -514,32 +396,10 @@
                 <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 24px;">Bandeja de comunicación directa entre Empresas, Startups y la Mesa de Innovación CIDERE.</p>
                 <div class="card" style="text-align: center; padding: 40px;">
                     <i data-lucide="message-square" size="48" style="color: var(--text-muted); opacity: 0.4; margin-bottom: 12px;"></i>
-                    <h3 style="font-size: 16px;">Sin mensajes nuevos</h3>
-                    <p style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">Las interacciones generadas desde "Encontrar Soluciones" o "Solicitar Contacto" aparecerán aquí.</p>
+                    <h3 style="font-size: 16px;">Buzón conectado a Apps Script</h3>
+                    <p style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">Los correos enviados a través de "Solicitar Contacto" son notificados internamente.</p>
                 </div>
             </section>
-
-            <!-- FOOTER COMÚN -->
-            <div class="footer-banner">
-                <div>
-                    <h4 style="font-size: 14px; text-transform: uppercase; font-family: var(--font-mono);">Impacto Regional CIDERE</h4>
-                    <p style="font-size: 12px; opacity: 0.8;">Ecosistema de Innovación de la Región del Biobío</p>
-                </div>
-                <div class="metric-group">
-                    <div class="metric-item">
-                        <div class="metric-val" id="footer-metric-proyectos">0</div>
-                        <div class="metric-lbl">Proyectos Activos</div>
-                    </div>
-                    <div class="metric-item">
-                        <div class="metric-val">84</div>
-                        <div class="metric-lbl">Patentes Biobío</div>
-                    </div>
-                    <div class="metric-item">
-                        <div class="metric-val">312</div>
-                        <div class="metric-lbl">Empresas Socias</div>
-                    </div>
-                </div>
-            </div>
 
         </div>
     </main>
@@ -551,100 +411,77 @@
             <form onsubmit="registrarNuevoDesarrollo(event)">
                 <div style="margin-bottom: 14px;">
                     <label style="font-size: 12px; font-weight: 600;">Datos de Contacto (Email / Teléfono):</label>
-                    <input type="text" id="reg-contacto" required placeholder="ej. contacto@innovabiobiodes.cl">
+                    <input type="text" id="reg-contacto" required>
                 </div>
                 <div style="margin-bottom: 14px;">
                     <label style="font-size: 12px; font-weight: 600;">Nombre de la Startup / Desarrollo:</label>
-                    <input type="text" id="reg-nombre" required placeholder="ej. EcoNano Tech">
+                    <input type="text" id="reg-nombre" required>
                 </div>
                 <div style="margin-bottom: 14px;">
-                    <label style="font-size: 12px; font-weight: 600;">¿Qué hacemos? (Descripción del servicio/producto):</label>
-                    <textarea id="reg-que-hacemos" required placeholder="Describa la solución tecnológica..." style="height: 80px;"></textarea>
+                    <label style="font-size: 12px; font-weight: 600;">¿Qué hacemos?</label>
+                    <textarea id="reg-que-hacemos" required style="height: 80px;"></textarea>
                 </div>
                 <div style="margin-bottom: 14px;">
-                    <label style="font-size: 12px; font-weight: 600;">¿Para quién lo hacemos? (Industria objetivo):</label>
+                    <label style="font-size: 12px; font-weight: 600;">¿Para quién lo hacemos? (Industria):</label>
                     <select id="reg-industria" required>
                         <option value="Agroindustria">Agroindustria</option>
                         <option value="Manufactura">Manufactura</option>
-                        <option value="Energía">Energía</option>
-                        <option value="Logística">Logística</option>
-                        <option value="Agua y Sanitario">Agua y Sanitario</option>
-                        <option value="Alimentos">Alimentos</option>
-                        <option value="Salud">Salud</option>
-                        <option value="Forestal">Forestal</option>
-                        <option value="Pesca y Acuicultura">Pesca y Acuicultura</option>
-                        <option value="Minería">Minería</option>
                         <option value="Tecnología / Software">Tecnología / Software</option>
                         <option value="Servicios B2B">Servicios B2B</option>
                     </select>
                 </div>
                 <div style="margin-bottom: 20px;">
                     <label style="font-size: 12px; font-weight: 600;">¿Cómo lo hacemos? (Tecnología base):</label>
-                    <input type="text" id="reg-como-hacemos" required placeholder="ej. Uso de sensores IoT y algoritmos analíticos">
+                    <input type="text" id="reg-como-hacemos" required>
                 </div>
                 <div style="display: flex; justify-content: flex-end; gap: 10px; align-items: center;">
-                    <span id="loader-startup" class="loader-text">Guardando en Sheets...</span>
+                    <span id="loader-startup" class="loader-text">Enviando a revisión...</span>
                     <button type="button" class="btn-outline" onclick="closeModal('modal-subir-desarrollo')">Cancelar</button>
-                    <button type="submit" class="btn-primary" style="background-color: var(--green-accent);">Guardar en Ecosistema</button>
+                    <button type="submit" class="btn-primary" style="background-color: var(--green-accent);">Enviar a CIDERE</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- MODAL: PUBLICAR DESAFÍO (ESTRUCTURADOR INTELIGENTE) -->
+    <!-- MODAL: PUBLICAR DESAFÍO -->
     <div id="modal-publicar-desafio" class="modal-overlay">
         <div class="modal-content" style="width: 700px;">
-            <h2 style="font-size: 18px; margin-bottom: 8px; color: var(--primary);">Estructurador de Desafíos (Mesa de Innovación)</h2>
-            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">Utilice esta estructura guiada para ayudar a las startups y universidades a entender exactamente su necesidad.</p>
+            <h2 style="font-size: 18px; margin-bottom: 8px; color: var(--primary);">Estructurador de Desafíos</h2>
             
             <form onsubmit="guardarDesafioMesa(event)">
                 <div class="grid-2" style="gap: 16px; margin-bottom: 14px;">
                     <div>
                         <label style="font-size: 12px; font-weight: 600;">Empresa Solicitante:</label>
-                        <input type="text" id="des-empresa" required placeholder="ej. Empresa Industrial del Biobío S.A.">
+                        <input type="text" id="des-empresa" required>
                     </div>
                     <div>
                         <label style="font-size: 12px; font-weight: 600;">Sector / Industria:</label>
                         <select id="des-rubro" required>
-                            <option value="Agroindustria">Agroindustria</option>
                             <option value="Manufactura">Manufactura</option>
-                            <option value="Energía">Energía</option>
-                            <option value="Logística">Logística</option>
-                            <option value="Agua y Sanitario">Agua y Sanitario</option>
-                            <option value="Alimentos">Alimentos</option>
-                            <option value="Salud">Salud</option>
                             <option value="Forestal">Forestal</option>
-                            <option value="Pesca y Acuicultura">Pesca y Acuicultura</option>
-                            <option value="Minería">Minería</option>
-                            <option value="Tecnología / Software">Tecnología / Software</option>
-                            <option value="Servicios B2B">Servicios B2B</option>
                         </select>
                     </div>
                 </div>
-                
                 <div style="margin-bottom: 20px;">
-                    <label style="font-size: 12px; font-weight: 600;">Título del Desafío Operativo/Tecnológico:</label>
-                    <input type="text" id="des-titulo" required placeholder="ej. Reducción de huella hídrica en procesos de enfriamiento">
+                    <label style="font-size: 12px; font-weight: 600;">Título del Desafío:</label>
+                    <input type="text" id="des-titulo" required>
                 </div>
-
-                <!-- NUEVA ESTRUCTURA DE REDACCIÓN GUIADA -->
                 <div style="background: #f8fafc; padding: 16px; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 24px;">
                     <div style="margin-bottom: 14px;">
                         <label style="font-size: 12px; font-weight: 600; color: var(--primary);">1. Contexto del Problema:</label>
-                        <textarea id="des-contexto" required placeholder="¿Qué ocurre actualmente en la operación y cómo lo están resolviendo hoy?" style="height: 55px;"></textarea>
+                        <textarea id="des-contexto" required style="height: 55px;"></textarea>
                     </div>
                     <div style="margin-bottom: 14px;">
                         <label style="font-size: 12px; font-weight: 600; color: var(--primary);">2. Impacto Esperado:</label>
-                        <textarea id="des-impacto" required placeholder="¿Qué métrica esperan mejorar? (ej. Reducir un 20% el consumo de agua, automatizar un proceso, etc.)" style="height: 55px;"></textarea>
+                        <textarea id="des-impacto" required style="height: 55px;"></textarea>
                     </div>
                     <div>
-                        <label style="font-size: 12px; font-weight: 600; color: var(--primary);">3. Restricciones o Soluciones previas:</label>
-                        <textarea id="des-restricciones" required placeholder="¿Hay algo que la solución NO deba tener? ¿Han intentado algo previamente que falló?" style="height: 55px;"></textarea>
+                        <label style="font-size: 12px; font-weight: 600; color: var(--primary);">3. Restricciones:</label>
+                        <textarea id="des-restricciones" required style="height: 55px;"></textarea>
                     </div>
                 </div>
-
                 <div style="display: flex; justify-content: flex-end; gap: 10px; align-items: center;">
-                    <span id="loader-desafio" class="loader-text">Enviando a Sheets...</span>
+                    <span id="loader-desafio" class="loader-text">Enviando a revisión...</span>
                     <button type="button" class="btn-outline" onclick="closeModal('modal-publicar-desafio')">Cancelar</button>
                     <button type="submit" class="btn-primary">Enviar a Mesa de Innovación</button>
                 </div>
@@ -653,58 +490,49 @@
     </div>
 
 
-    <!-- JAVASCRIPT Y LÓGICA DE DATOS 100% DINÁMICA -->
     <script>
         lucide.createIcons();
 
         // ==========================================
-        // CONEXIONES CON GOOGLE SHEETS
+        // ⚠️ PEGA AQUÍ TU NUEVO LINK DE APPS SCRIPT 
         // ==========================================
         const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwiEnVp_RVbU4aVno-eF4ZcxAXTYLKgv8rmupOtNEljpRwu8_rYXiq0B5DqxomIFOYsYA/exec";
+        
+        // CSV Links (no cambian)
         const CSV_STARTUPS = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ9bjV9qSRsPyVgCceJH3oKnkmMkJ2kd_aIE-FEQcUXhd7Tdo_BnRsMLtfSe7CMCETDOn5Il4kmfD5n/pub?gid=174902125&single=true&output=csv";
         const CSV_DESAFIOS = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ9bjV9qSRsPyVgCceJH3oKnkmMkJ2kd_aIE-FEQcUXhd7Tdo_BnRsMLtfSe7CMCETDOn5Il4kmfD5n/pub?gid=1430585904&single=true&output=csv";
 
         const trlDefinitions = [
-            { level: 1, title: "TRL 1: Principios básicos observados", desc: "Investigación científica inicial y observation de principios teóricos fundamentales." },
-            { level: 2, title: "TRL 2: Concepto tecnológico formulado", desc: "Formulación teórica del concepto tecnológico o aplicación práctica." },
-            { level: 3, title: "TRL 3: Prueba de concepto experimental", desc: "Demostración analítica y experimental de la función en entorno de laboratorio." },
-            { level: 4, title: "TRL 4: Validación de componentes en laboratorio", desc: "Integración básica de componentes para comprobar que funcionan juntos en laboratorio." },
-            { level: 5, title: "TRL 5: Validación en entorno relevante/simulado", desc: "Componentes validados en un entorno simulado o relevante a la industria objetivo." },
-            { level: 6, title: "TRL 6: Demostración de prototipo relevante", desc: "Prototipo funcional probado en condiciones operativas cercanas a las reales." },
-            { level: 7, title: "TRL 7: Demostración en entorno operativo real", desc: "Prueba del sistema completo en entorno operacional real (planta, campo o cliente piloto)." },
-            { level: 8, title: "TRL 8: Sistema completo y certificado", desc: "Desarrollo tecnológico finalizado, certificado y listo para su implementación." },
-            { level: 9, title: "TRL 9: Sistema comercializado con éxito", desc: "Tecnología en producción continua y comercialización activa en el mercado." }
+            { level: 1, title: "TRL 1: Principios básicos observados", desc: "Investigación inicial" },
+            { level: 2, title: "TRL 2: Concepto tecnológico formulado", desc: "Formulación teórica" },
+            { level: 3, title: "TRL 3: Prueba de concepto", desc: "Demostración experimental" },
+            { level: 4, title: "TRL 4: Validación en laboratorio", desc: "Componentes validados" },
+            { level: 5, title: "TRL 5: Entorno simulado", desc: "Validación en entorno relevante" },
+            { level: 6, title: "TRL 6: Prototipo funcional", desc: "Demostración en condiciones operativas" },
+            { level: 7, title: "TRL 7: Entorno operativo real", desc: "Piloto en cliente" },
+            { level: 8, title: "TRL 8: Sistema completo", desc: "Tecnología certificada" },
+            { level: 9, title: "TRL 9: Comercializado con éxito", desc: "Producción continua" }
         ];
 
-        // BASE DE DATOS INICIA VACÍA
         let startupsRegistry = [];
         let empresaSeleccionadaActual = null;
 
         // ==========================================
-        // MOTOR DE BÚSQUEDA GLOBAL (POR ENTER)
+        // FUNCIONES DE BÚSQUEDA Y NAVEGACIÓN
         // ==========================================
         function verificarEnter(event) {
-            // Solo ejecuta la búsqueda si la tecla presionada es "Enter"
-            if (event.key === "Enter") {
-                ejecutarBuscador();
-            }
+            if (event.key === "Enter") ejecutarBuscador();
         }
 
         function ejecutarBuscador() {
             const textoBusqueda = document.getElementById('buscador-global').value.toLowerCase().trim();
-            
-            // 1. REGLA ESPECIAL: Si el usuario busca exactamente "ies", lo llevamos directo a esa pantalla
             const navIES = document.querySelector('li[onclick*="view-ies"]');
+            
             if (textoBusqueda === "ies") {
-                if (!document.getElementById('view-ies').classList.contains('active')) {
-                    switchView('view-ies', navIES);
-                }
-                // Limpiamos los filtros de IES para mostrar todas
+                if (!document.getElementById('view-ies').classList.contains('active')) switchView('view-ies', navIES);
                 actualizarListasIES();
-                return; // Cortamos la ejecución aquí
+                return;
             }
-
-            // Si el buscador está vacío, mostramos todo
             if (textoBusqueda === "") {
                 actualizarListasStartups();
                 actualizarListasIES();
@@ -714,65 +542,70 @@
             let encontroStartup = false;
             let encontroIES = false;
 
-            // 2. Filtrar en Startups
             const listaStartups = document.getElementById('lista-startups');
             if(listaStartups) {
-                const tarjetasStartups = listaStartups.getElementsByClassName('card');
-                Array.from(tarjetasStartups).forEach(tarjeta => {
-                    const contenido = tarjeta.innerText.toLowerCase();
-                    if (contenido.includes(textoBusqueda)) {
-                        tarjeta.style.display = 'block';
-                        encontroStartup = true;
-                    } else {
-                        tarjeta.style.display = 'none';
-                    }
+                Array.from(listaStartups.getElementsByClassName('card')).forEach(tarjeta => {
+                    if (tarjeta.innerText.toLowerCase().includes(textoBusqueda)) {
+                        tarjeta.style.display = 'block'; encontroStartup = true;
+                    } else { tarjeta.style.display = 'none'; }
                 });
             }
 
-            // 3. Filtrar en IES
             const listaIES = document.getElementById('lista-ies');
             if(listaIES) {
-                const tarjetasIES = listaIES.getElementsByClassName('card');
-                Array.from(tarjetasIES).forEach(tarjeta => {
-                    const contenido = tarjeta.innerText.toLowerCase();
-                    if (contenido.includes(textoBusqueda)) {
-                        tarjeta.style.display = 'block';
-                        encontroIES = true;
-                    } else {
-                        tarjeta.style.display = 'none';
-                    }
+                Array.from(listaIES.getElementsByClassName('card')).forEach(tarjeta => {
+                    if (tarjeta.innerText.toLowerCase().includes(textoBusqueda)) {
+                        tarjeta.style.display = 'block'; encontroIES = true;
+                    } else { tarjeta.style.display = 'none'; }
                 });
             }
 
-            // 4. REDIRECCIÓN AUTOMÁTICA
-            const navStartups = document.querySelector('li[onclick*="view-repositorio"]');
-
-            if (encontroStartup) {
-                if (!document.getElementById('view-repositorio').classList.contains('active')) {
-                    switchView('view-repositorio', navStartups);
-                }
-            } 
-            else if (encontroIES) {
-                if (!document.getElementById('view-ies').classList.contains('active')) {
-                    switchView('view-ies', navIES);
-                }
+            if (encontroStartup && !document.getElementById('view-repositorio').classList.contains('active')) {
+                switchView('view-repositorio', document.querySelector('li[onclick*="view-repositorio"]'));
+            } else if (encontroIES && !document.getElementById('view-ies').classList.contains('active')) {
+                switchView('view-ies', navIES);
             }
         }
 
+        function switchView(viewId, element = null) {
+            document.querySelectorAll('.view-section').forEach(section => section.classList.remove('active'));
+            const target = document.getElementById(viewId);
+            if (target) target.classList.add('active');
+
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            document.querySelectorAll('.top-nav-links li').forEach(item => item.classList.remove('active-top'));
+
+            if (element) {
+                if(element.classList.contains('nav-item')) element.classList.add('active');
+                else element.classList.add('active-top');
+            }
+        }
+
+        function openModal(modalId) { document.getElementById(modalId).classList.add('active'); }
+        function closeModal(modalId) { document.getElementById(modalId).classList.remove('active'); }
+        function selectRubro(element) {
+            document.querySelectorAll('.rubro-card').forEach(card => card.classList.remove('selected'));
+            element.classList.add('selected');
+        }
+
         // ==========================================
-        // LEER DATOS DESDE GOOGLE SHEETS
+        // MODERACIÓN: CARGAR DATOS DESDE SHEETS
         // ==========================================
         function cargarDatosDesdeSheets() {
-            document.getElementById('sync-status').innerText = "(Sincronizando Google Sheets...)";
+            document.getElementById('sync-status').innerText = "(Sincronizando con Moderación...)";
             
+            // Cargar Startups e IES
             Papa.parse(CSV_STARTUPS, {
                 download: true,
                 complete: function(results) {
                     startupsRegistry = []; 
-                    
                     const filas = results.data;
+                    
                     for(let i = 1; i < filas.length; i++) {
-                        if(filas[i].length >= 5 && filas[i][1]) {
+                        // Verificamos dinámicamente la ÚLTIMA columna para saber si dice Aprobado
+                        let ultimaColumna = filas[i][filas[i].length - 1];
+                        
+                        if(filas[i].length >= 5 && filas[i][1] && ultimaColumna && ultimaColumna.trim() === 'Aprobado') {
                             startupsRegistry.push({
                                 nombre: filas[i][1],
                                 tipo: filas[i][2] || "Startup",
@@ -790,7 +623,6 @@
                     actualizarListasIES();
                     
                     document.getElementById('kpi-proyectos').innerText = startupsRegistry.length;
-                    document.getElementById('footer-metric-proyectos').innerText = startupsRegistry.length;
                     
                     const selectTrl = document.getElementById('select-empresa-trl');
                     selectTrl.innerHTML = `<option value="">-- Seleccione un proyecto registrado --</option>`;
@@ -800,6 +632,7 @@
                 }
             });
 
+            // Cargar Desafíos
             Papa.parse(CSV_DESAFIOS, {
                 download: true,
                 complete: function(results) {
@@ -809,7 +642,10 @@
                     let conteo = 0;
 
                     for(let i = 1; i < filas.length; i++) {
-                        if(filas[i].length >= 4 && filas[i][1]) {
+                        let ultimaColumnaDesafio = filas[i][filas[i].length - 1];
+                        
+                        // Solo mostramos los Desafíos que en la última columna digan "Aprobado"
+                        if(filas[i].length >= 4 && filas[i][1] && ultimaColumnaDesafio && ultimaColumnaDesafio.trim() === 'Aprobado') {
                             conteo++;
                             contenedor.innerHTML += `
                                 <div style="border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 12px; margin-bottom: 12px;">
@@ -820,7 +656,7 @@
                             `;
                         }
                     }
-                    if(conteo === 0) contenedor.innerHTML = '<p style="font-size:12px;">No hay desafíos registrados en la hoja aún.</p>';
+                    if(conteo === 0) contenedor.innerHTML = '<p style="font-size:12px;">No hay desafíos aprobados aún.</p>';
                     document.getElementById('kpi-desafios').innerText = conteo;
                     document.getElementById('sync-status').innerText = "(Sincronizado ✔)";
                 }
@@ -828,7 +664,100 @@
         }
 
         // ==========================================
-        // FUNCIONES DE GUARDADO (POST AL APP SCRIPT)
+        // DIBUJAR TARJETAS CON BOTÓN DE CONTACTO REAL
+        // ==========================================
+        function actualizarListasStartups(filtro = 'Todos') {
+            const contenedor = document.getElementById('lista-startups');
+            contenedor.innerHTML = '';
+            
+            let startups = startupsRegistry.filter(s => s.tipo.toUpperCase() === 'STARTUP');
+            if(filtro !== 'Todos') startups = startups.filter(s => s.industria === filtro);
+            
+            if(startups.length === 0) { contenedor.innerHTML = '<p style="font-size: 13px; color: gray;">No hay Startups aprobadas en esta categoría.</p>'; return; }
+
+            startups.forEach(s => {
+                contenedor.innerHTML += `
+                    <div class="card">
+                        <span class="badge badge-green" style="margin-bottom: 8px;">STARTUP</span>
+                        <h4 style="font-size: 15px;">${s.nombre}</h4>
+                        <p style="font-size: 11px; color: var(--text-muted); margin: 4px 0 10px 0;">Contacto: ${s.contacto || 'Privado'}</p>
+                        <p style="font-size: 12px; color: var(--text-muted);"><b>Qué hacemos:</b> ${s.queHace}</p>
+                        <p style="font-size: 12px; color: var(--text-muted); margin-top:4px;"><b>Industria:</b> ${s.industria}</p>
+                        <div style="margin-top: 14px; font-weight: 600; font-size: 12px; color: var(--primary);">TRL Validado: ${s.trlMax}</div>
+                        
+                        <!-- BOTÓN QUE DISPARA EL CORREO A APPS SCRIPT -->
+                        <div style="margin-top: 16px;">
+                            <button class="btn-primary" style="background-color: var(--green-accent); width: 100%; justify-content: center;" onclick="solicitarContactoReal('${s.contacto}', '${s.nombre}')">Solicitar Contacto</button>
+                        </div>
+                    </div>
+                `;
+            });
+            lucide.createIcons();
+        }
+
+        function actualizarListasIES(filtro = 'Todos') {
+            const contenedor = document.getElementById('lista-ies');
+            contenedor.innerHTML = '';
+            
+            let universidades = startupsRegistry.filter(s => s.tipo.toUpperCase() === 'UNIVERSIDAD');
+            if(filtro !== 'Todos') universidades = universidades.filter(s => s.industria === filtro);
+            
+            if(universidades.length === 0) { contenedor.innerHTML = '<p style="font-size: 13px; color: gray;">No hay capacidades universitarias aprobadas en esta categoría.</p>'; return; }
+
+            universidades.forEach(s => {
+                contenedor.innerHTML += `
+                    <div class="card">
+                        <span class="badge badge-blue" style="margin-bottom: 8px;">IES / UNIVERSIDAD</span>
+                        <h4 style="font-size: 15px;">${s.nombre}</h4>
+                        <p style="font-size: 11px; color: var(--text-muted); margin: 4px 0 10px 0;">Contacto OTL: ${s.contacto || 'Privado'}</p>
+                        <p style="font-size: 12px; color: var(--text-muted);"><b>Capacidad / Proyecto:</b> ${s.queHace}</p>
+                        <p style="font-size: 12px; color: var(--text-muted); margin-top:4px;"><b>Industria:</b> ${s.industria}</p>
+                        <div style="margin-top: 14px; font-weight: 600; font-size: 12px; color: var(--primary);">TRL Validado: ${s.trlMax}</div>
+                        
+                        <div style="margin-top: 16px;">
+                            <button class="btn-primary" style="background-color: var(--primary); width: 100%; justify-content: center;" onclick="solicitarContactoReal('${s.contacto}', '${s.nombre}')">Vincular Proyecto</button>
+                        </div>
+                    </div>
+                `;
+            });
+            lucide.createIcons();
+        }
+
+        function filtrarStartups(industria, btnElement) {
+            document.getElementById('view-repositorio').querySelectorAll('.filter-pill').forEach(btn => btn.classList.remove('active'));
+            btnElement.classList.add('active'); actualizarListasStartups(industria);
+        }
+
+        function filtrarIES(industria, btnElement) {
+            document.getElementById('view-ies').querySelectorAll('.filter-pill').forEach(btn => btn.classList.remove('active'));
+            btnElement.classList.add('active'); actualizarListasIES(industria);
+        }
+
+        // ==========================================
+        // FUNCIÓN DE MENSAJERÍA REAL
+        // ==========================================
+        function solicitarContactoReal(emailDestino, nombreStartup) {
+            if (!emailDestino || emailDestino === 'No disponible' || emailDestino.trim() === '') {
+                alert("Esta institución/startup no tiene un correo público registrado en la base de datos.");
+                return;
+            }
+            
+            alert("Solicitando conexión con " + nombreStartup + " a través de la Mesa CIDERE...");
+            
+            const formData = new FormData();
+            formData.append('tipoFormulario', 'Contacto');
+            formData.append('correoDestino', emailDestino);
+            formData.append('nombreStartup', nombreStartup);
+
+            fetch(APPS_SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: formData })
+            .then(() => {
+                alert("¡Solicitud enviada exitosamente! El equipo de CIDERE y " + nombreStartup + " han sido notificados.");
+            })
+            .catch(error => alert("Hubo un error al procesar la solicitud de contacto."));
+        }
+
+        // ==========================================
+        // FUNCIONES DE GUARDADO (Pasan por moderación)
         // ==========================================
         function registrarNuevoDesarrollo(event) {
             event.preventDefault();
@@ -844,10 +773,9 @@
 
             fetch(APPS_SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: formData })
             .then(() => {
-                alert("¡Desarrollo guardado exitosamente en tu Base de Datos!");
+                alert("¡Recibido! Tu desarrollo pasará por la revisión del comité CIDERE y, al ser aprobado, aparecerá en la plataforma pública.");
                 document.getElementById('loader-startup').style.display = 'none';
                 closeModal('modal-subir-desarrollo');
-                cargarDatosDesdeSheets();
             })
             .catch(error => {
                 alert("Hubo un error de conexión.");
@@ -859,11 +787,9 @@
             event.preventDefault();
             document.getElementById('loader-desafio').style.display = 'inline';
 
-            const contexto = document.getElementById('des-contexto').value;
-            const impacto = document.getElementById('des-impacto').value;
-            const restricciones = document.getElementById('des-restricciones').value;
-
-            const descripcionEstructurada = "1. CONTEXTO DEL PROBLEMA:\n" + contexto + "\n\n2. IMPACTO ESPERADO:\n" + impacto + "\n\n3. RESTRICCIONES Y EXPERIENCIA PREVIA:\n" + restricciones;
+            const descripcionEstructurada = "1. CONTEXTO DEL PROBLEMA:\n" + document.getElementById('des-contexto').value + 
+                                            "\n\n2. IMPACTO ESPERADO:\n" + document.getElementById('des-impacto').value + 
+                                            "\n\n3. RESTRICCIONES Y EXPERIENCIA PREVIA:\n" + document.getElementById('des-restricciones').value;
 
             const formData = new FormData();
             formData.append('tipoFormulario', 'Desafio');
@@ -874,15 +800,9 @@
 
             fetch(APPS_SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: formData })
             .then(() => {
-                alert("¡Desafío enviado a la Mesa de Innovación exitosamente!");
+                alert("¡Desafío enviado con éxito! El equipo de la Mesa de Innovación lo revisará antes de publicarlo.");
                 document.getElementById('loader-desafio').style.display = 'none';
                 closeModal('modal-publicar-desafio');
-                
-                document.getElementById('des-contexto').value = '';
-                document.getElementById('des-impacto').value = '';
-                document.getElementById('des-restricciones').value = '';
-
-                cargarDatosDesdeSheets();
             })
             .catch(error => {
                 alert("Hubo un error de conexión.");
@@ -891,114 +811,14 @@
         }
 
         // ==========================================
-        // FUNCIONES VISUALES E INTERFAZ
-        // ==========================================
-        function switchView(viewId, element = null) {
-            document.querySelectorAll('.view-section').forEach(section => section.classList.remove('active'));
-            const target = document.getElementById(viewId);
-            if (target) target.classList.add('active');
-
-            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-            document.querySelectorAll('.top-nav-links li').forEach(item => item.classList.remove('active-top'));
-
-            if (element) {
-                if(element.classList.contains('nav-item')) {
-                    element.classList.add('active');
-                } else {
-                    element.classList.add('active-top');
-                }
-            }
-        }
-
-        function openModal(modalId) { document.getElementById(modalId).classList.add('active'); }
-        function closeModal(modalId) { document.getElementById(modalId).classList.remove('active'); }
-        function selectRubro(element) {
-            document.querySelectorAll('.rubro-card').forEach(card => card.classList.remove('selected'));
-            element.classList.add('selected');
-        }
-
-        function actualizarListasStartups(filtro = 'Todos') {
-            const contenedor = document.getElementById('lista-startups');
-            contenedor.innerHTML = '';
-            
-            let startups = startupsRegistry.filter(s => s.tipo === 'Startup' || s.tipo === 'STARTUP');
-            if(filtro !== 'Todos') startups = startups.filter(s => s.industria === filtro);
-            
-            if(startups.length === 0) {
-                contenedor.innerHTML = '<p style="font-size: 13px; color: gray;">No hay Startups registradas en esta categoría.</p>';
-                return;
-            }
-
-            startups.forEach(s => {
-                contenedor.innerHTML += `
-                    <div class="card">
-                        <span class="badge badge-green" style="margin-bottom: 8px;">STARTUP</span>
-                        <h4 style="font-size: 15px;">${s.nombre}</h4>
-                        <p style="font-size: 11px; color: var(--text-muted); margin: 4px 0 10px 0;">Contacto: ${s.contacto || 'No disponible'}</p>
-                        <p style="font-size: 12px; color: var(--text-muted);"><b>Qué hacemos:</b> ${s.queHace}</p>
-                        <p style="font-size: 12px; color: var(--text-muted); margin-top:4px;"><b>Industria:</b> ${s.industria}</p>
-                        <div style="margin-top: 14px; font-weight: 600; font-size: 12px; color: var(--primary);">TRL Validado: ${s.trlMax}</div>
-                    </div>
-                `;
-            });
-            lucide.createIcons();
-        }
-
-        function actualizarListasIES(filtro = 'Todos') {
-            const contenedor = document.getElementById('lista-ies');
-            contenedor.innerHTML = '';
-            
-            let universidades = startupsRegistry.filter(s => s.tipo === 'Universidad' || s.tipo === 'UNIVERSIDAD');
-            if(filtro !== 'Todos') universidades = universidades.filter(s => s.industria === filtro);
-            
-            if(universidades.length === 0) {
-                contenedor.innerHTML = '<p style="font-size: 13px; color: gray;">No hay capacidades universitarias registradas en esta categoría.</p>';
-                return;
-            }
-
-            universidades.forEach(s => {
-                contenedor.innerHTML += `
-                    <div class="card">
-                        <span class="badge badge-blue" style="margin-bottom: 8px;">IES / UNIVERSIDAD</span>
-                        <h4 style="font-size: 15px;">${s.nombre}</h4>
-                        <p style="font-size: 11px; color: var(--text-muted); margin: 4px 0 10px 0;">Contacto OTL: ${s.contacto || 'No disponible'}</p>
-                        <p style="font-size: 12px; color: var(--text-muted);"><b>Capacidad / Proyecto:</b> ${s.queHace}</p>
-                        <p style="font-size: 12px; color: var(--text-muted); margin-top:4px;"><b>Industria:</b> ${s.industria}</p>
-                        <div style="margin-top: 14px; font-weight: 600; font-size: 12px; color: var(--primary);">TRL Validado: ${s.trlMax}</div>
-                    </div>
-                `;
-            });
-            lucide.createIcons();
-        }
-
-        function filtrarStartups(industria, btnElement) {
-            const botones = document.getElementById('view-repositorio').querySelectorAll('.filter-pill');
-            botones.forEach(btn => btn.classList.remove('active'));
-            btnElement.classList.add('active');
-            actualizarListasStartups(industria);
-        }
-
-        function filtrarIES(industria, btnElement) {
-            const botones = document.getElementById('view-ies').querySelectorAll('.filter-pill');
-            botones.forEach(btn => btn.classList.remove('active'));
-            btnElement.classList.add('active');
-            actualizarListasIES(industria);
-        }
-
-        // ==========================================
-        // CUESTIONARIO TRL
+        // CUESTIONARIO TRL (Solo visual por ahora)
         // ==========================================
         function renderizarCuestionarioTRLLineal() {
             const container = document.getElementById('cuestionario-lineal-container');
             container.innerHTML = '';
-
             trlDefinitions.forEach(step => {
                 const trlMax = empresaSeleccionadaActual ? empresaSeleccionadaActual.trlMax : 1;
                 const isCompleted = step.level <= trlMax;
-                const evidenciaArchivo = empresaSeleccionadaActual && empresaSeleccionadaActual.evidencias && empresaSeleccionadaActual.evidencias[step.level] 
-                    ? empresaSeleccionadaActual.evidencias[step.level] 
-                    : null;
-
                 container.innerHTML += `
                     <div class="trl-step-card ${isCompleted ? 'completed' : ''}">
                         <div class="trl-step-header">
@@ -1007,99 +827,35 @@
                                 <h4 style="font-size: 14px; margin-top: 4px;">${step.title}</h4>
                             </div>
                             <input type="checkbox" style="width: 18px; height: 18px; cursor: pointer;" 
-                                ${isCompleted ? 'checked' : ''} 
-                                onchange="actualizarEstadoTRLLineal(${step.level}, this.checked)">
+                                ${isCompleted ? 'checked' : ''} onchange="actualizarEstadoTRLLineal(${step.level}, this.checked)">
                         </div>
                         <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px;">${step.desc}</p>
-                        <div class="evidence-upload-zone">
-                            <div style="display: flex; justify-content: space-between; align-items: center;">
-                                <span style="font-size: 11px; font-weight: 600; color: var(--text-main);">
-                                    <i data-lucide="paperclip" size="12"></i> Indicio o Evidencia de Respaldo:
-                                </span>
-                                ${evidenciaArchivo ? `<span style="font-size: 10px; font-family: var(--font-mono); color: #0f766e; font-weight: 700;">✔ ${evidenciaArchivo}</span>` : `<span style="font-size: 10px; color: var(--text-muted);">Sin evidencia adjunta</span>`}
-                            </div>
-                            <div style="display: flex; gap: 8px; margin-top: 8px;">
-                                <input type="file" style="font-size: 11px; border: none; padding: 0;" onchange="adjuntarEvidenciaTRL(${step.level}, this)">
-                            </div>
-                        </div>
                     </div>
                 `;
             });
             lucide.createIcons();
-            actualizarResumenTRLLineal();
+            if(empresaSeleccionadaActual) document.getElementById('trl-score-num').innerText = empresaSeleccionadaActual.trlMax;
         }
 
         function cargarEmpresaTRLLineal(nombre) {
             empresaSeleccionadaActual = startupsRegistry.find(s => s.nombre === nombre) || null;
-            document.getElementById('trl-empresa-titulo-lineal').innerText = empresaSeleccionadaActual 
-                ? `Evaluación de: ${empresaSeleccionadaActual.nombre}` 
-                : "Seleccione un Proyecto";
+            document.getElementById('trl-empresa-titulo-lineal').innerText = empresaSeleccionadaActual ? `Evaluación de: ${empresaSeleccionadaActual.nombre}` : "Seleccione un Proyecto";
             renderizarCuestionarioTRLLineal();
         }
 
         function actualizarEstadoTRLLineal(level, checked) {
-            if(!empresaSeleccionadaActual) {
-                alert("Por favor seleccione primero un proyecto para evaluar.");
-                renderizarCuestionarioTRLLineal();
-                return;
-            }
-            if(checked) {
-                empresaSeleccionadaActual.trlMax = Math.max(empresaSeleccionadaActual.trlMax, level);
-            } else {
-                empresaSeleccionadaActual.trlMax = Math.max(1, level - 1);
-            }
+            if(!empresaSeleccionadaActual) { alert("Seleccione primero un proyecto."); renderizarCuestionarioTRLLineal(); return; }
+            if(checked) empresaSeleccionadaActual.trlMax = Math.max(empresaSeleccionadaActual.trlMax, level);
+            else empresaSeleccionadaActual.trlMax = Math.max(1, level - 1);
             renderizarCuestionarioTRLLineal();
         }
 
-        function adjuntarEvidenciaTRL(level, inputElement) {
-            if(!empresaSeleccionadaActual) {
-                alert("Selecciona un proyecto primero.");
-                return;
-            }
-            if(!empresaSeleccionadaActual.evidencias) empresaSeleccionadaActual.evidencias = {};
-
-            if(inputElement.files && inputElement.files[0]) {
-                const filename = inputElement.files[0].name;
-                empresaSeleccionadaActual.evidencias[level] = filename;
-                alert(`Evidencia "${filename}" subida con éxito para el TRL ${level}`);
-                renderizarCuestionarioTRLLineal();
-            }
-        }
-
-        function actualizarResumenTRLLineal() {
-            const trlActual = empresaSeleccionadaActual ? empresaSeleccionadaActual.trlMax : 1;
-            document.getElementById('trl-score-num').innerText = trlActual;
-            const defActual = trlDefinitions.find(t => t.level === trlActual);
-            document.getElementById('trl-score-label').innerText = defActual ? defActual.title.split(':')[1] : '';
-
-            const evidenciasConteo = (empresaSeleccionadaActual && empresaSeleccionadaActual.evidencias) ? Object.keys(empresaSeleccionadaActual.evidencias).length : 0;
-            document.getElementById('trl-evidencias-conteo').innerText = `Evidencias cargadas: ${evidenciasConteo} / 9`;
-
-            const resumenContainer = document.getElementById('checklist-resumen-trl');
-            resumenContainer.innerHTML = '';
-            trlDefinitions.forEach(t => {
-                const ok = t.level <= trlActual;
-                resumenContainer.innerHTML += `
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <span>${ok ? '🟢' : '⚪'} TRL ${t.level}</span>
-                        <span style="opacity: 0.7; font-size:10px;">${empresaSeleccionadaActual && empresaSeleccionadaActual.evidencias && empresaSeleccionadaActual.evidencias[t.level] ? 'Evidencia ✔' : 'Pendiente'}</span>
-                    </div>
-                `;
-            });
-        }
-
         function encontrarSolucionesEjemplo() {
-            const descripcion = document.getElementById('input-descripcion-desafio').value;
-            const boxResultado = document.getElementById('resultado-soluciones-ejemplo');
-            const textoSolucion = document.getElementById('texto-solucion-generada');
-            boxResultado.style.display = 'block';
-            textoSolucion.innerHTML = `Basado en el desafío ingresado ("<i>${descripcion || 'Optimización sectorial'}</i>"), la Mesa de Innovación CIDERE identificó opciones relevantes en el ecosistema para vinculación directa.`;
+            document.getElementById('resultado-soluciones-ejemplo').style.display = 'block';
+            document.getElementById('texto-solucion-generada').innerHTML = `Analizando requerimiento... Se sugerirán vinculaciones con IES y Startups de la base de datos de CIDERE.`;
             lucide.createIcons();
         }
 
-        // ==========================================
-        // AL CARGAR LA PÁGINA
-        // ==========================================
         window.onload = function() {
             renderizarCuestionarioTRLLineal();
             cargarDatosDesdeSheets();
