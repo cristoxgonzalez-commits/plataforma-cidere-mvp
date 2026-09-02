@@ -160,7 +160,7 @@
 
     <!-- CONTENIDO PRINCIPAL -->
     <main>
-        <!-- HEADER TOP CON BUSCADOR DINÁMICO -->
+        <!-- HEADER TOP CON BUSCADOR DINÁMICO Y REDIRECCIÓN -->
         <header>
             <div class="search-bar">
                 <i data-lucide="search" size="16" style="color: var(--text-muted)"></i>
@@ -681,29 +681,64 @@
         let empresaSeleccionadaActual = null;
 
         // ==========================================
-        // MOTOR DE BÚSQUEDA GLOBAL
+        // MOTOR DE BÚSQUEDA GLOBAL CON REDIRECCIÓN
         // ==========================================
         function ejecutarBuscador() {
             const textoBusqueda = document.getElementById('buscador-global').value.toLowerCase();
             
-            // Buscar en sección Startups
+            // Si el buscador se vacía, no cambiamos de pantalla, solo mostramos todo
+            if (textoBusqueda.trim() === "") {
+                actualizarListasStartups();
+                actualizarListasIES();
+                return;
+            }
+
+            let encontroStartup = false;
+            let encontroIES = false;
+
+            // 1. Filtrar en la sección de Startups
             const listaStartups = document.getElementById('lista-startups');
             if(listaStartups) {
                 const tarjetasStartups = listaStartups.getElementsByClassName('card');
                 Array.from(tarjetasStartups).forEach(tarjeta => {
                     const contenido = tarjeta.innerText.toLowerCase();
-                    tarjeta.style.display = contenido.includes(textoBusqueda) ? 'block' : 'none';
+                    if (contenido.includes(textoBusqueda)) {
+                        tarjeta.style.display = 'block';
+                        encontroStartup = true;
+                    } else {
+                        tarjeta.style.display = 'none';
+                    }
                 });
             }
 
-            // Buscar en sección IES
+            // 2. Filtrar en la sección de IES (Universidades)
             const listaIES = document.getElementById('lista-ies');
             if(listaIES) {
                 const tarjetasIES = listaIES.getElementsByClassName('card');
                 Array.from(tarjetasIES).forEach(tarjeta => {
                     const contenido = tarjeta.innerText.toLowerCase();
-                    tarjeta.style.display = contenido.includes(textoBusqueda) ? 'block' : 'none';
+                    if (contenido.includes(textoBusqueda)) {
+                        tarjeta.style.display = 'block';
+                        encontroIES = true;
+                    } else {
+                        tarjeta.style.display = 'none';
+                    }
                 });
+            }
+
+            // 3. REDIRECCIÓN AUTOMÁTICA (Navegación inteligente)
+            const navStartups = document.querySelector('li[onclick*="view-repositorio"]');
+            const navIES = document.querySelector('li[onclick*="view-ies"]');
+
+            if (encontroStartup) {
+                if (!document.getElementById('view-repositorio').classList.contains('active')) {
+                    switchView('view-repositorio', navStartups);
+                }
+            } 
+            else if (encontroIES) {
+                if (!document.getElementById('view-ies').classList.contains('active')) {
+                    switchView('view-ies', navIES);
+                }
             }
         }
 
@@ -890,7 +925,11 @@
                 `;
             });
             lucide.createIcons();
-            ejecutarBuscador(); // Volver a aplicar filtro de texto si lo hay
+            
+            // Re-ejecutar el buscador visual si hay texto en la barra de búsqueda
+            if(document.getElementById('buscador-global').value.trim() !== '') {
+                ejecutarBuscador();
+            }
         }
 
         function actualizarListasIES(filtro = 'Todos') {
@@ -918,7 +957,11 @@
                 `;
             });
             lucide.createIcons();
-            ejecutarBuscador(); // Volver a aplicar filtro de texto si lo hay
+            
+            // Re-ejecutar el buscador visual si hay texto en la barra de búsqueda
+            if(document.getElementById('buscador-global').value.trim() !== '') {
+                ejecutarBuscador();
+            }
         }
 
         function filtrarStartups(industria, btnElement) {
