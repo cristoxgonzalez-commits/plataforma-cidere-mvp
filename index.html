@@ -160,11 +160,11 @@
 
     <!-- CONTENIDO PRINCIPAL -->
     <main>
-        <!-- HEADER TOP -->
+        <!-- HEADER TOP CON BUSCADOR DINÁMICO -->
         <header>
             <div class="search-bar">
                 <i data-lucide="search" size="16" style="color: var(--text-muted)"></i>
-                <input type="text" placeholder="Buscar proyectos, startups o desafíos en Biobío...">
+                <input type="text" id="buscador-global" onkeyup="ejecutarBuscador()" placeholder="Buscar startups, IES o palabras clave...">
             </div>
 
             <div class="top-menu">
@@ -349,7 +349,7 @@
                     <button class="filter-pill" onclick="filtrarStartups('Pesca y Acuicultura', this)">Pesca y Acuicultura</button>
                     <button class="filter-pill" onclick="filtrarStartups('Minería', this)">Minería</button>
                     <button class="filter-pill" onclick="filtrarStartups('Tecnología / Software', this)">Tecnología / Software</button>
-                    <button class="filter-pill" onclick="filtrarStartups('Servicios', this)">Servicios B2B</button>
+                    <button class="filter-pill" onclick="filtrarStartups('Servicios B2B', this)">Servicios B2B</button>
                 </div>
 
                 <!-- Contenedor Startups -->
@@ -500,7 +500,7 @@
                     <button class="filter-pill" onclick="filtrarIES('Pesca y Acuicultura', this)">Pesca y Acuicultura</button>
                     <button class="filter-pill" onclick="filtrarIES('Minería', this)">Minería</button>
                     <button class="filter-pill" onclick="filtrarIES('Tecnología / Software', this)">Tecnología / Software</button>
-                    <button class="filter-pill" onclick="filtrarIES('Servicios', this)">Servicios B2B</button>
+                    <button class="filter-pill" onclick="filtrarIES('Servicios B2B', this)">Servicios B2B</button>
                 </div>
 
                 <!-- Contenedor de Universidades -->
@@ -575,7 +575,7 @@
                         <option value="Pesca y Acuicultura">Pesca y Acuicultura</option>
                         <option value="Minería">Minería</option>
                         <option value="Tecnología / Software">Tecnología / Software</option>
-                        <option value="Servicios">Servicios B2B</option>
+                        <option value="Servicios B2B">Servicios B2B</option>
                     </select>
                 </div>
                 <div style="margin-bottom: 20px;">
@@ -591,7 +591,7 @@
         </div>
     </div>
 
-    <!-- MODAL: PUBLICAR DESAFÍO (NUEVO ESTRUCTURADOR) -->
+    <!-- MODAL: PUBLICAR DESAFÍO (ESTRUCTURADOR INTELIGENTE) -->
     <div id="modal-publicar-desafio" class="modal-overlay">
         <div class="modal-content" style="width: 700px;">
             <h2 style="font-size: 18px; margin-bottom: 8px; color: var(--primary);">Estructurador de Desafíos (Mesa de Innovación)</h2>
@@ -617,7 +617,7 @@
                             <option value="Pesca y Acuicultura">Pesca y Acuicultura</option>
                             <option value="Minería">Minería</option>
                             <option value="Tecnología / Software">Tecnología / Software</option>
-                            <option value="Servicios">Servicios B2B</option>
+                            <option value="Servicios B2B">Servicios B2B</option>
                         </select>
                     </div>
                 </div>
@@ -676,9 +676,36 @@
             { level: 9, title: "TRL 9: Sistema comercializado con éxito", desc: "Tecnología en producción continua y comercialización activa en el mercado." }
         ];
 
-        // 1. BASE DE DATOS INICIA VACÍA (LEE DE GOOGLE SHEETS)
+        // BASE DE DATOS INICIA VACÍA
         let startupsRegistry = [];
         let empresaSeleccionadaActual = null;
+
+        // ==========================================
+        // MOTOR DE BÚSQUEDA GLOBAL
+        // ==========================================
+        function ejecutarBuscador() {
+            const textoBusqueda = document.getElementById('buscador-global').value.toLowerCase();
+            
+            // Buscar en sección Startups
+            const listaStartups = document.getElementById('lista-startups');
+            if(listaStartups) {
+                const tarjetasStartups = listaStartups.getElementsByClassName('card');
+                Array.from(tarjetasStartups).forEach(tarjeta => {
+                    const contenido = tarjeta.innerText.toLowerCase();
+                    tarjeta.style.display = contenido.includes(textoBusqueda) ? 'block' : 'none';
+                });
+            }
+
+            // Buscar en sección IES
+            const listaIES = document.getElementById('lista-ies');
+            if(listaIES) {
+                const tarjetasIES = listaIES.getElementsByClassName('card');
+                Array.from(tarjetasIES).forEach(tarjeta => {
+                    const contenido = tarjeta.innerText.toLowerCase();
+                    tarjeta.style.display = contenido.includes(textoBusqueda) ? 'block' : 'none';
+                });
+            }
+        }
 
         // ==========================================
         // LEER DATOS DESDE GOOGLE SHEETS
@@ -686,7 +713,6 @@
         function cargarDatosDesdeSheets() {
             document.getElementById('sync-status').innerText = "(Sincronizando Google Sheets...)";
             
-            // Cargar Startups y Universidades
             Papa.parse(CSV_STARTUPS, {
                 download: true,
                 complete: function(results) {
@@ -722,7 +748,6 @@
                 }
             });
 
-            // Cargar Desafíos de la Mesa
             Papa.parse(CSV_DESAFIOS, {
                 download: true,
                 complete: function(results) {
@@ -782,12 +807,10 @@
             event.preventDefault();
             document.getElementById('loader-desafio').style.display = 'inline';
 
-            // Capturar las 3 respuestas de la nueva estructura
             const contexto = document.getElementById('des-contexto').value;
             const impacto = document.getElementById('des-impacto').value;
             const restricciones = document.getElementById('des-restricciones').value;
 
-            // Armamos un texto consolidado y ordenado para guardar en Excel
             const descripcionEstructurada = "1. CONTEXTO DEL PROBLEMA:\n" + contexto + "\n\n2. IMPACTO ESPERADO:\n" + impacto + "\n\n3. RESTRICCIONES Y EXPERIENCIA PREVIA:\n" + restricciones;
 
             const formData = new FormData();
@@ -803,7 +826,6 @@
                 document.getElementById('loader-desafio').style.display = 'none';
                 closeModal('modal-publicar-desafio');
                 
-                // Limpiar campos
                 document.getElementById('des-contexto').value = '';
                 document.getElementById('des-impacto').value = '';
                 document.getElementById('des-restricciones').value = '';
@@ -843,9 +865,6 @@
             element.classList.add('selected');
         }
 
-        // ==========================================
-        // DIBUJAR Y FILTRAR TARJETAS SEPARADAS
-        // ==========================================
         function actualizarListasStartups(filtro = 'Todos') {
             const contenedor = document.getElementById('lista-startups');
             contenedor.innerHTML = '';
@@ -871,6 +890,7 @@
                 `;
             });
             lucide.createIcons();
+            ejecutarBuscador(); // Volver a aplicar filtro de texto si lo hay
         }
 
         function actualizarListasIES(filtro = 'Todos') {
@@ -898,6 +918,7 @@
                 `;
             });
             lucide.createIcons();
+            ejecutarBuscador(); // Volver a aplicar filtro de texto si lo hay
         }
 
         function filtrarStartups(industria, btnElement) {
