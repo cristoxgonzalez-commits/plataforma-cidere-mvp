@@ -591,40 +591,58 @@
         </div>
     </div>
 
-    <!-- MODAL: PUBLICAR DESAFÍO -->
+    <!-- MODAL: PUBLICAR DESAFÍO (NUEVO ESTRUCTURADOR) -->
     <div id="modal-publicar-desafio" class="modal-overlay">
-        <div class="modal-content">
-            <h2 style="font-size: 18px; margin-bottom: 16px; color: var(--primary);">Ingresar Desafío (Mesa de Innovación CIDERE)</h2>
+        <div class="modal-content" style="width: 700px;">
+            <h2 style="font-size: 18px; margin-bottom: 8px; color: var(--primary);">Estructurador de Desafíos (Mesa de Innovación)</h2>
+            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">Utilice esta estructura guiada para ayudar a las startups y universidades a entender exactamente su necesidad.</p>
+            
             <form onsubmit="guardarDesafioMesa(event)">
-                <div style="margin-bottom: 14px;">
-                    <label style="font-size: 12px; font-weight: 600;">Nombre de la Empresa Solicitante:</label>
-                    <input type="text" id="des-empresa" required placeholder="ej. Empresa Industrial del Biobío S.A.">
+                <div class="grid-2" style="gap: 16px; margin-bottom: 14px;">
+                    <div>
+                        <label style="font-size: 12px; font-weight: 600;">Empresa Solicitante:</label>
+                        <input type="text" id="des-empresa" required placeholder="ej. Empresa Industrial del Biobío S.A.">
+                    </div>
+                    <div>
+                        <label style="font-size: 12px; font-weight: 600;">Sector / Industria:</label>
+                        <select id="des-rubro" required>
+                            <option value="Agroindustria">Agroindustria</option>
+                            <option value="Manufactura">Manufactura</option>
+                            <option value="Energía">Energía</option>
+                            <option value="Logística">Logística</option>
+                            <option value="Agua y Sanitario">Agua y Sanitario</option>
+                            <option value="Alimentos">Alimentos</option>
+                            <option value="Salud">Salud</option>
+                            <option value="Forestal">Forestal</option>
+                            <option value="Pesca y Acuicultura">Pesca y Acuicultura</option>
+                            <option value="Minería">Minería</option>
+                            <option value="Tecnología / Software">Tecnología / Software</option>
+                            <option value="Servicios">Servicios B2B</option>
+                        </select>
+                    </div>
                 </div>
-                <div style="margin-bottom: 14px;">
-                    <label style="font-size: 12px; font-weight: 600;">Sector / Industria:</label>
-                    <select id="des-rubro" required>
-                        <option value="Agroindustria">Agroindustria</option>
-                        <option value="Manufactura">Manufactura</option>
-                        <option value="Energía">Energía</option>
-                        <option value="Logística">Logística</option>
-                        <option value="Agua y Sanitario">Agua y Sanitario</option>
-                        <option value="Alimentos">Alimentos</option>
-                        <option value="Salud">Salud</option>
-                        <option value="Forestal">Forestal</option>
-                        <option value="Pesca y Acuicultura">Pesca y Acuicultura</option>
-                        <option value="Minería">Minería</option>
-                        <option value="Tecnología / Software">Tecnología / Software</option>
-                        <option value="Servicios">Servicios B2B</option>
-                    </select>
-                </div>
-                <div style="margin-bottom: 14px;">
+                
+                <div style="margin-bottom: 20px;">
                     <label style="font-size: 12px; font-weight: 600;">Título del Desafío Operativo/Tecnológico:</label>
                     <input type="text" id="des-titulo" required placeholder="ej. Reducción de huella hídrica en procesos de enfriamiento">
                 </div>
-                <div style="margin-bottom: 20px;">
-                    <label style="font-size: 12px; font-weight: 600;">Detalle de la Problemática y Requerimiento:</label>
-                    <textarea id="des-desc" required placeholder="Formato oficial de la Mesa de Innovación CIDERE..." style="height: 90px;"></textarea>
+
+                <!-- NUEVA ESTRUCTURA DE REDACCIÓN GUIADA -->
+                <div style="background: #f8fafc; padding: 16px; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 24px;">
+                    <div style="margin-bottom: 14px;">
+                        <label style="font-size: 12px; font-weight: 600; color: var(--primary);">1. Contexto del Problema:</label>
+                        <textarea id="des-contexto" required placeholder="¿Qué ocurre actualmente en la operación y cómo lo están resolviendo hoy?" style="height: 55px;"></textarea>
+                    </div>
+                    <div style="margin-bottom: 14px;">
+                        <label style="font-size: 12px; font-weight: 600; color: var(--primary);">2. Impacto Esperado:</label>
+                        <textarea id="des-impacto" required placeholder="¿Qué métrica esperan mejorar? (ej. Reducir un 20% el consumo de agua, automatizar un proceso, etc.)" style="height: 55px;"></textarea>
+                    </div>
+                    <div>
+                        <label style="font-size: 12px; font-weight: 600; color: var(--primary);">3. Restricciones o Soluciones previas:</label>
+                        <textarea id="des-restricciones" required placeholder="¿Hay algo que la solución NO deba tener? ¿Han intentado algo previamente que falló?" style="height: 55px;"></textarea>
+                    </div>
                 </div>
+
                 <div style="display: flex; justify-content: flex-end; gap: 10px; align-items: center;">
                     <span id="loader-desafio" class="loader-text">Enviando a Sheets...</span>
                     <button type="button" class="btn-outline" onclick="closeModal('modal-publicar-desafio')">Cancelar</button>
@@ -658,7 +676,7 @@
             { level: 9, title: "TRL 9: Sistema comercializado con éxito", desc: "Tecnología en producción continua y comercialización activa en el mercado." }
         ];
 
-        // 1. AHORA LA BASE DE DATOS INICIA 100% VACÍA
+        // 1. BASE DE DATOS INICIA VACÍA (LEE DE GOOGLE SHEETS)
         let startupsRegistry = [];
         let empresaSeleccionadaActual = null;
 
@@ -672,7 +690,6 @@
             Papa.parse(CSV_STARTUPS, {
                 download: true,
                 complete: function(results) {
-                    // Limpiamos la memoria para que el Excel sea la única verdad
                     startupsRegistry = []; 
                     
                     const filas = results.data;
@@ -691,7 +708,6 @@
                         }
                     }
                     
-                    // Actualizar pantallas con la información fresca
                     actualizarListasStartups();
                     actualizarListasIES();
                     
@@ -766,18 +782,32 @@
             event.preventDefault();
             document.getElementById('loader-desafio').style.display = 'inline';
 
+            // Capturar las 3 respuestas de la nueva estructura
+            const contexto = document.getElementById('des-contexto').value;
+            const impacto = document.getElementById('des-impacto').value;
+            const restricciones = document.getElementById('des-restricciones').value;
+
+            // Armamos un texto consolidado y ordenado para guardar en Excel
+            const descripcionEstructurada = "1. CONTEXTO DEL PROBLEMA:\n" + contexto + "\n\n2. IMPACTO ESPERADO:\n" + impacto + "\n\n3. RESTRICCIONES Y EXPERIENCIA PREVIA:\n" + restricciones;
+
             const formData = new FormData();
             formData.append('tipoFormulario', 'Desafio');
             formData.append('empresa', document.getElementById('des-empresa').value);
             formData.append('rubro', document.getElementById('des-rubro').value);
             formData.append('titulo', document.getElementById('des-titulo').value);
-            formData.append('descripcion', document.getElementById('des-desc').value);
+            formData.append('descripcion', descripcionEstructurada);
 
             fetch(APPS_SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: formData })
             .then(() => {
                 alert("¡Desafío enviado a la Mesa de Innovación exitosamente!");
                 document.getElementById('loader-desafio').style.display = 'none';
                 closeModal('modal-publicar-desafio');
+                
+                // Limpiar campos
+                document.getElementById('des-contexto').value = '';
+                document.getElementById('des-impacto').value = '';
+                document.getElementById('des-restricciones').value = '';
+
                 cargarDatosDesdeSheets();
             })
             .catch(error => {
@@ -1001,7 +1031,6 @@
         // ==========================================
         window.onload = function() {
             renderizarCuestionarioTRLLineal();
-            // Ejecutamos la lectura del Sheets, que luego dibujará las tarjetas automáticamente
             cargarDatosDesdeSheets();
         };
     </script>
