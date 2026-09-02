@@ -4,8 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Plataforma CIDERE Biobío - MVP Interactivo</title>
+    <!-- Fuentes e Iconos de Lucide -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- LIBRERÍA AGREGADA PARA LEER EXCEL EN TIEMPO REAL -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 
     <style>
@@ -56,11 +59,13 @@
         .user-profile { display: flex; align-items: center; gap: 12px; padding-left: 16px; border-left: 1px solid var(--border-color); }
         .avatar { width: 36px; height: 36px; border-radius: 50%; background-color: #ccc; object-fit: cover; }
 
+        /* CONTENEDOR DE VISTAS */
         .content-container { padding: 32px; max-width: 1280px; margin: 0 auto; width: 100%; }
         .view-section { display: none; }
         .view-section.active { display: block; animation: fadeIn 0.25s ease-in-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
 
+        /* COMPONENTES REUTILIZABLES */
         .badge { font-family: var(--font-mono); font-size: 10px; padding: 3px 8px; border-radius: 4px; font-weight: 600; text-transform: uppercase; display: inline-block; }
         .badge-green { background: #d1fae5; color: #065f46; }
         .badge-blue { background: #dbeafe; color: #1e40af; }
@@ -74,12 +79,15 @@
         .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
         .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
 
+        /* MODALES FLOTANTES */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 1000; }
         .modal-overlay.active { display: flex; }
         .modal-content { background: white; padding: 30px; border-radius: 12px; width: 600px; max-width: 90%; max-height: 90vh; overflow-y: auto; }
 
+        /* ESTILOS ESPECÍFICOS TRL LINEAL */
         .trl-step-card { border: 1px solid var(--border-color); border-radius: 10px; padding: 18px; margin-bottom: 16px; background: #ffffff; transition: all 0.2s ease; }
         .trl-step-card.completed { border-color: #10b981; background-color: #f0fdf4; }
+        .trl-step-card.current { border-color: var(--primary); box-shadow: 0 4px 12px rgba(23, 56, 109, 0.08); }
         .trl-step-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
         .evidence-upload-zone { margin-top: 12px; padding: 12px; background: #f8fafc; border: 1px dashed var(--border-color); border-radius: 8px; }
 
@@ -103,12 +111,14 @@
         textarea, input[type="text"], select { width: 100%; border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; font-family: inherit; font-size: 13px; outline: none; background: #fff; }
         textarea:focus, input:focus, select:focus { border-color: var(--primary); }
 
+        /* FOOTER IMPACTO REGIONAL */
         .footer-banner { background-color: var(--primary-accent); color: white; border-radius: 12px; padding: 24px 32px; display: flex; align-items: center; justify-content: space-between; margin-top: 30px; }
         .metric-group { display: flex; gap: 40px; }
         .metric-item { border-left: 2px solid rgba(255,255,255,0.2); padding-left: 16px; }
         .metric-val { font-size: 28px; font-weight: 800; font-family: var(--font-mono); }
         .metric-lbl { font-size: 11px; opacity: 0.7; text-transform: uppercase; }
         
+        /* ESTILO PARA EL TEXTO DE CARGANDO */
         .loader-text { font-size: 12px; color: var(--green-accent); font-weight: bold; margin-right: 10px; display: none; }
     </style>
 </head>
@@ -176,16 +186,40 @@
 
             <!-- VISTA: MESA DE INNOVACIÓN -->
             <section id="view-mesa-innovacion" class="view-section">
+                <!-- BANNER RESTAURADO CON LA DIRECTIVA COMPLETA -->
                 <div class="card" style="background: linear-gradient(135deg, #17386d 0%, #0f274e 100%); color: white; padding: 32px; margin-bottom: 24px;">
                     <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 20px;">
                         <div>
                             <span class="badge badge-green" style="background: rgba(16, 185, 129, 0.2); color: #a7f3d0; margin-bottom: 10px;">INSTANCIA ESTRATÉGICA CIDERE BIOBÍO</span>
                             <h1 style="font-size: 28px; font-weight: 800; margin-bottom: 12px;">¿Qué es la Mesa de Innovación?</h1>
                             <p style="font-size: 14px; opacity: 0.9; line-height: 1.6; max-width: 950px;">
-                                La Mesa de Innovación de CIDERE Biobío conecta los desafíos operacionales de las empresas socias con la capacidad de desarrollo del ecosistema.
+                                La <b>Mesa de Innovación de CIDERE Biobío</b> es el espacio articulador principal del ecosistema regional. Su propósito fundamental es conectar de forma directa los desafíos operacionales y tecnológicos de las empresas socias e industrias de la Región del Biobío con la capacidad de desarrollo, investigación y soluciones de la academia, startups y centros de I+D.
                             </p>
                         </div>
                         <i data-lucide="building-2" size="56" style="opacity: 0.35; flex-shrink: 0;"></i>
+                    </div>
+
+                    <div style="margin-top: 28px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.15);">
+                        <h4 style="font-size: 12px; font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 1px; color: #a7f3d0; margin-bottom: 16px;">
+                            Directiva & Comité Ejecutivo de la Mesa
+                        </h4>
+                        <div class="grid-3" style="gap: 16px;">
+                            <div style="background: rgba(255,255,255,0.06); padding: 16px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
+                                <div style="font-size: 14px; font-weight: 700;">Presidencia de la Mesa</div>
+                                <div style="font-size: 12px; opacity: 0.85; margin-top: 4px;">Representante Sector Industrial Regional</div>
+                                <div style="font-size: 11px; color: #a7f3d0; margin-top: 8px; font-family: var(--font-mono);">Liderazgo Estratégico</div>
+                            </div>
+                            <div style="background: rgba(255,255,255,0.06); padding: 16px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
+                                <div style="font-size: 14px; font-weight: 700;">Vicepresidencia Academia</div>
+                                <div style="font-size: 12px; opacity: 0.85; margin-top: 4px;">Representante Red de Universidades</div>
+                                <div style="font-size: 11px; color: #a7f3d0; margin-top: 8px; font-family: var(--font-mono);">Vinculación I+D</div>
+                            </div>
+                            <div style="background: rgba(255,255,255,0.06); padding: 16px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
+                                <div style="font-size: 14px; font-weight: 700;">Secretaría Técnica CIDERE</div>
+                                <div style="font-size: 12px; opacity: 0.85; margin-top: 4px;">Equipo Ejecutivo CIDERE Biobío</div>
+                                <div style="font-size: 11px; color: #a7f3d0; margin-top: 8px; font-family: var(--font-mono);">Coordinación Operativa</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -236,8 +270,9 @@
                             <a href="#" onclick="switchView('view-repositorio')" style="color: var(--primary); font-size: 12px; font-weight: 600; text-decoration: none;">Ver Todas</a>
                         </div>
                         
-                        <!-- Tarjetas fijas de ejemplo para diseño (puedes dejarlas o quitarlas luego) -->
+                        <!-- Tarjeta fija de ejemplo para diseño -->
                         <div class="card">
+                            <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=600&auto=format&fit=crop&q=80" class="startup-img-preview" alt="Photonics">
                             <span class="badge badge-green">STARTUP</span>
                             <div style="display: flex; justify-content: space-between; margin-top: 8px;">
                                 <h4 style="font-size: 16px;">Lumina Photonics</h4>
@@ -256,7 +291,7 @@
                                 <i data-lucide="factory" size="18"></i> Desafíos de la Región
                             </h3>
                             
-                            <!-- DIV DONDE SE CARGARÁN LOS DESAFÍOS DEL EXCEL -->
+                            <!-- DIV DONDE SE CARGARÁN LOS DESAFÍOS DEL EXCEL (Solo Aprobados) -->
                             <div id="lista-desafios-dashboard">
                                 <!-- Se llena vía script -->
                             </div>
@@ -383,8 +418,16 @@
                     <button class="filter-pill active" id="btn-ies-todos" onclick="filtrarIES('Todos', this)">Todas</button>
                     <button class="filter-pill" onclick="filtrarIES('Agroindustria', this)">Agroindustria</button>
                     <button class="filter-pill" onclick="filtrarIES('Manufactura', this)">Manufactura</button>
+                    <button class="filter-pill" onclick="filtrarIES('Energía', this)">Energía</button>
+                    <button class="filter-pill" onclick="filtrarIES('Logística', this)">Logística</button>
+                    <button class="filter-pill" onclick="filtrarIES('Agua y Sanitario', this)">Agua y Sanitario</button>
+                    <button class="filter-pill" onclick="filtrarIES('Alimentos', this)">Alimentos</button>
+                    <button class="filter-pill" onclick="filtrarIES('Salud', this)">Salud</button>
+                    <button class="filter-pill" onclick="filtrarIES('Forestal', this)">Forestal</button>
+                    <button class="filter-pill" onclick="filtrarIES('Pesca y Acuicultura', this)">Pesca y Acuicultura</button>
+                    <button class="filter-pill" onclick="filtrarIES('Minería', this)">Minería</button>
                     <button class="filter-pill" onclick="filtrarIES('Tecnología / Software', this)">Tecnología / Software</button>
-                    <!-- Puedes agregar más botones aquí si lo deseas -->
+                    <button class="filter-pill" onclick="filtrarIES('Servicios B2B', this)">Servicios B2B</button>
                 </div>
 
                 <div id="lista-ies" class="grid-3"></div>
@@ -400,6 +443,28 @@
                     <p style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">Los correos enviados a través de "Solicitar Contacto" son notificados internamente.</p>
                 </div>
             </section>
+            
+            <!-- FOOTER COMÚN -->
+            <div class="footer-banner">
+                <div>
+                    <h4 style="font-size: 14px; text-transform: uppercase; font-family: var(--font-mono);">Impacto Regional CIDERE</h4>
+                    <p style="font-size: 12px; opacity: 0.8;">Ecosistema de Innovación de la Región del Biobío</p>
+                </div>
+                <div class="metric-group">
+                    <div class="metric-item">
+                        <div class="metric-val" id="footer-metric-proyectos">0</div>
+                        <div class="metric-lbl">Proyectos Activos</div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="metric-val">84</div>
+                        <div class="metric-lbl">Patentes Biobío</div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="metric-val">312</div>
+                        <div class="metric-lbl">Empresas Socias</div>
+                    </div>
+                </div>
+            </div>
 
         </div>
     </main>
@@ -426,6 +491,14 @@
                     <select id="reg-industria" required>
                         <option value="Agroindustria">Agroindustria</option>
                         <option value="Manufactura">Manufactura</option>
+                        <option value="Energía">Energía</option>
+                        <option value="Logística">Logística</option>
+                        <option value="Agua y Sanitario">Agua y Sanitario</option>
+                        <option value="Alimentos">Alimentos</option>
+                        <option value="Salud">Salud</option>
+                        <option value="Forestal">Forestal</option>
+                        <option value="Pesca y Acuicultura">Pesca y Acuicultura</option>
+                        <option value="Minería">Minería</option>
                         <option value="Tecnología / Software">Tecnología / Software</option>
                         <option value="Servicios B2B">Servicios B2B</option>
                     </select>
@@ -443,7 +516,7 @@
         </div>
     </div>
 
-    <!-- MODAL: PUBLICAR DESAFÍO -->
+    <!-- MODAL: PUBLICAR DESAFÍO ESTRUCTURADO -->
     <div id="modal-publicar-desafio" class="modal-overlay">
         <div class="modal-content" style="width: 700px;">
             <h2 style="font-size: 18px; margin-bottom: 8px; color: var(--primary);">Estructurador de Desafíos</h2>
@@ -457,8 +530,18 @@
                     <div>
                         <label style="font-size: 12px; font-weight: 600;">Sector / Industria:</label>
                         <select id="des-rubro" required>
+                            <option value="Agroindustria">Agroindustria</option>
                             <option value="Manufactura">Manufactura</option>
+                            <option value="Energía">Energía</option>
+                            <option value="Logística">Logística</option>
+                            <option value="Agua y Sanitario">Agua y Sanitario</option>
+                            <option value="Alimentos">Alimentos</option>
+                            <option value="Salud">Salud</option>
                             <option value="Forestal">Forestal</option>
+                            <option value="Pesca y Acuicultura">Pesca y Acuicultura</option>
+                            <option value="Minería">Minería</option>
+                            <option value="Tecnología / Software">Tecnología / Software</option>
+                            <option value="Servicios B2B">Servicios B2B</option>
                         </select>
                     </div>
                 </div>
@@ -494,9 +577,9 @@
         lucide.createIcons();
 
         // ==========================================
-        // ⚠️ PEGA AQUÍ TU NUEVO LINK DE APPS SCRIPT 
+        // ⚠️ PEGA AQUÍ TU NUEVO LINK DE APPS SCRIPT ⚠️
         // ==========================================
-        const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwiEnVp_RVbU4aVno-eF4ZcxAXTYLKgv8rmupOtNEljpRwu8_rYXiq0B5DqxomIFOYsYA/exec";
+        const APPS_SCRIPT_URL = "TU_NUEVO_LINK_AQUI"; // <-- REEMPLAZAR ESTO
         
         // CSV Links (no cambian)
         const CSV_STARTUPS = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ9bjV9qSRsPyVgCceJH3oKnkmMkJ2kd_aIE-FEQcUXhd7Tdo_BnRsMLtfSe7CMCETDOn5Il4kmfD5n/pub?gid=174902125&single=true&output=csv";
