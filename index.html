@@ -186,14 +186,13 @@
 
             <!-- VISTA: MESA DE INNOVACIÓN -->
             <section id="view-mesa-innovacion" class="view-section">
-                <!-- BANNER RESTAURADO CON LA DIRECTIVA COMPLETA -->
+                <!-- BANNER ACTUALIZADO -->
                 <div class="card" style="background: linear-gradient(135deg, #17386d 0%, #0f274e 100%); color: white; padding: 32px; margin-bottom: 24px;">
                     <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 20px;">
                         <div>
-                            <span class="badge badge-green" style="background: rgba(16, 185, 129, 0.2); color: #a7f3d0; margin-bottom: 10px;">INSTANCIA ESTRATÉGICA CIDERE BIOBÍO</span>
                             <h1 style="font-size: 28px; font-weight: 800; margin-bottom: 12px;">¿Qué es la Mesa de Innovación?</h1>
                             <p style="font-size: 14px; opacity: 0.9; line-height: 1.6; max-width: 950px;">
-                                La <b>Mesa de Innovación de CIDERE Biobío</b> es el espacio articulador principal del ecosistema regional. Su propósito fundamental es conectar de forma directa los desafíos operacionales y tecnológicos de las empresas socias e industrias de la Región del Biobío con la capacidad de desarrollo, investigación y soluciones de la academia, startups y centros de I+D.
+                                La Mesa de Innovación de CIDERE Biobío es una plataforma colaborativa que conecta a la industria, la academia y el ecosistema emprendedor para identificar desafíos estratégicos y co-crear soluciones innovadoras. Este espacio impulsa la transferencia de conocimiento, fortalece las capacidades de I+D del territorio y promueve la competitividad sostenible del Biobío mediante la colaboración entre empresas, instituciones educativas, centros de investigación y startups.
                             </p>
                         </div>
                         <i data-lucide="building-2" size="56" style="opacity: 0.35; flex-shrink: 0;"></i>
@@ -203,22 +202,15 @@
                         <h4 style="font-size: 12px; font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 1px; color: #a7f3d0; margin-bottom: 16px;">
                             Directiva & Comité Ejecutivo de la Mesa
                         </h4>
-                        <div class="grid-3" style="gap: 16px;">
-                            <div style="background: rgba(255,255,255,0.06); padding: 16px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
-                                <div style="font-size: 14px; font-weight: 700;">Presidencia de la Mesa</div>
-                                <div style="font-size: 12px; opacity: 0.85; margin-top: 4px;">Representante Sector Industrial Regional</div>
-                                <div style="font-size: 11px; color: #a7f3d0; margin-top: 8px; font-family: var(--font-mono);">Liderazgo Estratégico</div>
-                            </div>
-                            <div style="background: rgba(255,255,255,0.06); padding: 16px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
-                                <div style="font-size: 14px; font-weight: 700;">Vicepresidencia Academia</div>
-                                <div style="font-size: 12px; opacity: 0.85; margin-top: 4px;">Representante Red de Universidades</div>
-                                <div style="font-size: 11px; color: #a7f3d0; margin-top: 8px; font-family: var(--font-mono);">Vinculación I+D</div>
-                            </div>
-                            <div style="background: rgba(255,255,255,0.06); padding: 16px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
-                                <div style="font-size: 14px; font-weight: 700;">Secretaría Técnica CIDERE</div>
-                                <div style="font-size: 12px; opacity: 0.85; margin-top: 4px;">Equipo Ejecutivo CIDERE Biobío</div>
-                                <div style="font-size: 11px; color: #a7f3d0; margin-top: 8px; font-family: var(--font-mono);">Coordinación Operativa</div>
-                            </div>
+                        <!-- NUEVA GRILLA DE DIRECTIVA (Usando tus 4 imágenes completas) -->
+                        <div class="grid-4" style="gap: 16px;">
+                            <img src="tarjeta_hugo.png" alt="Hugo García" style="width: 100%; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='translateY(0)'">
+                            
+                            <img src="tarjeta_lila.png" alt="Lila Rodríguez" style="width: 100%; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='translateY(0)'">
+                            
+                            <img src="tarjeta_alejandro.png" alt="Alejandro Parada" style="width: 100%; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='translateY(0)'">
+                            
+                            <img src="tarjeta_david.png" alt="David Fernández" style="width: 100%; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='translateY(0)'">
                         </div>
                     </div>
                 </div>
@@ -572,7 +564,6 @@
         </div>
     </div>
 
-
     <script>
         lucide.createIcons();
 
@@ -581,7 +572,7 @@
         // ==========================================
         const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxN3oEYr2N8JZ5byhat94XMa_QwPe48sv-6Z6get94tmDpWrJwsTqg2-6LVC_5QWDH_GQ/exec"; 
         
-        // CSV Links (no cambian)
+        // CSV Links
         const CSV_STARTUPS = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ9bjV9qSRsPyVgCceJH3oKnkmMkJ2kd_aIE-FEQcUXhd7Tdo_BnRsMLtfSe7CMCETDOn5Il4kmfD5n/pub?gid=174902125&single=true&output=csv";
         const CSV_DESAFIOS = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ9bjV9qSRsPyVgCceJH3oKnkmMkJ2kd_aIE-FEQcUXhd7Tdo_BnRsMLtfSe7CMCETDOn5Il4kmfD5n/pub?gid=1430585904&single=true&output=csv";
 
@@ -600,9 +591,6 @@
         let startupsRegistry = [];
         let empresaSeleccionadaActual = null;
 
-        // ==========================================
-        // FUNCIONES DE BÚSQUEDA Y NAVEGACIÓN
-        // ==========================================
         function verificarEnter(event) {
             if (event.key === "Enter") ejecutarBuscador();
         }
@@ -671,13 +659,9 @@
             element.classList.add('selected');
         }
 
-        // ==========================================
-        // MODERACIÓN: CARGAR DATOS DESDE SHEETS
-        // ==========================================
         function cargarDatosDesdeSheets() {
             document.getElementById('sync-status').innerText = "(Sincronizando con Moderación...)";
             
-            // Cargar Startups e IES
             Papa.parse(CSV_STARTUPS, {
                 download: true,
                 complete: function(results) {
@@ -685,7 +669,6 @@
                     const filas = results.data;
                     
                     for(let i = 1; i < filas.length; i++) {
-                        // Verificamos dinámicamente la ÚLTIMA columna para saber si dice Aprobado
                         let ultimaColumna = filas[i][filas[i].length - 1];
                         
                         if(filas[i].length >= 5 && filas[i][1] && ultimaColumna && ultimaColumna.trim() === 'Aprobado') {
@@ -715,7 +698,6 @@
                 }
             });
 
-            // Cargar Desafíos
             Papa.parse(CSV_DESAFIOS, {
                 download: true,
                 complete: function(results) {
@@ -727,7 +709,6 @@
                     for(let i = 1; i < filas.length; i++) {
                         let ultimaColumnaDesafio = filas[i][filas[i].length - 1];
                         
-                        // Solo mostramos los Desafíos que en la última columna digan "Aprobado"
                         if(filas[i].length >= 4 && filas[i][1] && ultimaColumnaDesafio && ultimaColumnaDesafio.trim() === 'Aprobado') {
                             conteo++;
                             contenedor.innerHTML += `
@@ -746,9 +727,6 @@
             });
         }
 
-        // ==========================================
-        // DIBUJAR TARJETAS CON BOTÓN DE CONTACTO REAL
-        // ==========================================
         function actualizarListasStartups(filtro = 'Todos') {
             const contenedor = document.getElementById('lista-startups');
             contenedor.innerHTML = '';
@@ -768,7 +746,6 @@
                         <p style="font-size: 12px; color: var(--text-muted); margin-top:4px;"><b>Industria:</b> ${s.industria}</p>
                         <div style="margin-top: 14px; font-weight: 600; font-size: 12px; color: var(--primary);">TRL Validado: ${s.trlMax}</div>
                         
-                        <!-- BOTÓN QUE DISPARA EL CORREO A APPS SCRIPT -->
                         <div style="margin-top: 16px;">
                             <button class="btn-primary" style="background-color: var(--green-accent); width: 100%; justify-content: center;" onclick="solicitarContactoReal('${s.contacto}', '${s.nombre}')">Solicitar Contacto</button>
                         </div>
@@ -816,9 +793,6 @@
             btnElement.classList.add('active'); actualizarListasIES(industria);
         }
 
-        // ==========================================
-        // FUNCIÓN DE MENSAJERÍA REAL
-        // ==========================================
         function solicitarContactoReal(emailDestino, nombreStartup) {
             if (!emailDestino || emailDestino === 'No disponible' || emailDestino.trim() === '') {
                 alert("Esta institución/startup no tiene un correo público registrado en la base de datos.");
@@ -839,9 +813,6 @@
             .catch(error => alert("Hubo un error al procesar la solicitud de contacto."));
         }
 
-        // ==========================================
-        // FUNCIONES DE GUARDADO (Pasan por moderación)
-        // ==========================================
         function registrarNuevoDesarrollo(event) {
             event.preventDefault();
             document.getElementById('loader-startup').style.display = 'inline';
@@ -893,9 +864,6 @@
             });
         }
 
-        // ==========================================
-        // CUESTIONARIO TRL (Solo visual por ahora)
-        // ==========================================
         function renderizarCuestionarioTRLLineal() {
             const container = document.getElementById('cuestionario-lineal-container');
             container.innerHTML = '';
