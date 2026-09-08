@@ -89,14 +89,11 @@
         .trl-step-card.completed { border-color: #10b981; background-color: #f0fdf4; }
         .trl-step-card.current { border-color: var(--primary); box-shadow: 0 4px 12px rgba(23, 56, 109, 0.08); }
         .trl-step-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-        .evidence-upload-zone { margin-top: 12px; padding: 12px; background: #f8fafc; border: 1px dashed var(--border-color); border-radius: 8px; }
 
         .kpi-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
         .kpi-card { background: white; border: 1px solid var(--border-color); border-radius: 10px; padding: 20px; display: flex; align-items: center; justify-content: space-between; }
         .kpi-value { font-size: 32px; font-weight: 800; color: var(--primary); font-family: var(--font-mono); }
         .kpi-label { font-size: 11px; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.5px; font-family: var(--font-mono); }
-
-        .startup-img-preview { width: 100%; height: 140px; object-fit: cover; border-radius: 8px; margin-bottom: 12px; }
 
         .filter-pill { padding: 6px 14px; border-radius: 20px; border: 1px solid var(--border-color); background: white; font-size: 12px; cursor: pointer; font-weight: 500; }
         .filter-pill.active { background: var(--primary); color: white; border-color: var(--primary); }
@@ -120,7 +117,7 @@
         
         .loader-text { font-size: 12px; color: var(--green-accent); font-weight: bold; margin-right: 10px; display: none; }
         
-        /* ESTILOS NUEVOS PARA TARJETAS DE DIRECTIVA */
+        /* ESTILOS TARJETAS DE DIRECTIVA */
         .profile-card { background: #ffffff; border-radius: 10px; padding: 24px 16px 16px; text-align: center; color: var(--text-main); box-shadow: 0 4px 12px rgba(0,0,0,0.1); display: flex; flex-direction: column; justify-content: space-between; height: 100%; transition: transform 0.2s; }
         .profile-card:hover { transform: translateY(-4px); }
         .profile-img { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; margin: 0 auto 12px; border: 2px solid var(--border-color); }
@@ -210,7 +207,7 @@
                         <h4 style="font-size: 12px; font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 1px; color: #a7f3d0; margin-bottom: 16px;">
                             Directiva & Comité Ejecutivo de la Mesa
                         </h4>
-                        <!-- GRILLA DE DIRECTIVA EN HTML/CSS (Perfectamente alineada) -->
+                        <!-- GRILLA DE DIRECTIVA EN HTML/CSS -->
                         <div class="grid-4" style="gap: 16px;">
                             <!-- Hugo Garcia -->
                             <div class="profile-card">
@@ -227,7 +224,6 @@
                                 <div class="profile-name">Lila Rodríguez</div>
                                 <div class="profile-role">Directora de Innovación y Vinculación con el Medio</div>
                                 <div class="profile-logo-container">
-                                    <!-- ARCHIVO CORREGIDO: .jpeg -->
                                     <img src="inacap_logo.jpeg" alt="INACAP" class="profile-logo">
                                 </div>
                             </div>
@@ -246,7 +242,6 @@
                                 <div class="profile-name">David Fernández</div>
                                 <div class="profile-role">Gerente General</div>
                                 <div class="profile-logo-container">
-                                    <!-- ARCHIVO CORREGIDO: .jpg -->
                                     <img src="cidere_logo.jpg" alt="CIDERE Biobío" class="profile-logo">
                                 </div>
                             </div>
@@ -295,27 +290,43 @@
                 </div>
 
                 <div class="grid-2">
+                    <!-- COLUMNA IZQUIERDA: CARRUSEL DE GALERÍA -->
                     <div>
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                            <h3 style="font-size: 16px;">Startups Destacadas</h3>
-                            <a href="#" onclick="switchView('view-repositorio')" style="color: var(--primary); font-size: 12px; font-weight: 600; text-decoration: none;">Ver Todas</a>
+                            <h3 style="font-size: 16px;">Galería CIDERE Biobío</h3>
+                            <span style="color: var(--text-muted); font-size: 12px;">Actividades de la Mesa</span>
                         </div>
                         
-                        <!-- Tarjeta fija de ejemplo para diseño -->
-                        <div class="card">
-                            <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=600&auto=format&fit=crop&q=80" class="startup-img-preview" alt="Photonics">
-                            <span class="badge badge-green">STARTUP</span>
-                            <div style="display: flex; justify-content: space-between; margin-top: 8px;">
-                                <h4 style="font-size: 16px;">Lumina Photonics</h4>
-                                <span style="font-family: var(--font-mono); font-size: 11px; font-weight: 600; color: var(--text-muted)">Nivel TRL Actual: <b style="color: var(--text-main)">5</b></span>
+                        <div class="card" style="padding: 0; overflow: hidden; position: relative;">
+                            <!-- Contenedor del Carrusel -->
+                            <div id="carrusel-fotos" style="display: flex; width: 300%; transition: transform 0.5s ease-in-out;">
+                                <!-- Slide 1: Fotos 1 y 2 -->
+                                <div style="width: 33.333%; display: flex; gap: 12px; padding: 20px;">
+                                    <img src="foto1.jpg" alt="Actividad CIDERE" style="width: calc(50% - 6px); height: 220px; object-fit: cover; border-radius: 8px;">
+                                    <img src="foto2.jpg" alt="Actividad CIDERE" style="width: calc(50% - 6px); height: 220px; object-fit: cover; border-radius: 8px;">
+                                </div>
+                                <!-- Slide 2: Fotos 3 y 4 -->
+                                <div style="width: 33.333%; display: flex; gap: 12px; padding: 20px;">
+                                    <img src="foto3.jpg" alt="Actividad CIDERE" style="width: calc(50% - 6px); height: 220px; object-fit: cover; border-radius: 8px;">
+                                    <img src="foto4.jpg" alt="Actividad CIDERE" style="width: calc(50% - 6px); height: 220px; object-fit: cover; border-radius: 8px;">
+                                </div>
+                                <!-- Slide 3: Fotos 5 y 6 (AQUÍ ESTÁ CORREGIDA A .png) -->
+                                <div style="width: 33.333%; display: flex; gap: 12px; padding: 20px;">
+                                    <img src="foto5.jpg" alt="Actividad CIDERE" style="width: calc(50% - 6px); height: 220px; object-fit: cover; border-radius: 8px;">
+                                    <img src="foto6.png" alt="Actividad CIDERE" style="width: calc(50% - 6px); height: 220px; object-fit: cover; border-radius: 8px;">
+                                </div>
                             </div>
-                            <p style="font-size: 13px; color: var(--text-muted); margin: 10px 0;">Desarrollo de interconexiones ópticas para centros de datos a gran escala, reduciendo el consumo energético en un 35%.</p>
-                            <div style="display: flex; gap: 10px; margin-top: 16px;">
-                                <button class="btn-primary" style="background-color: var(--green-accent)" onclick="solicitarContactoReal('contacto@luminaphotonics.cl', 'Lumina Photonics')">Solicitar Contacto</button>
+                            
+                            <!-- Indicadores (Puntitos) -->
+                            <div style="display: flex; justify-content: center; gap: 6px; padding-bottom: 16px;">
+                                <div class="dot active" style="width: 8px; height: 8px; border-radius: 50%; background: var(--primary);"></div>
+                                <div class="dot" style="width: 8px; height: 8px; border-radius: 50%; background: var(--border-color);"></div>
+                                <div class="dot" style="width: 8px; height: 8px; border-radius: 50%; background: var(--border-color);"></div>
                             </div>
                         </div>
                     </div>
 
+                    <!-- COLUMNA DERECHA: DESAFÍOS -->
                     <div>
                         <div class="card" style="background: var(--primary); color: white;">
                             <h3 style="font-size: 15px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
@@ -602,7 +613,6 @@
             </form>
         </div>
     </div>
-
 
     <script>
         lucide.createIcons();
@@ -946,6 +956,28 @@
             document.getElementById('texto-solucion-generada').innerHTML = `Analizando requerimiento... Se sugerirán vinculaciones con IES y Startups de la base de datos de CIDERE.`;
             lucide.createIcons();
         }
+
+        // ==========================================
+        // CÓDIGO DEL CARRUSEL DE IMÁGENES
+        // ==========================================
+        let slideIndex = 0;
+        setInterval(() => {
+            const track = document.getElementById('carrusel-fotos');
+            if(track) {
+                slideIndex = (slideIndex + 1) % 3; // Alterna entre 0, 1 y 2
+                track.style.transform = `translateX(-${slideIndex * 33.333}%)`;
+                
+                const dots = document.querySelectorAll('.dot');
+                if(dots.length > 0) {
+                    dots.forEach(dot => {
+                        dot.style.background = 'var(--border-color)';
+                        dot.classList.remove('active');
+                    });
+                    dots[slideIndex].style.background = 'var(--primary)';
+                    dots[slideIndex].classList.add('active');
+                }
+            }
+        }, 4000); // Cambia cada 4 segundos
 
         window.onload = function() {
             renderizarCuestionarioTRLLineal();
