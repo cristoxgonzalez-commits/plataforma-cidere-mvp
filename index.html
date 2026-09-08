@@ -298,8 +298,8 @@
                         </div>
                         
                         <div class="card" style="padding: 0; overflow: hidden; position: relative;">
-                            <!-- Contenedor del Carrusel -->
-                            <div id="carrusel-fotos" style="display: flex; width: 300%; transition: transform 0.5s ease-in-out;">
+                            <!-- Contenedor del Carrusel (ACTUALIZADO PARA TRANSICIONES MUY SUAVES) -->
+                            <div id="carrusel-fotos" style="display: flex; width: 300%; transition: transform 1.5s cubic-bezier(0.22, 1, 0.36, 1);">
                                 <!-- Slide 1: Fotos 1 y 2 -->
                                 <div style="width: 33.333%; display: flex; gap: 12px; padding: 20px;">
                                     <img src="foto1.jpg" alt="Actividad CIDERE" style="width: calc(50% - 6px); height: 220px; object-fit: cover; border-radius: 8px;">
@@ -310,7 +310,7 @@
                                     <img src="foto3.jpg" alt="Actividad CIDERE" style="width: calc(50% - 6px); height: 220px; object-fit: cover; border-radius: 8px;">
                                     <img src="foto4.jpg" alt="Actividad CIDERE" style="width: calc(50% - 6px); height: 220px; object-fit: cover; border-radius: 8px;">
                                 </div>
-                                <!-- Slide 3: Fotos 5 y 6 (AQUÍ ESTÁ CORREGIDA A .png) -->
+                                <!-- Slide 3: Fotos 5 y 6 (.png) -->
                                 <div style="width: 33.333%; display: flex; gap: 12px; padding: 20px;">
                                     <img src="foto5.jpg" alt="Actividad CIDERE" style="width: calc(50% - 6px); height: 220px; object-fit: cover; border-radius: 8px;">
                                     <img src="foto6.png" alt="Actividad CIDERE" style="width: calc(50% - 6px); height: 220px; object-fit: cover; border-radius: 8px;">
@@ -613,6 +613,7 @@
             </form>
         </div>
     </div>
+
 
     <script>
         lucide.createIcons();
@@ -977,7 +978,7 @@
                     dots[slideIndex].classList.add('active');
                 }
             }
-        }, 4000); // Cambia cada 4 segundos
+        }, 5000); // Cambia cada 5 segundos
 
         window.onload = function() {
             renderizarCuestionarioTRLLineal();
