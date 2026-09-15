@@ -150,7 +150,7 @@
                     <i data-lucide="factory"></i> Desafíos Industria
                 </li>
                 <li class="nav-item" onclick="switchView('view-ies', this)">
-                    <i data-lucide="graduation-cap"></i> IES (Universidades)
+                    <i data-lucide="graduation-cap"></i> IES / Academias
                 </li>
                 <li class="nav-item" onclick="switchView('view-mensajeria', this)">
                     <i data-lucide="message-square"></i> Mensajería
@@ -262,7 +262,7 @@
             <section id="view-dashboard" class="view-section active">
                 <div style="margin-bottom: 24px;">
                     <h1 style="font-size: 24px; font-weight: 700;">Panel de Innovación CIDERE</h1>
-                    <p style="color: var(--text-muted); font-size: 13px;">Impulsando el desarrollo regional mediante la conexión entre Academia, Industria y Capital. <span id="sync-status" style="color: #10b981; font-weight: bold;">(Sincronizando Google Sheets...)</span></p>
+                    <p style="color: var(--text-muted); font-size: 13px;">Impulsando el desarrollo regional mediante la conexión entre Academia, Industria y Capital.</p>
                 </div>
 
                 <div class="kpi-container">
@@ -297,31 +297,31 @@
                             <span style="color: var(--text-muted); font-size: 12px;">Actividades de la Mesa</span>
                         </div>
                         
-                        <div class="card" style="padding: 0; overflow: hidden; position: relative;">
-                            <!-- Contenedor del Carrusel (ACTUALIZADO PARA TRANSICIONES MUY SUAVES) -->
-                            <div id="carrusel-fotos" style="display: flex; width: 300%; transition: transform 1.5s cubic-bezier(0.22, 1, 0.36, 1);">
+                        <div class="card" style="padding: 20px; position: relative; height: 310px; display: flex; flex-direction: column; justify-content: space-between;">
+                            <!-- Contenedor del Carrusel (Transición por Fade) -->
+                            <div id="carrusel-fotos" style="position: relative; width: 100%; height: 220px;">
                                 <!-- Slide 1: Fotos 1 y 2 -->
-                                <div style="width: 33.333%; display: flex; gap: 12px; padding: 20px;">
-                                    <img src="foto1.jpg" alt="Actividad CIDERE" style="width: calc(50% - 6px); height: 220px; object-fit: cover; border-radius: 8px;">
-                                    <img src="foto2.jpg" alt="Actividad CIDERE" style="width: calc(50% - 6px); height: 220px; object-fit: cover; border-radius: 8px;">
+                                <div class="slide" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; gap: 12px; opacity: 1; transition: opacity 1.5s ease-in-out;">
+                                    <img src="foto1.jpg" alt="Actividad CIDERE" style="width: calc(50% - 6px); height: 100%; object-fit: cover; border-radius: 8px;">
+                                    <img src="foto2.jpg" alt="Actividad CIDERE" style="width: calc(50% - 6px); height: 100%; object-fit: cover; border-radius: 8px;">
                                 </div>
                                 <!-- Slide 2: Fotos 3 y 4 -->
-                                <div style="width: 33.333%; display: flex; gap: 12px; padding: 20px;">
-                                    <img src="foto3.jpg" alt="Actividad CIDERE" style="width: calc(50% - 6px); height: 220px; object-fit: cover; border-radius: 8px;">
-                                    <img src="foto4.jpg" alt="Actividad CIDERE" style="width: calc(50% - 6px); height: 220px; object-fit: cover; border-radius: 8px;">
+                                <div class="slide" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; gap: 12px; opacity: 0; transition: opacity 1.5s ease-in-out;">
+                                    <img src="foto3.jpg" alt="Actividad CIDERE" style="width: calc(50% - 6px); height: 100%; object-fit: cover; border-radius: 8px;">
+                                    <img src="foto4.jpg" alt="Actividad CIDERE" style="width: calc(50% - 6px); height: 100%; object-fit: cover; border-radius: 8px;">
                                 </div>
                                 <!-- Slide 3: Fotos 5 y 6 (.png) -->
-                                <div style="width: 33.333%; display: flex; gap: 12px; padding: 20px;">
-                                    <img src="foto5.jpg" alt="Actividad CIDERE" style="width: calc(50% - 6px); height: 220px; object-fit: cover; border-radius: 8px;">
-                                    <img src="foto6.png" alt="Actividad CIDERE" style="width: calc(50% - 6px); height: 220px; object-fit: cover; border-radius: 8px;">
+                                <div class="slide" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; gap: 12px; opacity: 0; transition: opacity 1.5s ease-in-out;">
+                                    <img src="foto5.jpg" alt="Actividad CIDERE" style="width: calc(50% - 6px); height: 100%; object-fit: cover; border-radius: 8px;">
+                                    <img src="foto6.png" alt="Actividad CIDERE" style="width: calc(50% - 6px); height: 100%; object-fit: cover; border-radius: 8px;">
                                 </div>
                             </div>
                             
                             <!-- Indicadores (Puntitos) -->
-                            <div style="display: flex; justify-content: center; gap: 6px; padding-bottom: 16px;">
-                                <div class="dot active" style="width: 8px; height: 8px; border-radius: 50%; background: var(--primary);"></div>
-                                <div class="dot" style="width: 8px; height: 8px; border-radius: 50%; background: var(--border-color);"></div>
-                                <div class="dot" style="width: 8px; height: 8px; border-radius: 50%; background: var(--border-color);"></div>
+                            <div style="display: flex; justify-content: center; gap: 6px; margin-top: 16px;">
+                                <div class="dot active" style="width: 8px; height: 8px; border-radius: 50%; background: var(--primary); transition: background 0.5s;"></div>
+                                <div class="dot" style="width: 8px; height: 8px; border-radius: 50%; background: var(--border-color); transition: background 0.5s;"></div>
+                                <div class="dot" style="width: 8px; height: 8px; border-radius: 50%; background: var(--border-color); transition: background 0.5s;"></div>
                             </div>
                         </div>
                     </div>
@@ -452,7 +452,7 @@
                 <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px;">
                     <div>
                         <span class="badge badge-blue" style="margin-bottom: 6px;">OFERTA TECNOLÓGICA ACADÉMICA</span>
-                        <h1 style="font-size: 24px; font-weight: 700;">Instituciones de Educación Superior (IES)</h1>
+                        <h1 style="font-size: 24px; font-weight: 700;">Instituciones de Educación Superior (IES / Academias)</h1>
                     </div>
                 </div>
 
@@ -650,7 +650,7 @@
             const textoBusqueda = document.getElementById('buscador-global').value.toLowerCase().trim();
             const navIES = document.querySelector('li[onclick*="view-ies"]');
             
-            if (textoBusqueda === "ies") {
+            if (textoBusqueda === "ies" || textoBusqueda.includes("academia")) {
                 if (!document.getElementById('view-ies').classList.contains('active')) switchView('view-ies', navIES);
                 actualizarListasIES();
                 return;
@@ -711,8 +711,6 @@
         }
 
         function cargarDatosDesdeSheets() {
-            document.getElementById('sync-status').innerText = "(Sincronizando con Moderación...)";
-            
             Papa.parse(CSV_STARTUPS, {
                 download: true,
                 complete: function(results) {
@@ -773,7 +771,6 @@
                     }
                     if(conteo === 0) contenedor.innerHTML = '<p style="font-size:12px;">No hay desafíos aprobados aún.</p>';
                     document.getElementById('kpi-desafios').innerText = conteo;
-                    document.getElementById('sync-status').innerText = "(Sincronizado ✔)";
                 }
             });
         }
@@ -818,7 +815,7 @@
             universidades.forEach(s => {
                 contenedor.innerHTML += `
                     <div class="card">
-                        <span class="badge badge-blue" style="margin-bottom: 8px;">IES / UNIVERSIDAD</span>
+                        <span class="badge badge-blue" style="margin-bottom: 8px;">IES / ACADEMIA</span>
                         <h4 style="font-size: 15px;">${s.nombre}</h4>
                         <p style="font-size: 11px; color: var(--text-muted); margin: 4px 0 10px 0;">Contacto OTL: ${s.contacto || 'Privado'}</p>
                         <p style="font-size: 12px; color: var(--text-muted);"><b>Capacidad / Proyecto:</b> ${s.queHace}</p>
@@ -959,21 +956,27 @@
         }
 
         // ==========================================
-        // CÓDIGO DEL CARRUSEL DE IMÁGENES
+        // CÓDIGO DEL CARRUSEL DE IMÁGENES (FADE SUAVE)
         // ==========================================
         let slideIndex = 0;
         setInterval(() => {
-            const track = document.getElementById('carrusel-fotos');
-            if(track) {
-                slideIndex = (slideIndex + 1) % 3; // Alterna entre 0, 1 y 2
-                track.style.transform = `translateX(-${slideIndex * 33.333}%)`;
-                
-                const dots = document.querySelectorAll('.dot');
+            const slides = document.querySelectorAll('.slide');
+            const dots = document.querySelectorAll('.dot');
+            
+            if(slides.length > 0) {
+                // Ocultar slide actual
+                slides[slideIndex].style.opacity = '0';
                 if(dots.length > 0) {
-                    dots.forEach(dot => {
-                        dot.style.background = 'var(--border-color)';
-                        dot.classList.remove('active');
-                    });
+                    dots[slideIndex].style.background = 'var(--border-color)';
+                    dots[slideIndex].classList.remove('active');
+                }
+                
+                // Avanzar al siguiente
+                slideIndex = (slideIndex + 1) % slides.length;
+                
+                // Mostrar nuevo slide
+                slides[slideIndex].style.opacity = '1';
+                if(dots.length > 0) {
                     dots[slideIndex].style.background = 'var(--primary)';
                     dots[slideIndex].classList.add('active');
                 }
