@@ -3,27 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mesa de Innovación - CIDERE Biobío</title>
+    <title>Plataforma CIDERE Biobío - MVP Interactivo</title>
     <!-- Fuentes Oficiales CIDERE Biobío -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     
-    <!-- PapaParse para lectura de Google Sheets -->
+    <!-- LIBRERÍA AGREGADA PARA LEER EXCEL EN TIEMPO REAL -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 
     <style>
         :root {
-            /* PALETA OFICIAL CIDERE BIOBÍO (MANUAL 2026 & WEB) */
-            --cidere-blue: #3C63AD;         /* Azul Corporativo */
-            --cidere-blue-dark: #112852;    /* Azul Fondo Navbar / Footer */
-            --cidere-blue-light: #e8f0fe;   /* Azul Suave */
-            --cidere-cyan: #01DCFF;         /* Celeste Acento */
-            --cidere-orange: #EE731B;       /* Naranjo Innovación */
+            /* PALETA OFICIAL MANUAL DE MARCA CIDERE BIOBÍO 2026 */
+            --cidere-blue-dark: #112852;    /* Azul Oscuro Sidebar */
+            --cidere-blue: #3C63AD;         /* Azul Corporativo Principal */
+            --cidere-blue-light: #e8f0fe;   /* Azul Suave Fondo */
+            --cidere-orange: #EE731B;       /* Naranjo Área Innovación */
             --cidere-orange-hover: #d8620d;
             --cidere-green: #598145;        /* Verde Corporativo */
-            --cidere-green-bright: #31AD72; /* Verde Éxito / Mentores */
+            --cidere-green-bright: #31AD72; /* Verde Mentores / CTAs */
+            --cidere-green-hover: #248a59;
             
-            --bg-body: #f8fafc;
+            --bg-sidebar: var(--cidere-blue-dark);
+            --bg-body: #f4f6fa;
             --bg-card: #ffffff;
             --text-main: #1e293b;
             --text-muted: #64748b;
@@ -35,231 +36,221 @@
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: var(--font-sans); background-color: var(--bg-body); color: var(--text-main); display: flex; flex-direction: column; min-height: 100vh; overflow-x: hidden; }
+        body { font-family: var(--font-sans); background-color: var(--bg-body); color: var(--text-main); display: flex; min-height: 100vh; overflow-x: hidden; }
 
         h1, h2, h3, h4, h5, h6, .font-title { font-family: var(--font-title); }
 
-        /* ENCABEZADO SUPERIOR ESTILO CIDEREBIOBIO.CL */
-        .site-header { background-color: #ffffff; border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.04); }
-        .header-topbar { background-color: var(--cidere-blue-dark); color: white; padding: 6px 32px; font-size: 11px; display: flex; justify-content: space-between; align-items: center; font-family: var(--font-title); font-weight: 500; }
-        .header-topbar a { color: var(--cidere-cyan); text-decoration: none; font-weight: 600; }
+        /* BARRA LATERAL (SIDEBAR) ESTRICTAMENTE MANTENIDA */
+        aside { width: 260px; background-color: var(--bg-sidebar); color: #ffffff; display: flex; flex-direction: column; justify-content: space-between; padding: 24px 16px; flex-shrink: 0; transition: left 0.3s ease; }
+        .brand { padding: 0 8px 24px 8px; border-bottom: 1px solid rgba(255, 255, 255, 0.12); margin-bottom: 20px; display: flex; justify-content: center; }
+        .nav-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+        .nav-item { padding: 12px 14px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 12px; font-size: 13.5px; font-weight: 500; color: rgba(255, 255, 255, 0.85); transition: all 0.2s ease; font-family: var(--font-title); }
+        .nav-item:hover { background-color: rgba(255, 255, 255, 0.1); color: #fff; }
+        .nav-item.active { background-color: #ffffff; color: var(--cidere-blue); font-weight: 700; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
         
-        .header-nav { display: flex; align-items: center; justify-content: space-between; padding: 12px 32px; height: 72px; max-width: 1400px; margin: 0 auto; width: 100%; }
-        .brand-logo { height: 48px; object-fit: contain; }
+        .btn-sidebar-cta { background: var(--cidere-orange); color: white; border: none; padding: 14px; border-radius: 8px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: background 0.2s; width: 100%; margin-top: auto; font-family: var(--font-title); }
+        .btn-sidebar-cta:hover { background-color: var(--cidere-orange-hover); }
+
+        /* AREA PRINCIPAL DE CONTENIDO */
+        main { flex-grow: 1; display: flex; flex-direction: column; height: 100vh; overflow-y: auto; }
+        header { background-color: #ffffff; height: 64px; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; padding: 0 32px; position: sticky; top: 0; z-index: 10; }
         
-        .nav-links-web { display: flex; gap: 28px; list-style: none; font-family: var(--font-title); font-size: 13.5px; font-weight: 600; color: var(--cidere-blue-dark); }
-        .nav-links-web li { cursor: pointer; padding: 8px 12px; border-radius: 8px; transition: all 0.2s ease; display: flex; align-items: center; gap: 8px; }
-        .nav-links-web li:hover { color: var(--cidere-blue); background-color: var(--cidere-blue-light); }
-        .nav-links-web li.active { color: var(--cidere-blue); background-color: var(--cidere-blue-light); font-weight: 700; border-bottom: 2px solid var(--cidere-blue); }
-
-        .btn-header-cta { background: var(--cidere-orange); color: white; border: none; padding: 10px 20px; border-radius: 20px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; font-family: var(--font-title); font-size: 13px; transition: all 0.2s; box-shadow: 0 4px 12px rgba(238, 115, 27, 0.3); }
-        .btn-header-cta:hover { background-color: var(--cidere-orange-hover); transform: translateY(-1px); }
-
-        .mobile-menu-btn { display: none; background: transparent; border: none; cursor: pointer; color: var(--cidere-blue-dark); }
-
-        /* LAYOUT DE LA PLATAFORMA EN LA PÁGINA */
-        .platform-wrapper { display: flex; max-width: 1400px; margin: 0 auto; width: 100%; flex-grow: 1; }
-
-        /* BARRA LATERAL SUB-MESA */
-        aside { width: 250px; background-color: #ffffff; border-right: 1px solid var(--border-color); padding: 24px 16px; flex-shrink: 0; display: flex; flex-direction: column; justify-content: space-between; }
-        .sidebar-title { font-size: 11px; text-transform: uppercase; font-family: var(--font-mono); color: var(--text-muted); letter-spacing: 1px; margin-bottom: 12px; padding-left: 12px; font-weight: 700; }
-        .nav-list { list-style: none; display: flex; flex-direction: column; gap: 4px; }
-        .nav-item { padding: 11px 14px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; gap: 12px; font-size: 13px; font-weight: 600; color: var(--text-main); transition: all 0.2s ease; font-family: var(--font-title); }
-        .nav-item:hover { background-color: #f1f5f9; color: var(--cidere-blue); }
-        .nav-item.active { background-color: var(--cidere-blue); color: #ffffff; font-weight: 700; box-shadow: 0 4px 12px rgba(60, 99, 173, 0.25); }
-
-        /* ÁREA PRINCIPAL DE CONTENIDO */
-        main { flex-grow: 1; padding: 32px; overflow-y: auto; }
+        .mobile-menu-btn { display: none; background: transparent; border: none; cursor: pointer; color: var(--text-main); margin-right: 16px; }
         
-        .search-bar { display: flex; align-items: center; background-color: #ffffff; border: 1px solid var(--border-color); border-radius: 20px; padding: 8px 18px; width: 100%; max-width: 420px; gap: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.02); }
+        .search-bar { display: flex; align-items: center; background-color: var(--bg-body); border: 1px solid var(--border-color); border-radius: 8px; padding: 8px 16px; width: 380px; gap: 10px; }
         .search-bar input { border: none; background: transparent; outline: none; width: 100%; font-size: 13px; font-family: var(--font-sans); }
+        
+        .top-menu { display: flex; align-items: center; gap: 24px; }
+        .top-nav-links { display: flex; gap: 20px; list-style: none; font-size: 13px; font-weight: 600; color: var(--text-muted); font-family: var(--font-title); }
+        .top-nav-links li { cursor: pointer; padding: 6px 10px; border-radius: 6px; transition: all 0.2s; }
+        .top-nav-links li:hover { color: var(--cidere-blue); background-color: var(--bg-body); }
+        .top-nav-links li.active-top { color: var(--cidere-blue); font-weight: 700; background-color: var(--cidere-blue-light); }
+        
+        .user-profile { display: flex; align-items: center; gap: 12px; padding-left: 16px; border-left: 1px solid var(--border-color); }
+        .avatar { width: 36px; height: 36px; border-radius: 50%; background-color: #ccc; object-fit: cover; }
 
-        /* COMPONENTES REUTILIZABLES ESTILO CIDERE */
-        .badge { font-family: var(--font-mono); font-size: 10px; padding: 4px 10px; border-radius: 20px; font-weight: 700; text-transform: uppercase; display: inline-block; }
-        .badge-green { background: #e6f7ef; color: var(--cidere-green-bright); }
+        /* CONTENEDOR DE VISTAS */
+        .content-container { padding: 32px; max-width: 1280px; margin: 0 auto; width: 100%; }
+        .view-section { display: none; }
+        .view-section.active { display: block; animation: fadeIn 0.25s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* COMPONENTES REUTILIZABLES */
+        .badge { font-family: var(--font-mono); font-size: 10px; padding: 3px 8px; border-radius: 4px; font-weight: 600; text-transform: uppercase; display: inline-block; }
+        .badge-green { background: #d1fae5; color: #065f46; }
         .badge-blue { background: var(--cidere-blue-light); color: var(--cidere-blue); }
         .badge-gray { background: #f1f5f9; color: #475569; }
 
-        .btn-primary { background-color: var(--cidere-blue); color: white; border: none; padding: 10px 20px; border-radius: 20px; font-weight: 600; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-title); transition: all 0.2s; box-shadow: 0 3px 10px rgba(60, 99, 173, 0.2); }
-        .btn-primary:hover { background-color: #2e4f8d; }
-        .btn-outline { background: transparent; border: 1px solid var(--border-color); color: var(--text-main); padding: 8px 16px; border-radius: 20px; font-weight: 600; font-size: 13px; cursor: pointer; font-family: var(--font-title); }
+        .btn-primary { background-color: var(--cidere-blue); color: white; border: none; padding: 10px 18px; border-radius: 6px; font-weight: 600; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-title); }
+        .btn-primary:hover { background-color: #2f4f8a; }
+        .btn-outline { background: transparent; border: 1px solid var(--border-color); color: var(--text-main); padding: 8px 14px; border-radius: 6px; font-weight: 500; font-size: 13px; cursor: pointer; font-family: var(--font-title); }
 
-        .card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 16px; padding: 24px; margin-bottom: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); border-top: 3px solid var(--cidere-blue); }
+        .card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 24px; margin-bottom: 20px; }
         .grid-2 { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; }
         .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
         .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
 
         /* MODALES FLOTANTES */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(17, 40, 82, 0.6); backdrop-filter: blur(3px); display: none; align-items: center; justify-content: center; z-index: 1000; }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 1000; }
         .modal-overlay.active { display: flex; }
-        .modal-content { background: white; padding: 32px; border-radius: 20px; width: 600px; max-width: 90%; max-height: 90vh; overflow-y: auto; box-shadow: 0 12px 36px rgba(0,0,0,0.18); }
+        .modal-content { background: white; padding: 30px; border-radius: 12px; width: 600px; max-width: 90%; max-height: 90vh; overflow-y: auto; }
 
-        /* TRL Y KPIS */
-        .trl-step-card { border: 1px solid var(--border-color); border-radius: 12px; padding: 18px; margin-bottom: 16px; background: #ffffff; transition: all 0.2s ease; }
-        .trl-step-card.completed { border-color: var(--cidere-green-bright); background-color: #f0fdf4; }
+        /* ESTILOS ESPECÍFICOS TRL LINEAL */
+        .trl-step-card { border: 1px solid var(--border-color); border-radius: 10px; padding: 18px; margin-bottom: 16px; background: #ffffff; transition: all 0.2s ease; }
+        .trl-step-card.completed { border-color: #10b981; background-color: #f0fdf4; }
         .trl-step-card.current { border-color: var(--cidere-blue); box-shadow: 0 4px 12px rgba(60, 99, 173, 0.12); }
         .trl-step-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
 
         .kpi-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
-        .kpi-card { background: white; border: 1px solid var(--border-color); border-radius: 14px; padding: 20px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
+        .kpi-card { background: white; border: 1px solid var(--border-color); border-radius: 10px; padding: 20px; display: flex; align-items: center; justify-content: space-between; }
         .kpi-value { font-size: 32px; font-weight: 800; color: var(--cidere-blue); font-family: var(--font-mono); }
         .kpi-label { font-size: 11px; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.5px; font-family: var(--font-title); font-weight: 700; }
 
-        .filter-pill { padding: 8px 18px; border-radius: 20px; border: 1px solid var(--border-color); background: white; font-size: 12px; cursor: pointer; font-weight: 600; white-space: nowrap; font-family: var(--font-title); transition: all 0.2s; }
-        .filter-pill:hover { border-color: var(--cidere-blue); color: var(--cidere-blue); }
+        .filter-pill { padding: 6px 14px; border-radius: 20px; border: 1px solid var(--border-color); background: white; font-size: 12px; cursor: pointer; font-weight: 600; white-space: nowrap; font-family: var(--font-title); }
         .filter-pill.active { background: var(--cidere-blue); color: white; border-color: var(--cidere-blue); }
 
-        .trl-gauge-card { background: var(--cidere-blue-dark); color: white; border-radius: 16px; padding: 24px; text-align: center; position: sticky; top: 100px; }
+        .trl-gauge-card { background: var(--cidere-blue-dark); color: white; border-radius: 12px; padding: 24px; text-align: center; position: sticky; top: 80px; }
         .trl-circle { width: 120px; height: 120px; border-radius: 50%; border: 8px solid var(--cidere-green-bright); display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 20px auto; }
 
-        .rubro-card { border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; text-align: center; cursor: pointer; transition: all 0.2s; background: white; }
-        .rubro-card:hover, .rubro-card.selected { border-color: var(--cidere-blue); background-color: #f8fafc; box-shadow: 0 4px 12px rgba(60, 99, 173, 0.1); }
+        .rubro-card { border: 1px solid var(--border-color); border-radius: 8px; padding: 20px; text-align: center; cursor: pointer; transition: all 0.2s; background: white; }
+        .rubro-card:hover, .rubro-card.selected { border-color: var(--cidere-blue); background-color: #f8fafc; box-shadow: 0 2px 8px rgba(60, 99, 173, 0.1); }
         .rubro-card.selected { border-width: 2px; }
 
-        textarea, input[type="text"], select { width: 100%; border: 1px solid var(--border-color); border-radius: 10px; padding: 12px; font-family: var(--font-sans); font-size: 13px; outline: none; background: #fff; }
-        textarea:focus, input:focus, select:focus { border-color: var(--cidere-blue); box-shadow: 0 0 0 3px rgba(60, 99, 173, 0.1); }
+        textarea, input[type="text"], select { width: 100%; border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; font-family: inherit; font-size: 13px; outline: none; background: #fff; }
+        textarea:focus, input:focus, select:focus { border-color: var(--cidere-blue); }
 
-        /* FOOTER ESTILO WEB CIDERE */
-        .footer-banner { background: linear-gradient(135deg, var(--cidere-blue-dark) 0%, var(--cidere-blue) 100%); color: white; border-radius: 16px; padding: 28px 36px; display: flex; align-items: center; justify-content: space-between; margin-top: 30px; box-shadow: 0 6px 20px rgba(17, 40, 82, 0.25); }
+        /* FOOTER IMPACTO REGIONAL */
+        .footer-banner { background-color: var(--cidere-blue-dark); color: white; border-radius: 12px; padding: 24px 32px; display: flex; align-items: center; justify-content: space-between; margin-top: 30px; }
         .metric-group { display: flex; gap: 40px; }
-        .metric-item { border-left: 2px solid rgba(255,255,255,0.25); padding-left: 16px; }
+        .metric-item { border-left: 2px solid rgba(255,255,255,0.2); padding-left: 16px; }
         .metric-val { font-size: 28px; font-weight: 800; font-family: var(--font-mono); }
-        .metric-lbl { font-size: 11px; opacity: 0.85; text-transform: uppercase; font-family: var(--font-title); font-weight: 600; }
+        .metric-lbl { font-size: 11px; opacity: 0.8; text-transform: uppercase; font-family: var(--font-title); font-weight: 600; }
         
         .loader-text { font-size: 12px; color: var(--cidere-green-bright); font-weight: bold; margin-right: 10px; display: none; }
         
-        /* DIRECTIVA */
-        .profile-card { background: #ffffff; border-radius: 14px; padding: 24px 16px 16px; text-align: center; color: var(--text-main); box-shadow: 0 4px 14px rgba(0,0,0,0.06); display: flex; flex-direction: column; justify-content: space-between; height: 100%; transition: transform 0.2s; border: 1px solid var(--border-color); }
-        .profile-card:hover { transform: translateY(-4px); border-color: var(--cidere-blue); }
+        /* ESTILOS TARJETAS DE DIRECTIVA */
+        .profile-card { background: #ffffff; border-radius: 10px; padding: 24px 16px 16px; text-align: center; color: var(--text-main); box-shadow: 0 4px 12px rgba(0,0,0,0.06); display: flex; flex-direction: column; justify-content: space-between; height: 100%; transition: transform 0.2s; }
+        .profile-card:hover { transform: translateY(-4px); }
         .profile-img { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; margin: 0 auto 12px; border: 2px solid var(--border-color); }
         .profile-name { font-size: 15px; font-weight: 700; color: var(--cidere-blue); margin-bottom: 4px; font-family: var(--font-title); }
         .profile-role { font-size: 10px; font-family: var(--font-mono); text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.5px; margin-bottom: 16px; flex-grow: 1; display: flex; align-items: center; justify-content: center; }
         .profile-logo-container { border-top: 1px solid var(--border-color); padding-top: 12px; display: flex; justify-content: center; align-items: center; height: 45px; }
         .profile-logo { max-height: 100%; max-width: 90%; object-fit: contain; }
-
-        .view-section { display: none; }
-        .view-section.active { display: block; animation: fadeIn 0.25s ease-in-out; }
-
-        /* ADAPTACIÓN MÓVIL */
-        .sidebar-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 150; }
+        
+        /* OVERLAY PARA CELULARES */
+        .sidebar-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 90; }
         .sidebar-overlay.active { display: block; }
 
-        @media (max-width: 900px) {
-            .nav-links-web { display: none; }
+        /* ADAPTACIÓN MÓVIL (RESPONSIVE) */
+        @media (max-width: 768px) {
             .mobile-menu-btn { display: block; }
-            aside { position: fixed; left: -260px; top: 0; bottom: 0; z-index: 200; height: 100vh; transition: left 0.3s ease; box-shadow: 4px 0 20px rgba(0,0,0,0.15); }
-            aside.open { left: 0; }
-            .header-nav { height: 60px; padding: 0 16px; }
-            main { padding: 16px; }
+            aside { position: fixed; left: -260px; top: 0; bottom: 0; z-index: 100; height: 100vh; }
+            aside.open { left: 0; box-shadow: 4px 0 24px rgba(0,0,0,0.2); }
+            header { padding: 0 16px; }
+            .top-nav-links { display: none; }
+            .search-bar { flex-grow: 1; width: auto; margin-left: 12px; }
+            .user-profile { display: none; }
+            .content-container { padding: 16px; }
             .grid-2, .grid-3, .grid-4, .kpi-container { grid-template-columns: 1fr; gap: 16px; }
             .carrusel-card { height: auto !important; padding: 16px !important; }
-            #carrusel-fotos { height: 300px !important; }
+            #carrusel-fotos { height: 320px !important; }
             .slide { flex-direction: column; }
-            .slide img { width: 100% !important; height: 140px !important; }
+            .slide img { width: 100% !important; height: 150px !important; }
             .footer-banner { flex-direction: column; text-align: center; gap: 24px; padding: 24px 16px; }
             .metric-group { flex-direction: column; width: 100%; gap: 16px; }
             .metric-item { border-left: none; border-top: 1px solid rgba(255,255,255,0.2); padding-left: 0; padding-top: 16px; }
+            .modal-content { width: 95%; padding: 20px; }
         }
     </style>
 </head>
 <body>
 
-    <!-- BANDEROLA SUPERIOR INSTITUCIONAL -->
-    <div class="header-topbar">
-        <span>Corporación Industrial para el Desarrollo Regional del Biobío</span>
-        <span>Mesa de Innovación Abierta | <a href="https://ciderebiobio.cl" target="_blank">ciderebiobio.cl</a></span>
-    </div>
+    <!-- OVERLAY OSCURO PARA MÓVIL -->
+    <div id="sidebar-overlay" class="sidebar-overlay" onclick="toggleSidebar()"></div>
 
-    <!-- NAVEGACIÓN SUPERIOR OFICIAL TIPO CIDEREBIOBIO.CL -->
-    <header class="site-header">
-        <div class="header-nav">
-            <div style="display: flex; align-items: center; gap: 12px;">
-                <button class="mobile-menu-btn" onclick="toggleSidebar()">
-                    <i data-lucide="menu" size="24"></i>
-                </button>
-                <a href="https://ciderebiobio.cl"><img src="logo.png" alt="Logo CIDERE Biobío" class="brand-logo"></a>
+    <!-- SIDEBAR -->
+    <aside id="main-sidebar">
+        <div>
+            <div class="brand">
+                <img src="logo.png" alt="Logo CIDERE" style="max-width: 100%; height: auto;">
             </div>
 
-            <!-- Menú Principal Web -->
-            <ul class="nav-links-web">
-                <li onclick="switchView('view-dashboard', this)" class="active"><i data-lucide="layout-dashboard" size="16"></i> Panel</li>
-                <li onclick="switchView('view-mesa-innovacion', this)"><i data-lucide="building-2" size="16"></i> La Mesa</li>
-                <li onclick="switchView('view-repositorio', this)"><i data-lucide="rocket" size="16"></i> Startups</li>
-                <li onclick="switchView('view-ies', this)"><i data-lucide="graduation-cap" size="16"></i> Academias / IES</li>
-                <li onclick="switchView('view-desafio', this)"><i data-lucide="factory" size="16"></i> Desafíos</li>
+            <ul class="nav-list">
+                <li class="nav-item active" onclick="switchView('view-dashboard', this)">
+                    <i data-lucide="layout-dashboard"></i> Panel de Control
+                </li>
+                <li class="nav-item" onclick="switchView('view-repositorio', this)">
+                    <i data-lucide="rocket"></i> Startups Regionales
+                </li>
+                <li class="nav-item" onclick="switchView('view-ficha', this)">
+                    <i data-lucide="file-text"></i> Diagnóstico TRL
+                </li>
+                <li class="nav-item" onclick="switchView('view-desafio', this)">
+                    <i data-lucide="factory"></i> Desafíos Industria
+                </li>
+                <li class="nav-item" onclick="switchView('view-ies', this)">
+                    <i data-lucide="graduation-cap"></i> IES / Academias
+                </li>
+                <li class="nav-item" onclick="switchView('view-mensajeria', this)">
+                    <i data-lucide="message-square"></i> Mensajería
+                </li>
             </ul>
-
-            <button class="btn-header-cta" onclick="openModal('modal-publicar-desafio')">
-                <i data-lucide="plus" size="16"></i> Publicar Desafío
-            </button>
         </div>
-    </header>
 
-    <!-- ESTRUCTURA PRINCIPAL DEL PLATAFORMA -->
-    <div class="platform-wrapper">
+        <button class="btn-sidebar-cta" onclick="openModal('modal-publicar-desafio')">
+            <i data-lucide="plus"></i> Publicar Desafío
+        </button>
+    </aside>
 
-        <!-- OVERLAY MÓVIL -->
-        <div id="sidebar-overlay" class="sidebar-overlay" onclick="toggleSidebar()"></div>
-
-        <!-- BARRA LATERAL MESA DE INNOVACIÓN -->
-        <aside id="main-sidebar">
-            <div>
-                <div class="sidebar-title">Plataforma Mesa</div>
-                <ul class="nav-list">
-                    <li class="nav-item active" onclick="switchView('view-dashboard', this)">
-                        <i data-lucide="layout-dashboard"></i> Panel General
-                    </li>
-                    <li class="nav-item" onclick="switchView('view-repositorio', this)">
-                        <i data-lucide="rocket"></i> Startups Regionales
-                    </li>
-                    <li class="nav-item" onclick="switchView('view-ficha', this)">
-                        <i data-lucide="file-text"></i> Diagnóstico TRL
-                    </li>
-                    <li class="nav-item" onclick="switchView('view-desafio', this)">
-                        <i data-lucide="factory"></i> Desafíos Industria
-                    </li>
-                    <li class="nav-item" onclick="switchView('view-ies', this)">
-                        <i data-lucide="graduation-cap"></i> IES / Academias
-                    </li>
-                    <li class="nav-item" onclick="switchView('view-mensajeria', this)">
-                        <i data-lucide="message-square"></i> Mensajería
-                    </li>
-                </ul>
-            </div>
-
-            <div style="border-top: 1px solid var(--border-color); padding-top: 16px; margin-top: auto;">
-                <p style="font-size: 11px; color: var(--text-muted); text-align: center;">Mesa de Innovación © 2026<br>CIDERE Biobío</p>
-            </div>
-        </aside>
-
-        <!-- CONTENIDO VISTAS -->
-        <main>
-            
-            <!-- BUSCADOR -->
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+    <!-- CONTENIDO PRINCIPAL -->
+    <main>
+        <!-- HEADER TOP CON BUSCADOR -->
+        <header>
+            <div style="display: flex; align-items: center; width: 100%;">
+                <button class="mobile-menu-btn" onclick="toggleSidebar()">
+                    <i data-lucide="menu"></i>
+                </button>
                 <div class="search-bar">
                     <i data-lucide="search" size="16" style="color: var(--text-muted)"></i>
-                    <input type="text" id="buscador-global" onkeydown="verificarEnter(event)" placeholder="Buscar soluciones, startups, universidades o palabras clave...">
+                    <input type="text" id="buscador-global" onkeydown="verificarEnter(event)" placeholder="Buscar startups, IES...">
                 </div>
             </div>
 
+            <div class="top-menu">
+                <ul class="top-nav-links">
+                    <li onclick="switchView('view-mesa-innovacion', this)" id="btn-top-mesa">Mesa de Innovación</li>
+                    <li onclick="alert('Sección de Recursos en construcción...')">Recursos</li>
+                    <li onclick="alert('Calendario de Eventos en construcción...')">Eventos</li>
+                </ul>
+                <i data-lucide="bell" size="18" style="color: var(--text-muted); cursor: pointer;" onclick="alert('No tienes nuevas notificaciones')"></i>
+                <i data-lucide="settings" size="18" style="color: var(--text-muted); cursor: pointer;" onclick="alert('Ajustes de cuenta...')"></i>
+                
+                <div class="user-profile">
+                    <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=100&auto=format&fit=crop&q=80" class="avatar" alt="User">
+                </div>
+            </div>
+        </header>
+
+        <div class="content-container">
+
             <!-- VISTA: MESA DE INNOVACIÓN -->
             <section id="view-mesa-innovacion" class="view-section">
-                <div class="card" style="background: linear-gradient(135deg, var(--cidere-blue-dark) 0%, var(--cidere-blue) 100%); color: white; padding: 32px; border-top: none;">
+                <div class="card" style="background: linear-gradient(135deg, var(--cidere-blue-dark) 0%, var(--cidere-blue) 100%); color: white; padding: 32px; margin-bottom: 24px;">
                     <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 20px;">
                         <div>
-                            <h1 style="font-size: 26px; font-weight: 800; margin-bottom: 12px;">¿Qué es la Mesa de Innovación?</h1>
+                            <h1 style="font-size: 28px; font-weight: 800; margin-bottom: 12px; font-family: var(--font-title);">¿Qué es la Mesa de Innovación?</h1>
                             <p style="font-size: 14px; opacity: 0.9; line-height: 1.6; max-width: 950px;">
-                                La Mesa de Innovación de CIDERE Biobío es una plataforma colaborativa que conecta a la industria, la academia y el ecosistema emprendedor para identificar desafíos estratégicos y co-crear soluciones innovadoras. Este espacio impulsa la transferencia de conocimiento, fortalece las capacidades de I+D del territorio y promueve la competitividad sostenible del Biobío.
+                                La Mesa de Innovación de CIDERE Biobío es una plataforma colaborativa que conecta a la industria, la academia y el ecosistema emprendedor para identificar desafíos estratégicos y co-crear soluciones innovadoras. Este espacio impulsa la transferencia de conocimiento, fortalece las capacidades de I+D del territorio y promueve la competitividad sostenible del Biobío mediante la colaboración entre empresas, instituciones educativas, centros de investigación y startups.
                             </p>
                         </div>
-                        <i data-lucide="building-2" size="56" style="opacity: 0.3; flex-shrink: 0;"></i>
+                        <i data-lucide="building-2" size="56" style="opacity: 0.35; flex-shrink: 0;"></i>
                     </div>
 
-                    <div style="margin-top: 28px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.18);">
-                        <h4 style="font-size: 12px; font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 1px; color: var(--cidere-cyan); margin-bottom: 16px;">
+                    <div style="margin-top: 28px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.15);">
+                        <h4 style="font-size: 12px; font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 1px; color: #01DCFF; margin-bottom: 16px;">
                             Directiva & Comité Ejecutivo de la Mesa
                         </h4>
+                        <!-- GRILLA DE DIRECTIVA EN HTML/CSS -->
                         <div class="grid-4" style="gap: 16px;">
                             <div class="profile-card">
                                 <img src="hugo_garcia.png" alt="Hugo García" class="profile-img">
@@ -306,10 +297,10 @@
                 </div>
             </section>
 
-            <!-- VISTA: PANEL GENERAL -->
+            <!-- PANTALLA 1: PANEL DE CONTROL -->
             <section id="view-dashboard" class="view-section active">
                 <div style="margin-bottom: 24px;">
-                    <h1 style="font-size: 24px; font-weight: 800; color: var(--cidere-blue);">Panel de Innovación CIDERE Biobío</h1>
+                    <h1 style="font-size: 24px; font-weight: 800; color: var(--cidere-blue);">Panel de Innovación CIDERE</h1>
                     <p style="color: var(--text-muted); font-size: 13px;">Impulsando el desarrollo regional mediante la conexión entre Academia, Industria y Capital.</p>
                 </div>
 
@@ -338,7 +329,7 @@
                 </div>
 
                 <div class="grid-2">
-                    <!-- CARRUSEL -->
+                    <!-- COLUMNA IZQUIERDA: CARRUSEL DE GALERÍA -->
                     <div>
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
                             <h3 style="font-size: 16px; color: var(--cidere-blue);">Galería CIDERE Biobío</h3>
@@ -346,21 +337,23 @@
                         </div>
                         
                         <div class="card carrusel-card" style="padding: 20px; position: relative; height: 310px; display: flex; flex-direction: column; justify-content: space-between;">
+                            <!-- Contenedor del Carrusel (Transición por Fade) -->
                             <div id="carrusel-fotos" style="position: relative; width: 100%; height: 220px;">
                                 <div class="slide" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; gap: 12px; opacity: 1; transition: opacity 1.5s ease-in-out;">
-                                    <img src="foto1.jpg" alt="Actividad CIDERE" style="width: calc(50% - 6px); height: 100%; object-fit: cover; border-radius: 10px;">
-                                    <img src="foto2.jpg" alt="Actividad CIDERE" style="width: calc(50% - 6px); height: 100%; object-fit: cover; border-radius: 10px;">
+                                    <img src="foto1.jpg" alt="Actividad CIDERE" style="width: calc(50% - 6px); height: 100%; object-fit: cover; border-radius: 8px;">
+                                    <img src="foto2.jpg" alt="Actividad CIDERE" style="width: calc(50% - 6px); height: 100%; object-fit: cover; border-radius: 8px;">
                                 </div>
                                 <div class="slide" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; gap: 12px; opacity: 0; transition: opacity 1.5s ease-in-out;">
-                                    <img src="foto3.jpg" alt="Actividad CIDERE" style="width: calc(50% - 6px); height: 100%; object-fit: cover; border-radius: 10px;">
-                                    <img src="foto4.jpg" alt="Actividad CIDERE" style="width: calc(50% - 6px); height: 100%; object-fit: cover; border-radius: 10px;">
+                                    <img src="foto3.jpg" alt="Actividad CIDERE" style="width: calc(50% - 6px); height: 100%; object-fit: cover; border-radius: 8px;">
+                                    <img src="foto4.jpg" alt="Actividad CIDERE" style="width: calc(50% - 6px); height: 100%; object-fit: cover; border-radius: 8px;">
                                 </div>
                                 <div class="slide" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; gap: 12px; opacity: 0; transition: opacity 1.5s ease-in-out;">
-                                    <img src="foto5.jpg" alt="Actividad CIDERE" style="width: calc(50% - 6px); height: 100%; object-fit: cover; border-radius: 10px;">
-                                    <img src="foto6.png" alt="Actividad CIDERE" style="width: calc(50% - 6px); height: 100%; object-fit: cover; border-radius: 10px;">
+                                    <img src="foto5.jpg" alt="Actividad CIDERE" style="width: calc(50% - 6px); height: 100%; object-fit: cover; border-radius: 8px;">
+                                    <img src="foto6.png" alt="Actividad CIDERE" style="width: calc(50% - 6px); height: 100%; object-fit: cover; border-radius: 8px;">
                                 </div>
                             </div>
                             
+                            <!-- Indicadores (Puntitos) -->
                             <div style="display: flex; justify-content: center; gap: 6px; margin-top: 16px;">
                                 <div class="dot active" style="width: 8px; height: 8px; border-radius: 50%; background: var(--cidere-blue); transition: background 0.5s;"></div>
                                 <div class="dot" style="width: 8px; height: 8px; border-radius: 50%; background: var(--border-color); transition: background 0.5s;"></div>
@@ -369,31 +362,34 @@
                         </div>
                     </div>
 
-                    <!-- DESAFÍOS -->
+                    <!-- COLUMNA DERECHA: DESAFÍOS -->
                     <div>
-                        <div class="card" style="background: var(--cidere-blue-dark); color: white; border-top: none;">
-                            <h3 style="font-size: 15px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
-                                <i data-lucide="factory" size="18" style="color: var(--cidere-cyan);"></i> Desafíos de la Región
+                        <div class="card" style="background: var(--cidere-blue-dark); color: white;">
+                            <h3 style="font-size: 15px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; font-family: var(--font-title);">
+                                <i data-lucide="factory" size="18" style="color: #01DCFF;"></i> Desafíos de la Región
                             </h3>
-                            <div id="lista-desafios-dashboard"></div>
+                            
+                            <div id="lista-desafios-dashboard">
+                                <!-- Se llena vía script -->
+                            </div>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <!-- VISTA: STARTUPS -->
+            <!-- PANTALLA 2: REPOSITORIO DE STARTUPS -->
             <section id="view-repositorio" class="view-section">
                 <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px;">
                     <div>
                         <h1 style="font-size: 24px; font-weight: 800; color: var(--cidere-blue);">Startups y Desarrollos Regionales</h1>
                         <p style="color: var(--text-muted); font-size: 13px; margin-top: 4px;">Plataforma centralizada gestionada por CIDERE Biobío para proyectos de I+D y Startups.</p>
                     </div>
-                    <button class="btn-primary" style="background-color: var(--cidere-green-bright);" onclick="openModal('modal-subir-desarrollo')">
+                    <button class="btn-primary" style="background-color: var(--cidere-green-bright)" onclick="openModal('modal-subir-desarrollo')">
                         <i data-lucide="upload-cloud" size="16"></i> Subir Nuevo Desarrollo
                     </button>
                 </div>
 
-                <!-- FILTROS (SIN B2B) -->
+                <!-- FILTROS (SIN SERVICIOS B2B) -->
                 <div style="display: flex; gap: 10px; margin-bottom: 24px; overflow-x: auto; padding-bottom: 8px;">
                     <button class="filter-pill active" onclick="filtrarStartups('Todos', this)">Todos los Proyectos</button>
                     <button class="filter-pill" onclick="filtrarStartups('Agroindustria', this)">Agroindustria</button>
@@ -409,10 +405,11 @@
                     <button class="filter-pill" onclick="filtrarStartups('Tecnología / Software', this)">Tecnología / Software</button>
                 </div>
 
+                <!-- Contenedor Startups -->
                 <div id="lista-startups" class="grid-3"></div>
             </section>
 
-            <!-- VISTA: DIAGNÓSTICO TRL -->
+            <!-- PANTALLA 3: DIAGNÓSTICO TRL -->
             <section id="view-ficha" class="view-section">
                 <div style="margin-bottom: 16px;">
                     <span class="badge badge-green">MEDICIÓN Y EVIDENCIAS DE MADUREZ</span>
@@ -420,7 +417,7 @@
                 </div>
 
                 <div class="card" style="margin-bottom: 24px;">
-                    <label style="font-size: 13px; font-weight: 600; display: block; margin-bottom: 8px;">Seleccionar Startup/IES (Aprobada) para Evaluación:</label>
+                    <label style="font-size: 13px; font-weight: 600; display: block; margin-bottom: 8px; font-family: var(--font-title);">Seleccionar Startup/IES (Aprobada) para Evaluación:</label>
                     <select id="select-empresa-trl" onchange="cargarEmpresaTRLLineal(this.value)">
                         <option value="">-- Seleccione un proyecto registrado --</option>
                     </select>
@@ -445,7 +442,7 @@
                 </div>
             </section>
 
-            <!-- VISTA: DESAFÍOS INDUSTRIA -->
+            <!-- PANTALLA 4: DESAFÍOS INDUSTRIA -->
             <section id="view-desafio" class="view-section">
                 <div style="margin-bottom: 20px;">
                     <span class="badge badge-green" style="margin-bottom: 6px;">DESAFÍOS REGIONALES</span>
@@ -483,7 +480,7 @@
                 </div>
             </section>
 
-            <!-- VISTA: IES -->
+            <!-- PANTALLA 5: IES -->
             <section id="view-ies" class="view-section">
                 <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px;">
                     <div>
@@ -492,6 +489,7 @@
                     </div>
                 </div>
 
+                <!-- FILTROS (SIN SERVICIOS B2B) -->
                 <div style="display: flex; gap: 10px; margin-bottom: 24px; overflow-x: auto; padding-bottom: 8px;">
                     <button class="filter-pill active" id="btn-ies-todos" onclick="filtrarIES('Todos', this)">Todas</button>
                     <button class="filter-pill" onclick="filtrarIES('Agroindustria', this)">Agroindustria</button>
@@ -510,7 +508,7 @@
                 <div id="lista-ies" class="grid-3"></div>
             </section>
 
-            <!-- VISTA: MENSAJERÍA -->
+            <!-- PANTALLA 6: MENSAJERÍA -->
             <section id="view-mensajeria" class="view-section">
                 <h1 style="font-size: 24px; font-weight: 800; color: var(--cidere-blue); margin-bottom: 8px;">Mensajería y Enlaces</h1>
                 <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 24px;">Bandeja de comunicación directa entre Empresas, Startups y la Mesa de Innovación CIDERE.</p>
@@ -521,10 +519,10 @@
                 </div>
             </section>
             
-            <!-- FOOTER OFICIAL -->
+            <!-- FOOTER COMÚN -->
             <div class="footer-banner">
                 <div>
-                    <h4 style="font-size: 14px; text-transform: uppercase; font-weight: 700;">Impacto Regional CIDERE Biobío</h4>
+                    <h4 style="font-size: 14px; text-transform: uppercase; font-family: var(--font-title); font-weight: 700;">Impacto Regional CIDERE Biobío</h4>
                     <p style="font-size: 12px; opacity: 0.85;">Ecosistema de Innovación de la Región del Biobío</p>
                 </div>
                 <div class="metric-group">
@@ -543,8 +541,8 @@
                 </div>
             </div>
 
-        </main>
-    </div>
+        </div>
+    </main>
 
     <!-- MODAL: SUBIR NUEVO DESARROLLO (SIN SERVICIOS B2B) -->
     <div id="modal-subir-desarrollo" class="modal-overlay">
@@ -647,6 +645,7 @@
         </div>
     </div>
 
+
     <script>
         lucide.createIcons();
 
@@ -728,13 +727,14 @@
             if (target) target.classList.add('active');
 
             document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-            document.querySelectorAll('.nav-links-web li').forEach(item => item.classList.remove('active'));
+            document.querySelectorAll('.top-nav-links li').forEach(item => item.classList.remove('active-top'));
 
             if (element) {
-                element.classList.add('active');
+                if(element.classList.contains('nav-item')) element.classList.add('active');
+                else element.classList.add('active-top');
             }
 
-            if (window.innerWidth <= 900) {
+            if (window.innerWidth <= 768) {
                 document.getElementById('main-sidebar').classList.remove('open');
                 document.getElementById('sidebar-overlay').classList.remove('active');
             }
@@ -801,13 +801,13 @@
                             contenedor.innerHTML += `
                                 <div style="border-bottom: 1px solid rgba(255,255,255,0.12); padding-bottom: 12px; margin-bottom: 12px;">
                                     <span class="badge badge-green" style="background: rgba(255,255,255,0.15); color: white;">INDUSTRIA</span>
-                                    <h5 style="margin-top: 6px; font-size: 14px; color: var(--cidere-cyan);">${filas[i][3]}</h5>
+                                    <h5 style="margin-top: 6px; font-size: 14px; color: #01DCFF;">${filas[i][3]}</h5>
                                     <p style="font-size: 12px; opacity: 0.85; margin-top: 4px;"><b>${filas[i][1]}:</b> ${filas[i][4]}</p>
                                 </div>
                             `;
                         }
                     }
-                    if(conteo === 0) contenedor.innerHTML = '<p style="font-size:12px; opacity: 0.8;">No hay desafíos aprobados aún.</p>';
+                    if(conteo === 0) contenedor.innerHTML = '<p style="font-size:12px; opacity:0.8;">No hay desafíos aprobados aún.</p>';
                     document.getElementById('kpi-desafios').innerText = conteo;
                 }
             });
