@@ -3,28 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Plataforma CIDERE Biobío - MVP Interactivo</title>
+    <title>Mesa de Innovación - CIDERE Biobío</title>
     <!-- Fuentes Oficiales CIDERE Biobío -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     
-    <!-- LIBRERÍA AGREGADA PARA LEER EXCEL EN TIEMPO REAL -->
+    <!-- PapaParse para lectura de Google Sheets -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 
     <style>
         :root {
-            /* PALETA OFICIAL MANUAL DE MARCA CIDERE BIOBÍO 2026 */
-            --cidere-blue-dark: #112852;    /* Azul Oscuro Sidebar */
-            --cidere-blue: #3C63AD;         /* Azul Corporativo Principal */
-            --cidere-blue-light: #e8f0fe;   /* Azul Suave Fondo */
-            --cidere-orange: #EE731B;       /* Naranjo Área Innovación */
+            /* PALETA OFICIAL CIDERE BIOBÍO (MANUAL 2026 & WEB) */
+            --cidere-blue: #3C63AD;         /* Azul Corporativo */
+            --cidere-blue-dark: #112852;    /* Azul Fondo Navbar / Footer */
+            --cidere-blue-light: #e8f0fe;   /* Azul Suave */
+            --cidere-cyan: #01DCFF;         /* Celeste Acento */
+            --cidere-orange: #EE731B;       /* Naranjo Innovación */
             --cidere-orange-hover: #d8620d;
             --cidere-green: #598145;        /* Verde Corporativo */
-            --cidere-green-bright: #31AD72; /* Verde Mentores / CTAs */
-            --cidere-green-hover: #248a59;
+            --cidere-green-bright: #31AD72; /* Verde Éxito / Mentores */
             
-            --bg-sidebar: var(--cidere-blue-dark);
-            --bg-body: #f4f6fa;
+            --bg-body: #f8fafc;
             --bg-card: #ffffff;
             --text-main: #1e293b;
             --text-muted: #64748b;
@@ -36,221 +35,256 @@
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: var(--font-sans); background-color: var(--bg-body); color: var(--text-main); display: flex; min-height: 100vh; overflow-x: hidden; }
+        body { font-family: var(--font-sans); background-color: var(--bg-body); color: var(--text-main); display: flex; flex-direction: column; min-height: 100vh; overflow-x: hidden; }
 
         h1, h2, h3, h4, h5, h6, .font-title { font-family: var(--font-title); }
 
-        /* BARRA LATERAL (SIDEBAR) ESTRICTAMENTE MANTENIDA */
-        aside { width: 260px; background-color: var(--bg-sidebar); color: #ffffff; display: flex; flex-direction: column; justify-content: space-between; padding: 24px 16px; flex-shrink: 0; transition: left 0.3s ease; }
-        .brand { padding: 0 8px 24px 8px; border-bottom: 1px solid rgba(255, 255, 255, 0.12); margin-bottom: 20px; display: flex; justify-content: center; }
-        .nav-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
-        .nav-item { padding: 12px 14px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 12px; font-size: 13.5px; font-weight: 500; color: rgba(255, 255, 255, 0.85); transition: all 0.2s ease; font-family: var(--font-title); }
-        .nav-item:hover { background-color: rgba(255, 255, 255, 0.1); color: #fff; }
-        .nav-item.active { background-color: #ffffff; color: var(--cidere-blue); font-weight: 700; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+        /* BANDEROLA SUPERIOR */
+        .header-topbar { background-color: var(--cidere-blue-dark); color: white; padding: 6px 32px; font-size: 11px; display: flex; justify-content: space-between; align-items: center; font-family: var(--font-title); font-weight: 500; }
+        .header-topbar a { color: var(--cidere-cyan); text-decoration: none; font-weight: 600; }
         
-        .btn-sidebar-cta { background: var(--cidere-orange); color: white; border: none; padding: 14px; border-radius: 8px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: background 0.2s; width: 100%; margin-top: auto; font-family: var(--font-title); }
-        .btn-sidebar-cta:hover { background-color: var(--cidere-orange-hover); }
+        /* ENCABEZADO PRINCIPAL */
+        .site-header { background-color: #ffffff; border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.04); }
+        .header-nav { display: flex; align-items: center; justify-content: space-between; padding: 12px 32px; height: 72px; max-width: 1400px; margin: 0 auto; width: 100%; }
+        .brand-logo { height: 48px; object-fit: contain; }
+        
+        .nav-links-web { display: flex; gap: 20px; list-style: none; font-family: var(--font-title); font-size: 13.5px; font-weight: 600; color: var(--cidere-blue-dark); }
+        .nav-links-web li { cursor: pointer; padding: 8px 12px; border-radius: 8px; transition: all 0.2s ease; display: flex; align-items: center; gap: 8px; }
+        .nav-links-web li:hover { color: var(--cidere-blue); background-color: var(--cidere-blue-light); }
+        .nav-links-web li.active { color: var(--cidere-blue); background-color: var(--cidere-blue-light); font-weight: 700; border-bottom: 2px solid var(--cidere-blue); }
 
-        /* AREA PRINCIPAL DE CONTENIDO */
-        main { flex-grow: 1; display: flex; flex-direction: column; height: 100vh; overflow-y: auto; }
-        header { background-color: #ffffff; height: 64px; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; padding: 0 32px; position: sticky; top: 0; z-index: 10; }
+        .btn-header-cta { background: var(--cidere-orange); color: white; border: none; padding: 10px 20px; border-radius: 20px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; font-family: var(--font-title); font-size: 13px; transition: all 0.2s; box-shadow: 0 4px 12px rgba(238, 115, 27, 0.3); }
+        .btn-header-cta:hover { background-color: var(--cidere-orange-hover); transform: translateY(-1px); }
+
+        .mobile-menu-btn { display: none; background: transparent; border: none; cursor: pointer; color: var(--cidere-blue-dark); }
+
+        /* LAYOUT GENERAL */
+        .platform-wrapper { display: flex; max-width: 1400px; margin: 0 auto; width: 100%; flex-grow: 1; }
+
+        /* SIDEBAR SUB-MESA */
+        aside { width: 250px; background-color: #ffffff; border-right: 1px solid var(--border-color); padding: 24px 16px; flex-shrink: 0; display: flex; flex-direction: column; justify-content: space-between; }
+        .sidebar-title { font-size: 11px; text-transform: uppercase; font-family: var(--font-mono); color: var(--text-muted); letter-spacing: 1px; margin-bottom: 12px; padding-left: 12px; font-weight: 700; }
+        .nav-list { list-style: none; display: flex; flex-direction: column; gap: 4px; }
+        .nav-item { padding: 11px 14px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; gap: 12px; font-size: 13px; font-weight: 600; color: var(--text-main); transition: all 0.2s ease; font-family: var(--font-title); }
+        .nav-item:hover { background-color: #f1f5f9; color: var(--cidere-blue); }
+        .nav-item.active { background-color: var(--cidere-blue); color: #ffffff; font-weight: 700; box-shadow: 0 4px 12px rgba(60, 99, 173, 0.25); }
+
+        /* CONTENIDO PRINCIPAL */
+        main { flex-grow: 1; padding: 32px; overflow-y: auto; }
         
-        .mobile-menu-btn { display: none; background: transparent; border: none; cursor: pointer; color: var(--text-main); margin-right: 16px; }
-        
-        .search-bar { display: flex; align-items: center; background-color: var(--bg-body); border: 1px solid var(--border-color); border-radius: 8px; padding: 8px 16px; width: 380px; gap: 10px; }
+        .search-bar { display: flex; align-items: center; background-color: #ffffff; border: 1px solid var(--border-color); border-radius: 20px; padding: 8px 18px; width: 100%; max-width: 450px; gap: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.02); }
         .search-bar input { border: none; background: transparent; outline: none; width: 100%; font-size: 13px; font-family: var(--font-sans); }
-        
-        .top-menu { display: flex; align-items: center; gap: 24px; }
-        .top-nav-links { display: flex; gap: 20px; list-style: none; font-size: 13px; font-weight: 600; color: var(--text-muted); font-family: var(--font-title); }
-        .top-nav-links li { cursor: pointer; padding: 6px 10px; border-radius: 6px; transition: all 0.2s; }
-        .top-nav-links li:hover { color: var(--cidere-blue); background-color: var(--bg-body); }
-        .top-nav-links li.active-top { color: var(--cidere-blue); font-weight: 700; background-color: var(--cidere-blue-light); }
-        
-        .user-profile { display: flex; align-items: center; gap: 12px; padding-left: 16px; border-left: 1px solid var(--border-color); }
-        .avatar { width: 36px; height: 36px; border-radius: 50%; background-color: #ccc; object-fit: cover; }
 
-        /* CONTENEDOR DE VISTAS */
-        .content-container { padding: 32px; max-width: 1280px; margin: 0 auto; width: 100%; }
-        .view-section { display: none; }
-        .view-section.active { display: block; animation: fadeIn 0.25s ease-in-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* COMPONENTES REUTILIZABLES */
-        .badge { font-family: var(--font-mono); font-size: 10px; padding: 3px 8px; border-radius: 4px; font-weight: 600; text-transform: uppercase; display: inline-block; }
-        .badge-green { background: #d1fae5; color: #065f46; }
+        /* BADGES Y BOTONES */
+        .badge { font-family: var(--font-mono); font-size: 10px; padding: 4px 10px; border-radius: 20px; font-weight: 700; text-transform: uppercase; display: inline-block; }
+        .badge-green { background: #e6f7ef; color: var(--cidere-green-bright); }
         .badge-blue { background: var(--cidere-blue-light); color: var(--cidere-blue); }
         .badge-gray { background: #f1f5f9; color: #475569; }
 
-        .btn-primary { background-color: var(--cidere-blue); color: white; border: none; padding: 10px 18px; border-radius: 6px; font-weight: 600; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-title); }
-        .btn-primary:hover { background-color: #2f4f8a; }
-        .btn-outline { background: transparent; border: 1px solid var(--border-color); color: var(--text-main); padding: 8px 14px; border-radius: 6px; font-weight: 500; font-size: 13px; cursor: pointer; font-family: var(--font-title); }
+        .btn-primary { background-color: var(--cidere-blue); color: white; border: none; padding: 10px 20px; border-radius: 20px; font-weight: 600; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-title); transition: all 0.2s; box-shadow: 0 3px 10px rgba(60, 99, 173, 0.2); }
+        .btn-primary:hover { background-color: #2e4f8d; }
+        .btn-outline { background: transparent; border: 1px solid var(--border-color); color: var(--text-main); padding: 8px 16px; border-radius: 20px; font-weight: 600; font-size: 13px; cursor: pointer; font-family: var(--font-title); transition: all 0.2s; }
+        .btn-outline:hover { border-color: var(--cidere-blue); color: var(--cidere-blue); }
 
-        .card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 24px; margin-bottom: 20px; }
+        .card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 16px; padding: 24px; margin-bottom: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); border-top: 3px solid var(--cidere-blue); }
         .grid-2 { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; }
         .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
         .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
 
-        /* MODALES FLOTANTES */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 1000; }
-        .modal-overlay.active { display: flex; }
-        .modal-content { background: white; padding: 30px; border-radius: 12px; width: 600px; max-width: 90%; max-height: 90vh; overflow-y: auto; }
+        /* SKELETON LOADERS */
+        .skeleton-card { background: #ffffff; border: 1px solid var(--border-color); border-radius: 16px; padding: 24px; animation: skeleton-pulse 1.5s infinite ease-in-out; }
+        .skeleton-bar { height: 12px; background: #e2e8f0; border-radius: 6px; margin-bottom: 12px; }
+        .skeleton-bar.title { height: 20px; width: 65%; margin-bottom: 16px; }
+        .skeleton-bar.short { width: 40%; }
+        @keyframes skeleton-pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
 
-        /* ESTILOS ESPECÍFICOS TRL LINEAL */
-        .trl-step-card { border: 1px solid var(--border-color); border-radius: 10px; padding: 18px; margin-bottom: 16px; background: #ffffff; transition: all 0.2s ease; }
-        .trl-step-card.completed { border-color: #10b981; background-color: #f0fdf4; }
+        .results-counter { font-size: 12.5px; color: var(--text-muted); font-weight: 600; margin-bottom: 16px; font-family: var(--font-title); }
+
+        /* MODALES */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(17, 40, 82, 0.6); backdrop-filter: blur(3px); display: none; align-items: center; justify-content: center; z-index: 1000; }
+        .modal-overlay.active { display: flex; }
+        .modal-content { background: white; padding: 32px; border-radius: 20px; width: 640px; max-width: 90%; max-height: 90vh; overflow-y: auto; box-shadow: 0 12px 36px rgba(0,0,0,0.18); }
+
+        /* TRL & KPIS */
+        .trl-step-card { border: 1px solid var(--border-color); border-radius: 12px; padding: 18px; margin-bottom: 16px; background: #ffffff; transition: all 0.2s ease; }
+        .trl-step-card.completed { border-color: var(--cidere-green-bright); background-color: #f0fdf4; }
         .trl-step-card.current { border-color: var(--cidere-blue); box-shadow: 0 4px 12px rgba(60, 99, 173, 0.12); }
         .trl-step-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
 
         .kpi-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
-        .kpi-card { background: white; border: 1px solid var(--border-color); border-radius: 10px; padding: 20px; display: flex; align-items: center; justify-content: space-between; }
+        .kpi-card { background: white; border: 1px solid var(--border-color); border-radius: 14px; padding: 20px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
         .kpi-value { font-size: 32px; font-weight: 800; color: var(--cidere-blue); font-family: var(--font-mono); }
         .kpi-label { font-size: 11px; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.5px; font-family: var(--font-title); font-weight: 700; }
 
-        .filter-pill { padding: 6px 14px; border-radius: 20px; border: 1px solid var(--border-color); background: white; font-size: 12px; cursor: pointer; font-weight: 600; white-space: nowrap; font-family: var(--font-title); }
+        .filter-pill { padding: 8px 18px; border-radius: 20px; border: 1px solid var(--border-color); background: white; font-size: 12px; cursor: pointer; font-weight: 600; white-space: nowrap; font-family: var(--font-title); transition: all 0.2s; }
+        .filter-pill:hover { border-color: var(--cidere-blue); color: var(--cidere-blue); }
         .filter-pill.active { background: var(--cidere-blue); color: white; border-color: var(--cidere-blue); }
 
-        .trl-gauge-card { background: var(--cidere-blue-dark); color: white; border-radius: 12px; padding: 24px; text-align: center; position: sticky; top: 80px; }
+        .trl-gauge-card { background: var(--cidere-blue-dark); color: white; border-radius: 16px; padding: 24px; text-align: center; position: sticky; top: 100px; }
         .trl-circle { width: 120px; height: 120px; border-radius: 50%; border: 8px solid var(--cidere-green-bright); display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 20px auto; }
 
-        .rubro-card { border: 1px solid var(--border-color); border-radius: 8px; padding: 20px; text-align: center; cursor: pointer; transition: all 0.2s; background: white; }
-        .rubro-card:hover, .rubro-card.selected { border-color: var(--cidere-blue); background-color: #f8fafc; box-shadow: 0 2px 8px rgba(60, 99, 173, 0.1); }
+        .rubro-card { border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; text-align: center; cursor: pointer; transition: all 0.2s; background: white; }
+        .rubro-card:hover, .rubro-card.selected { border-color: var(--cidere-blue); background-color: #f8fafc; box-shadow: 0 4px 12px rgba(60, 99, 173, 0.1); }
         .rubro-card.selected { border-width: 2px; }
 
-        textarea, input[type="text"], select { width: 100%; border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; font-family: inherit; font-size: 13px; outline: none; background: #fff; }
-        textarea:focus, input:focus, select:focus { border-color: var(--cidere-blue); }
+        textarea, input[type="text"], select { width: 100%; border: 1px solid var(--border-color); border-radius: 10px; padding: 12px; font-family: var(--font-sans); font-size: 13px; outline: none; background: #fff; }
+        textarea:focus, input:focus, select:focus { border-color: var(--cidere-blue); box-shadow: 0 0 0 3px rgba(60, 99, 173, 0.1); }
 
-        /* FOOTER IMPACTO REGIONAL */
-        .footer-banner { background-color: var(--cidere-blue-dark); color: white; border-radius: 12px; padding: 24px 32px; display: flex; align-items: center; justify-content: space-between; margin-top: 30px; }
+        /* FOOTER */
+        .footer-banner { background: linear-gradient(135deg, var(--cidere-blue-dark) 0%, var(--cidere-blue) 100%); color: white; border-radius: 16px; padding: 28px 36px; display: flex; align-items: center; justify-content: space-between; margin-top: 30px; box-shadow: 0 6px 20px rgba(17, 40, 82, 0.25); }
         .metric-group { display: flex; gap: 40px; }
-        .metric-item { border-left: 2px solid rgba(255,255,255,0.2); padding-left: 16px; }
+        .metric-item { border-left: 2px solid rgba(255,255,255,0.25); padding-left: 16px; }
         .metric-val { font-size: 28px; font-weight: 800; font-family: var(--font-mono); }
-        .metric-lbl { font-size: 11px; opacity: 0.8; text-transform: uppercase; font-family: var(--font-title); font-weight: 600; }
+        .metric-lbl { font-size: 11px; opacity: 0.85; text-transform: uppercase; font-family: var(--font-title); font-weight: 600; }
         
         .loader-text { font-size: 12px; color: var(--cidere-green-bright); font-weight: bold; margin-right: 10px; display: none; }
         
-        /* ESTILOS TARJETAS DE DIRECTIVA */
-        .profile-card { background: #ffffff; border-radius: 10px; padding: 24px 16px 16px; text-align: center; color: var(--text-main); box-shadow: 0 4px 12px rgba(0,0,0,0.06); display: flex; flex-direction: column; justify-content: space-between; height: 100%; transition: transform 0.2s; }
-        .profile-card:hover { transform: translateY(-4px); }
+        /* DIRECTIVA */
+        .profile-card { background: #ffffff; border-radius: 14px; padding: 24px 16px 16px; text-align: center; color: var(--text-main); box-shadow: 0 4px 14px rgba(0,0,0,0.06); display: flex; flex-direction: column; justify-content: space-between; height: 100%; transition: transform 0.2s; border: 1px solid var(--border-color); }
+        .profile-card:hover { transform: translateY(-4px); border-color: var(--cidere-blue); }
         .profile-img { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; margin: 0 auto 12px; border: 2px solid var(--border-color); }
         .profile-name { font-size: 15px; font-weight: 700; color: var(--cidere-blue); margin-bottom: 4px; font-family: var(--font-title); }
         .profile-role { font-size: 10px; font-family: var(--font-mono); text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.5px; margin-bottom: 16px; flex-grow: 1; display: flex; align-items: center; justify-content: center; }
         .profile-logo-container { border-top: 1px solid var(--border-color); padding-top: 12px; display: flex; justify-content: center; align-items: center; height: 45px; }
         .profile-logo { max-height: 100%; max-width: 90%; object-fit: contain; }
-        
-        /* OVERLAY PARA CELULARES */
-        .sidebar-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 90; }
+
+        .view-section { display: none; }
+        .view-section.active { display: block; animation: fadeIn 0.25s ease-in-out; }
+
+        /* TARJETAS DE EVENTOS Y RECURSOS */
+        .event-card { border: 1px solid var(--border-color); border-radius: 14px; padding: 20px; background: white; margin-bottom: 16px; display: flex; gap: 20px; align-items: center; }
+        .event-date-box { background: var(--cidere-blue-light); color: var(--cidere-blue); padding: 12px 18px; border-radius: 12px; text-align: center; min-width: 90px; }
+        .resource-item-card { border: 1px solid var(--border-color); border-radius: 14px; padding: 20px; background: white; display: flex; flex-direction: column; justify-content: space-between; height: 100%; }
+
+        /* RESPONSIVE */
+        .sidebar-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 150; }
         .sidebar-overlay.active { display: block; }
 
-        /* ADAPTACIÓN MÓVIL (RESPONSIVE) */
-        @media (max-width: 768px) {
+        @media (max-width: 900px) {
+            .nav-links-web { display: none; }
             .mobile-menu-btn { display: block; }
-            aside { position: fixed; left: -260px; top: 0; bottom: 0; z-index: 100; height: 100vh; }
-            aside.open { left: 0; box-shadow: 4px 0 24px rgba(0,0,0,0.2); }
-            header { padding: 0 16px; }
-            .top-nav-links { display: none; }
-            .search-bar { flex-grow: 1; width: auto; margin-left: 12px; }
-            .user-profile { display: none; }
-            .content-container { padding: 16px; }
+            aside { position: fixed; left: -260px; top: 0; bottom: 0; z-index: 200; height: 100vh; transition: left 0.3s ease; box-shadow: 4px 0 20px rgba(0,0,0,0.15); }
+            aside.open { left: 0; }
+            .header-nav { height: 60px; padding: 0 16px; }
+            main { padding: 16px; }
             .grid-2, .grid-3, .grid-4, .kpi-container { grid-template-columns: 1fr; gap: 16px; }
             .carrusel-card { height: auto !important; padding: 16px !important; }
-            #carrusel-fotos { height: 320px !important; }
+            #carrusel-fotos { height: 300px !important; }
             .slide { flex-direction: column; }
-            .slide img { width: 100% !important; height: 150px !important; }
+            .slide img { width: 100% !important; height: 140px !important; }
             .footer-banner { flex-direction: column; text-align: center; gap: 24px; padding: 24px 16px; }
             .metric-group { flex-direction: column; width: 100%; gap: 16px; }
             .metric-item { border-left: none; border-top: 1px solid rgba(255,255,255,0.2); padding-left: 0; padding-top: 16px; }
-            .modal-content { width: 95%; padding: 20px; }
+            .event-card { flex-direction: column; text-align: center; }
         }
     </style>
 </head>
 <body>
 
-    <!-- OVERLAY OSCURO PARA MÓVIL -->
-    <div id="sidebar-overlay" class="sidebar-overlay" onclick="toggleSidebar()"></div>
+    <!-- BANDEROLA SUPERIOR INSTITUCIONAL -->
+    <div class="header-topbar">
+        <span>Corporación Industrial para el Desarrollo Regional del Biobío</span>
+        <span>Mesa de Innovación Abierta | <a href="https://ciderebiobio.cl" target="_blank">ciderebiobio.cl</a></span>
+    </div>
 
-    <!-- SIDEBAR -->
-    <aside id="main-sidebar">
-        <div>
-            <div class="brand">
-                <img src="logo.png" alt="Logo CIDERE" style="max-width: 100%; height: auto;">
+    <!-- NAVEGACIÓN SUPERIOR WEB -->
+    <header class="site-header">
+        <div class="header-nav">
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <button class="mobile-menu-btn" onclick="toggleSidebar()">
+                    <i data-lucide="menu" size="24"></i>
+                </button>
+                <a href="https://ciderebiobio.cl"><img src="logo.png" alt="Logo CIDERE Biobío" class="brand-logo"></a>
             </div>
 
-            <ul class="nav-list">
-                <li class="nav-item active" onclick="switchView('view-dashboard', this)">
-                    <i data-lucide="layout-dashboard"></i> Panel de Control
-                </li>
-                <li class="nav-item" onclick="switchView('view-repositorio', this)">
-                    <i data-lucide="rocket"></i> Startups Regionales
-                </li>
-                <li class="nav-item" onclick="switchView('view-ficha', this)">
-                    <i data-lucide="file-text"></i> Diagnóstico TRL
-                </li>
-                <li class="nav-item" onclick="switchView('view-desafio', this)">
-                    <i data-lucide="factory"></i> Desafíos Industria
-                </li>
-                <li class="nav-item" onclick="switchView('view-ies', this)">
-                    <i data-lucide="graduation-cap"></i> IES / Academias
-                </li>
-                <li class="nav-item" onclick="switchView('view-mensajeria', this)">
-                    <i data-lucide="message-square"></i> Mensajería
-                </li>
+            <!-- Menú Principal Web -->
+            <ul class="nav-links-web">
+                <li onclick="switchView('view-dashboard', this)" class="active"><i data-lucide="layout-dashboard" size="16"></i> Panel</li>
+                <li onclick="switchView('view-mesa-innovacion', this)"><i data-lucide="building-2" size="16"></i> La Mesa</li>
+                <li onclick="switchView('view-repositorio', this)"><i data-lucide="rocket" size="16"></i> Startups</li>
+                <li onclick="switchView('view-ies', this)"><i data-lucide="graduation-cap" size="16"></i> Academias / IES</li>
+                <li onclick="switchView('view-desafio', this)"><i data-lucide="factory" size="16"></i> Desafíos</li>
+                <li onclick="switchView('view-recursos', this)"><i data-lucide="folder-open" size="16"></i> Recursos</li>
+                <li onclick="switchView('view-eventos', this)"><i data-lucide="calendar" size="16"></i> Eventos</li>
             </ul>
+
+            <button class="btn-header-cta" onclick="openModal('modal-publicar-desafio')">
+                <i data-lucide="plus" size="16"></i> Publicar Desafío
+            </button>
         </div>
+    </header>
 
-        <button class="btn-sidebar-cta" onclick="openModal('modal-publicar-desafio')">
-            <i data-lucide="plus"></i> Publicar Desafío
-        </button>
-    </aside>
+    <!-- ESTRUCTURA PRINCIPAL DE PLATAFORMA -->
+    <div class="platform-wrapper">
 
-    <!-- CONTENIDO PRINCIPAL -->
-    <main>
-        <!-- HEADER TOP CON BUSCADOR -->
-        <header>
-            <div style="display: flex; align-items: center; width: 100%;">
-                <button class="mobile-menu-btn" onclick="toggleSidebar()">
-                    <i data-lucide="menu"></i>
-                </button>
+        <!-- OVERLAY MÓVIL -->
+        <div id="sidebar-overlay" class="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+        <!-- BARRA LATERAL SUB-MESA -->
+        <aside id="main-sidebar">
+            <div>
+                <div class="sidebar-title">Plataforma Mesa</div>
+                <ul class="nav-list">
+                    <li class="nav-item active" onclick="switchView('view-dashboard', this)">
+                        <i data-lucide="layout-dashboard"></i> Panel General
+                    </li>
+                    <li class="nav-item" onclick="switchView('view-repositorio', this)">
+                        <i data-lucide="rocket"></i> Startups Regionales
+                    </li>
+                    <li class="nav-item" onclick="switchView('view-ficha', this)">
+                        <i data-lucide="file-text"></i> Diagnóstico TRL
+                    </li>
+                    <li class="nav-item" onclick="switchView('view-desafio', this)">
+                        <i data-lucide="factory"></i> Desafíos Industria
+                    </li>
+                    <li class="nav-item" onclick="switchView('view-ies', this)">
+                        <i data-lucide="graduation-cap"></i> IES / Academias
+                    </li>
+                    <li class="nav-item" onclick="switchView('view-recursos', this)">
+                        <i data-lucide="folder-open"></i> Centro de Recursos
+                    </li>
+                    <li class="nav-item" onclick="switchView('view-eventos', this)">
+                        <i data-lucide="calendar"></i> Calendario Eventos
+                    </li>
+                    <li class="nav-item" onclick="switchView('view-mensajeria', this)">
+                        <i data-lucide="message-square"></i> Mensajería
+                    </li>
+                </ul>
+            </div>
+
+            <div style="border-top: 1px solid var(--border-color); padding-top: 16px; margin-top: auto;">
+                <p style="font-size: 11px; color: var(--text-muted); text-align: center;">Mesa de Innovación © 2026<br>CIDERE Biobío</p>
+            </div>
+        </aside>
+
+        <!-- CONTENIDO PRINCIPAL -->
+        <main>
+            
+            <!-- BUSCADOR CON ENTRADA EN TIEMPO REAL -->
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
                 <div class="search-bar">
                     <i data-lucide="search" size="16" style="color: var(--text-muted)"></i>
-                    <input type="text" id="buscador-global" onkeydown="verificarEnter(event)" placeholder="Buscar startups, IES...">
+                    <input type="text" id="buscador-global" oninput="aplicarFiltrosCombine()" placeholder="Buscar soluciones, startups, universidades o palabras clave en vivo...">
                 </div>
             </div>
-
-            <div class="top-menu">
-                <ul class="top-nav-links">
-                    <li onclick="switchView('view-mesa-innovacion', this)" id="btn-top-mesa">Mesa de Innovación</li>
-                    <li onclick="alert('Sección de Recursos en construcción...')">Recursos</li>
-                    <li onclick="alert('Calendario de Eventos en construcción...')">Eventos</li>
-                </ul>
-                <i data-lucide="bell" size="18" style="color: var(--text-muted); cursor: pointer;" onclick="alert('No tienes nuevas notificaciones')"></i>
-                <i data-lucide="settings" size="18" style="color: var(--text-muted); cursor: pointer;" onclick="alert('Ajustes de cuenta...')"></i>
-                
-                <div class="user-profile">
-                    <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=100&auto=format&fit=crop&q=80" class="avatar" alt="User">
-                </div>
-            </div>
-        </header>
-
-        <div class="content-container">
 
             <!-- VISTA: MESA DE INNOVACIÓN -->
             <section id="view-mesa-innovacion" class="view-section">
-                <div class="card" style="background: linear-gradient(135deg, var(--cidere-blue-dark) 0%, var(--cidere-blue) 100%); color: white; padding: 32px; margin-bottom: 24px;">
+                <div class="card" style="background: linear-gradient(135deg, var(--cidere-blue-dark) 0%, var(--cidere-blue) 100%); color: white; padding: 32px; border-top: none;">
                     <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 20px;">
                         <div>
-                            <h1 style="font-size: 28px; font-weight: 800; margin-bottom: 12px; font-family: var(--font-title);">¿Qué es la Mesa de Innovación?</h1>
+                            <h1 style="font-size: 26px; font-weight: 800; margin-bottom: 12px;">¿Qué es la Mesa de Innovación?</h1>
                             <p style="font-size: 14px; opacity: 0.9; line-height: 1.6; max-width: 950px;">
-                                La Mesa de Innovación de CIDERE Biobío es una plataforma colaborativa que conecta a la industria, la academia y el ecosistema emprendedor para identificar desafíos estratégicos y co-crear soluciones innovadoras. Este espacio impulsa la transferencia de conocimiento, fortalece las capacidades de I+D del territorio y promueve la competitividad sostenible del Biobío mediante la colaboración entre empresas, instituciones educativas, centros de investigación y startups.
+                                La Mesa de Innovación de CIDERE Biobío es una plataforma colaborativa que conecta a la industria, la academia y el ecosistema emprendedor para identificar desafíos estratégicos y co-crear soluciones innovadoras. Este espacio impulsa la transferencia de conocimiento, fortalece las capacidades de I+D del territorio y promueve la competitividad sostenible del Biobío.
                             </p>
                         </div>
-                        <i data-lucide="building-2" size="56" style="opacity: 0.35; flex-shrink: 0;"></i>
+                        <i data-lucide="building-2" size="56" style="opacity: 0.3; flex-shrink: 0;"></i>
                     </div>
 
-                    <div style="margin-top: 28px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.15);">
-                        <h4 style="font-size: 12px; font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 1px; color: #01DCFF; margin-bottom: 16px;">
+                    <div style="margin-top: 28px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.18);">
+                        <h4 style="font-size: 12px; font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 1px; color: var(--cidere-cyan); margin-bottom: 16px;">
                             Directiva & Comité Ejecutivo de la Mesa
                         </h4>
-                        <!-- GRILLA DE DIRECTIVA EN HTML/CSS -->
                         <div class="grid-4" style="gap: 16px;">
                             <div class="profile-card">
                                 <img src="hugo_garcia.png" alt="Hugo García" class="profile-img">
@@ -297,10 +331,10 @@
                 </div>
             </section>
 
-            <!-- PANTALLA 1: PANEL DE CONTROL -->
+            <!-- VISTA: PANEL GENERAL -->
             <section id="view-dashboard" class="view-section active">
                 <div style="margin-bottom: 24px;">
-                    <h1 style="font-size: 24px; font-weight: 800; color: var(--cidere-blue);">Panel de Innovación CIDERE</h1>
+                    <h1 style="font-size: 24px; font-weight: 800; color: var(--cidere-blue);">Panel de Innovación CIDERE Biobío</h1>
                     <p style="color: var(--text-muted); font-size: 13px;">Impulsando el desarrollo regional mediante la conexión entre Academia, Industria y Capital.</p>
                 </div>
 
@@ -329,7 +363,7 @@
                 </div>
 
                 <div class="grid-2">
-                    <!-- COLUMNA IZQUIERDA: CARRUSEL DE GALERÍA -->
+                    <!-- CARRUSEL -->
                     <div>
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
                             <h3 style="font-size: 16px; color: var(--cidere-blue);">Galería CIDERE Biobío</h3>
@@ -337,23 +371,21 @@
                         </div>
                         
                         <div class="card carrusel-card" style="padding: 20px; position: relative; height: 310px; display: flex; flex-direction: column; justify-content: space-between;">
-                            <!-- Contenedor del Carrusel (Transición por Fade) -->
                             <div id="carrusel-fotos" style="position: relative; width: 100%; height: 220px;">
                                 <div class="slide" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; gap: 12px; opacity: 1; transition: opacity 1.5s ease-in-out;">
-                                    <img src="foto1.jpg" alt="Actividad CIDERE" style="width: calc(50% - 6px); height: 100%; object-fit: cover; border-radius: 8px;">
-                                    <img src="foto2.jpg" alt="Actividad CIDERE" style="width: calc(50% - 6px); height: 100%; object-fit: cover; border-radius: 8px;">
+                                    <img src="foto1.jpg" alt="Actividad CIDERE" style="width: calc(50% - 6px); height: 100%; object-fit: cover; border-radius: 10px;">
+                                    <img src="foto2.jpg" alt="Actividad CIDERE" style="width: calc(50% - 6px); height: 100%; object-fit: cover; border-radius: 10px;">
                                 </div>
                                 <div class="slide" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; gap: 12px; opacity: 0; transition: opacity 1.5s ease-in-out;">
-                                    <img src="foto3.jpg" alt="Actividad CIDERE" style="width: calc(50% - 6px); height: 100%; object-fit: cover; border-radius: 8px;">
-                                    <img src="foto4.jpg" alt="Actividad CIDERE" style="width: calc(50% - 6px); height: 100%; object-fit: cover; border-radius: 8px;">
+                                    <img src="foto3.jpg" alt="Actividad CIDERE" style="width: calc(50% - 6px); height: 100%; object-fit: cover; border-radius: 10px;">
+                                    <img src="foto4.jpg" alt="Actividad CIDERE" style="width: calc(50% - 6px); height: 100%; object-fit: cover; border-radius: 10px;">
                                 </div>
                                 <div class="slide" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; gap: 12px; opacity: 0; transition: opacity 1.5s ease-in-out;">
-                                    <img src="foto5.jpg" alt="Actividad CIDERE" style="width: calc(50% - 6px); height: 100%; object-fit: cover; border-radius: 8px;">
-                                    <img src="foto6.png" alt="Actividad CIDERE" style="width: calc(50% - 6px); height: 100%; object-fit: cover; border-radius: 8px;">
+                                    <img src="foto5.jpg" alt="Actividad CIDERE" style="width: calc(50% - 6px); height: 100%; object-fit: cover; border-radius: 10px;">
+                                    <img src="foto6.png" alt="Actividad CIDERE" style="width: calc(50% - 6px); height: 100%; object-fit: cover; border-radius: 10px;">
                                 </div>
                             </div>
                             
-                            <!-- Indicadores (Puntitos) -->
                             <div style="display: flex; justify-content: center; gap: 6px; margin-top: 16px;">
                                 <div class="dot active" style="width: 8px; height: 8px; border-radius: 50%; background: var(--cidere-blue); transition: background 0.5s;"></div>
                                 <div class="dot" style="width: 8px; height: 8px; border-radius: 50%; background: var(--border-color); transition: background 0.5s;"></div>
@@ -362,35 +394,32 @@
                         </div>
                     </div>
 
-                    <!-- COLUMNA DERECHA: DESAFÍOS -->
+                    <!-- DESAFÍOS -->
                     <div>
-                        <div class="card" style="background: var(--cidere-blue-dark); color: white;">
-                            <h3 style="font-size: 15px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; font-family: var(--font-title);">
+                        <div class="card" style="background: var(--cidere-blue-dark); color: white; border-top: none;">
+                            <h3 style="font-size: 15px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
                                 <i data-lucide="factory" size="18" style="color: #01DCFF;"></i> Desafíos de la Región
                             </h3>
-                            
-                            <div id="lista-desafios-dashboard">
-                                <!-- Se llena vía script -->
-                            </div>
+                            <div id="lista-desafios-dashboard"></div>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <!-- PANTALLA 2: REPOSITORIO DE STARTUPS -->
+            <!-- VISTA: STARTUPS -->
             <section id="view-repositorio" class="view-section">
                 <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px;">
                     <div>
                         <h1 style="font-size: 24px; font-weight: 800; color: var(--cidere-blue);">Startups y Desarrollos Regionales</h1>
                         <p style="color: var(--text-muted); font-size: 13px; margin-top: 4px;">Plataforma centralizada gestionada por CIDERE Biobío para proyectos de I+D y Startups.</p>
                     </div>
-                    <button class="btn-primary" style="background-color: var(--cidere-green-bright)" onclick="openModal('modal-subir-desarrollo')">
+                    <button class="btn-primary" style="background-color: var(--cidere-green-bright);" onclick="openModal('modal-subir-desarrollo')">
                         <i data-lucide="upload-cloud" size="16"></i> Subir Nuevo Desarrollo
                     </button>
                 </div>
 
-                <!-- FILTROS (SIN SERVICIOS B2B) -->
-                <div style="display: flex; gap: 10px; margin-bottom: 24px; overflow-x: auto; padding-bottom: 8px;">
+                <!-- FILTROS COMBINADOS -->
+                <div style="display: flex; gap: 10px; margin-bottom: 16px; overflow-x: auto; padding-bottom: 8px;">
                     <button class="filter-pill active" onclick="filtrarStartups('Todos', this)">Todos los Proyectos</button>
                     <button class="filter-pill" onclick="filtrarStartups('Agroindustria', this)">Agroindustria</button>
                     <button class="filter-pill" onclick="filtrarStartups('Manufactura', this)">Manufactura</button>
@@ -405,11 +434,13 @@
                     <button class="filter-pill" onclick="filtrarStartups('Tecnología / Software', this)">Tecnología / Software</button>
                 </div>
 
-                <!-- Contenedor Startups -->
+                <!-- CONTADOR DINÁMICO DE RESULTADOS -->
+                <div id="contador-startups" class="results-counter">Cargando desarrollos...</div>
+
                 <div id="lista-startups" class="grid-3"></div>
             </section>
 
-            <!-- PANTALLA 3: DIAGNÓSTICO TRL -->
+            <!-- VISTA: DIAGNÓSTICO TRL -->
             <section id="view-ficha" class="view-section">
                 <div style="margin-bottom: 16px;">
                     <span class="badge badge-green">MEDICIÓN Y EVIDENCIAS DE MADUREZ</span>
@@ -442,7 +473,7 @@
                 </div>
             </section>
 
-            <!-- PANTALLA 4: DESAFÍOS INDUSTRIA -->
+            <!-- VISTA: DESAFÍOS INDUSTRIA -->
             <section id="view-desafio" class="view-section">
                 <div style="margin-bottom: 20px;">
                     <span class="badge badge-green" style="margin-bottom: 6px;">DESAFÍOS REGIONALES</span>
@@ -480,7 +511,7 @@
                 </div>
             </section>
 
-            <!-- PANTALLA 5: IES -->
+            <!-- VISTA: IES / ACADEMIAS -->
             <section id="view-ies" class="view-section">
                 <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px;">
                     <div>
@@ -489,8 +520,8 @@
                     </div>
                 </div>
 
-                <!-- FILTROS (SIN SERVICIOS B2B) -->
-                <div style="display: flex; gap: 10px; margin-bottom: 24px; overflow-x: auto; padding-bottom: 8px;">
+                <!-- FILTROS COMBINADOS -->
+                <div style="display: flex; gap: 10px; margin-bottom: 16px; overflow-x: auto; padding-bottom: 8px;">
                     <button class="filter-pill active" id="btn-ies-todos" onclick="filtrarIES('Todos', this)">Todas</button>
                     <button class="filter-pill" onclick="filtrarIES('Agroindustria', this)">Agroindustria</button>
                     <button class="filter-pill" onclick="filtrarIES('Manufactura', this)">Manufactura</button>
@@ -505,10 +536,102 @@
                     <button class="filter-pill" onclick="filtrarIES('Tecnología / Software', this)">Tecnología / Software</button>
                 </div>
 
+                <div id="contador-ies" class="results-counter">Cargando capacidades académicas...</div>
+
                 <div id="lista-ies" class="grid-3"></div>
             </section>
 
-            <!-- PANTALLA 6: MENSAJERÍA -->
+            <!-- VISTA NUEVA: RECURSOS -->
+            <section id="view-recursos" class="view-section">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px;">
+                    <div>
+                        <span class="badge badge-blue" style="margin-bottom: 6px;">REPOSITORIO DOCUMENTAL</span>
+                        <h1 style="font-size: 24px; font-weight: 800; color: var(--cidere-blue);">Recursos & Documentos de la Mesa</h1>
+                        <p style="color: var(--text-muted); font-size: 13px; margin-top: 4px;">Accede a reportes, minutas, manuales TRL y kits de innovación que impulsan el desarrollo regional. Si tienes un nuevo recurso, súbelo para revisión.</p>
+                    </div>
+                    <button class="btn-primary" style="background-color: var(--cidere-orange);" onclick="openModal('modal-subir-recurso')">
+                        <i data-lucide="upload" size="16"></i> Subir Nuevo Recurso
+                    </button>
+                </div>
+
+                <div class="grid-3">
+                    <div class="resource-item-card">
+                        <div>
+                            <span class="badge badge-blue" style="margin-bottom: 10px;">GUÍA TÉCNICA</span>
+                            <h4 style="font-size: 15px; color: var(--cidere-blue); margin-bottom: 8px;">Manual de Medición TRL 2026</h4>
+                            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">Estándar de madurez tecnológica para proyectos de I+D y Startups en la Región del Biobío.</p>
+                        </div>
+                        <button class="btn-outline" style="width: 100%; display: flex; justify-content: center; gap: 8px;" onclick="alert('Descargando Manual TRL 2026 en PDF...')">
+                            <i data-lucide="download" size="14"></i> Descargar Documento
+                        </button>
+                    </div>
+
+                    <div class="resource-item-card">
+                        <div>
+                            <span class="badge badge-green" style="margin-bottom: 10px;">MINUTA TÉCNICA</span>
+                            <h4 style="font-size: 15px; color: var(--cidere-blue); margin-bottom: 8px;">Minuta Sesión Arauco MDF</h4>
+                            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">Documento de profundización técnica del desafío de medición en línea de fibra MDF (Planta Trupán).</p>
+                        </div>
+                        <button class="btn-outline" style="width: 100%; display: flex; justify-content: center; gap: 8px;" onclick="alert('Descargando Minuta Arauco MDF en PDF...')">
+                            <i data-lucide="download" size="14"></i> Descargar Minuta
+                        </button>
+                    </div>
+
+                    <div class="resource-item-card">
+                        <div>
+                            <span class="badge badge-blue" style="margin-bottom: 10px;">PRESENTACIÓN</span>
+                            <h4 style="font-size: 15px; color: var(--cidere-blue); margin-bottom: 8px;">Kit Resiliencia Digital Camanchaca</h4>
+                            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">Presentación NEXS.O.S de logística de catástrofes para el Comité de Innovación.</p>
+                        </div>
+                        <button class="btn-outline" style="width: 100%; display: flex; justify-content: center; gap: 8px;" onclick="alert('Descargando Presentación NEXS.O.S...')">
+                            <i data-lucide="download" size="14"></i> Descargar Kit
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- VISTA NUEVA: EVENTOS -->
+            <section id="view-eventos" class="view-section">
+                <div style="margin-bottom: 24px;">
+                    <span class="badge badge-green" style="margin-bottom: 6px;">CALENDARIO MESA</span>
+                    <h1 style="font-size: 24px; font-weight: 800; color: var(--cidere-blue);">Próximos Eventos & Sesiones de Profundización</h1>
+                    <p style="color: var(--text-muted); font-size: 13px; margin-top: 4px;">Participa en los talleres de trabajo entre empresas socias, academia y emprendedores.</p>
+                </div>
+
+                <div>
+                    <div class="event-card">
+                        <div class="event-date-box">
+                            <div style="font-size: 22px; font-weight: 800; font-family: var(--font-mono);">20</div>
+                            <div style="font-size: 11px; font-weight: 700; text-transform: uppercase;">MAYO 2026</div>
+                        </div>
+                        <div style="flex-grow: 1;">
+                            <span class="badge badge-green">SESIÓN ONLINE</span>
+                            <h4 style="font-size: 16px; color: var(--cidere-blue); margin: 4px 0;">Profundización Desafío Arauco - Medición Fibra MDF</h4>
+                            <p style="font-size: 12px; color: var(--text-muted);">Reunión técnica con Juan Osses (Arauco) e instituciones académicas de la región.</p>
+                        </div>
+                        <button class="btn-primary" onclick="alert('Inscripción confirmada para la Sesión Arauco MDF')">
+                            Confirmar Asistencia
+                        </button>
+                    </div>
+
+                    <div class="event-card">
+                        <div class="event-date-box">
+                            <div style="font-size: 22px; font-weight: 800; font-family: var(--font-mono);">12</div>
+                            <div style="font-size: 11px; font-weight: 700; text-transform: uppercase;">JUN 2026</div>
+                        </div>
+                        <div style="flex-grow: 1;">
+                            <span class="badge badge-blue">PRESENCIAL / MESA</span>
+                            <h4 style="font-size: 16px; color: var(--cidere-blue); margin: 4px 0;">Comité Ejecutivo de la Mesa de Innovación</h4>
+                            <p style="font-size: 12px; color: var(--text-muted);">Sesión trimestral de revisión de proyectos aprobados y vinculaciones activas.</p>
+                        </div>
+                        <button class="btn-outline" onclick="alert('Inscripción confirmada para el Comité Ejecutivo')">
+                            Agendar
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- VISTA: MENSAJERÍA -->
             <section id="view-mensajeria" class="view-section">
                 <h1 style="font-size: 24px; font-weight: 800; color: var(--cidere-blue); margin-bottom: 8px;">Mensajería y Enlaces</h1>
                 <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 24px;">Bandeja de comunicación directa entre Empresas, Startups y la Mesa de Innovación CIDERE.</p>
@@ -541,10 +664,54 @@
                 </div>
             </div>
 
-        </div>
-    </main>
+        </main>
+    </div>
 
-    <!-- MODAL: SUBIR NUEVO DESARROLLO (SIN SERVICIOS B2B) -->
+    <!-- MODAL 1: FICHA TÉCNICA DETALLADA -->
+    <div id="modal-ficha-tecnica" class="modal-overlay">
+        <div class="modal-content">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px;">
+                <div>
+                    <span id="ficha-tipo-badge" class="badge badge-green">STARTUP</span>
+                    <h2 id="ficha-nombre" style="font-size: 20px; color: var(--cidere-blue); margin-top: 4px;">Nombre del Proyecto</h2>
+                </div>
+                <button class="btn-outline" style="padding: 4px 10px; border: none; font-size: 18px;" onclick="closeModal('modal-ficha-tecnica')">✕</button>
+            </div>
+
+            <div style="background: #f8fafc; padding: 16px; border-radius: 12px; border: 1px solid var(--border-color); margin-bottom: 20px;">
+                <div style="margin-bottom: 12px;">
+                    <label style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; font-family: var(--font-mono);">¿Qué hacemos?</label>
+                    <p id="ficha-que-hace" style="font-size: 13px; color: var(--text-main); margin-top: 2px;">-</p>
+                </div>
+                <div style="margin-bottom: 12px;">
+                    <label style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; font-family: var(--font-mono);">Tecnología Base (¿Cómo lo hacemos?):</label>
+                    <p id="ficha-como-hace" style="font-size: 13px; color: var(--text-main); margin-top: 2px;">-</p>
+                </div>
+                <div style="display: flex; gap: 20px;">
+                    <div>
+                        <label style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; font-family: var(--font-mono);">Industria:</label>
+                        <p id="ficha-industria" style="font-size: 13px; font-weight: 600; color: var(--cidere-blue);">-</p>
+                    </div>
+                    <div>
+                        <label style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; font-family: var(--font-mono);">Contacto / OTL:</label>
+                        <p id="ficha-contacto" style="font-size: 13px; font-weight: 600;">-</p>
+                    </div>
+                </div>
+            </div>
+
+            <div style="border: 1px solid var(--border-color); border-radius: 12px; padding: 16px; margin-bottom: 24px; text-align: center; background: white;">
+                <label style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; font-family: var(--font-mono);">Estado de Madurez Validado</label>
+                <div style="font-size: 22px; font-weight: 800; color: var(--cidere-blue); margin-top: 4px;" id="ficha-trl-val">TRL 1</div>
+            </div>
+
+            <div style="display: flex; justify-content: flex-end; gap: 10px;">
+                <button class="btn-outline" onclick="closeModal('modal-ficha-tecnica')">Cerrar</button>
+                <button id="ficha-btn-contacto" class="btn-primary" style="background-color: var(--cidere-green-bright);">Solicitar Contacto</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 2: SUBIR NUEVO DESARROLLO -->
     <div id="modal-subir-desarrollo" class="modal-overlay">
         <div class="modal-content">
             <h2 style="font-size: 18px; margin-bottom: 16px; color: var(--cidere-blue);">Registrar Nuevo Desarrollo / Startup</h2>
@@ -590,7 +757,7 @@
         </div>
     </div>
 
-    <!-- MODAL: PUBLICAR DESAFÍO ESTRUCTURADO (SIN SERVICIOS B2B) -->
+    <!-- MODAL 3: PUBLICAR DESAFÍO ESTRUCTURADO -->
     <div id="modal-publicar-desafio" class="modal-overlay">
         <div class="modal-content" style="width: 700px;">
             <h2 style="font-size: 18px; margin-bottom: 8px; color: var(--cidere-blue);">Estructurador de Desafíos</h2>
@@ -645,6 +812,35 @@
         </div>
     </div>
 
+    <!-- MODAL 4: SUBIR RECURSO DOCUMENTAL -->
+    <div id="modal-subir-recurso" class="modal-overlay">
+        <div class="modal-content">
+            <h2 style="font-size: 18px; margin-bottom: 16px; color: var(--cidere-blue);">Subir Recurso o Reporte para Revisión</h2>
+            <form onsubmit="alert('¡Gracias! El documento ha sido enviado al equipo de CIDERE para su aprobación.'); closeModal('modal-subir-recurso'); event.preventDefault();">
+                <div style="margin-bottom: 14px;">
+                    <label style="font-size: 12px; font-weight: 600;">Título del Recurso:</label>
+                    <input type="text" required placeholder="Ej: Reporte de Innovación Agroindustrial 2026">
+                </div>
+                <div style="margin-bottom: 14px;">
+                    <label style="font-size: 12px; font-weight: 600;">Tipo de Recurso:</label>
+                    <select required>
+                        <option value="Minuta">Minuta Técnica</option>
+                        <option value="Reporte">Reporte / Estudio</option>
+                        <option value="Manual">Manual o Guía TRL</option>
+                        <option value="Presentacion">Presentación</option>
+                    </select>
+                </div>
+                <div style="margin-bottom: 20px;">
+                    <label style="font-size: 12px; font-weight: 600;">Enlace al Documento (Google Drive / PDF):</label>
+                    <input type="text" required placeholder="https://...">
+                </div>
+                <div style="display: flex; justify-content: flex-end; gap: 10px;">
+                    <button type="button" class="btn-outline" onclick="closeModal('modal-subir-recurso')">Cancelar</button>
+                    <button type="submit" class="btn-primary" style="background-color: var(--cidere-orange);">Enviar a Revisión</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <script>
         lucide.createIcons();
@@ -673,52 +869,19 @@
 
         let startupsRegistry = [];
         let empresaSeleccionadaActual = null;
+        let filtroIndustriaStartupActual = 'Todos';
+        let filtroIndustriaIESActual = 'Todos';
 
-        function verificarEnter(event) {
-            if (event.key === "Enter") ejecutarBuscador();
-        }
-
-        function ejecutarBuscador() {
-            const textoBusqueda = document.getElementById('buscador-global').value.toLowerCase().trim();
-            const navIES = document.querySelector('li[onclick*="view-ies"]');
-            
-            if (textoBusqueda === "ies" || textoBusqueda.includes("academia")) {
-                if (!document.getElementById('view-ies').classList.contains('active')) switchView('view-ies', navIES);
-                actualizarListasIES();
-                return;
-            }
-            if (textoBusqueda === "") {
-                actualizarListasStartups();
-                actualizarListasIES();
-                return;
-            }
-
-            let encontroStartup = false;
-            let encontroIES = false;
-
-            const listaStartups = document.getElementById('lista-startups');
-            if(listaStartups) {
-                Array.from(listaStartups.getElementsByClassName('card')).forEach(tarjeta => {
-                    if (tarjeta.innerText.toLowerCase().includes(textoBusqueda)) {
-                        tarjeta.style.display = 'block'; encontroStartup = true;
-                    } else { tarjeta.style.display = 'none'; }
-                });
-            }
-
-            const listaIES = document.getElementById('lista-ies');
-            if(listaIES) {
-                Array.from(listaIES.getElementsByClassName('card')).forEach(tarjeta => {
-                    if (tarjeta.innerText.toLowerCase().includes(textoBusqueda)) {
-                        tarjeta.style.display = 'block'; encontroIES = true;
-                    } else { tarjeta.style.display = 'none'; }
-                });
-            }
-
-            if (encontroStartup && !document.getElementById('view-repositorio').classList.contains('active')) {
-                switchView('view-repositorio', document.querySelector('li[onclick*="view-repositorio"]'));
-            } else if (encontroIES && !document.getElementById('view-ies').classList.contains('active')) {
-                switchView('view-ies', navIES);
-            }
+        function mostrarSkeletons() {
+            const skeletonHTML = `
+                <div class="skeleton-card">
+                    <div class="skeleton-bar title"></div>
+                    <div class="skeleton-bar"></div>
+                    <div class="skeleton-bar short"></div>
+                </div>
+            `.repeat(3);
+            document.getElementById('lista-startups').innerHTML = skeletonHTML;
+            document.getElementById('lista-ies').innerHTML = skeletonHTML;
         }
 
         function switchView(viewId, element = null) {
@@ -727,14 +890,13 @@
             if (target) target.classList.add('active');
 
             document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-            document.querySelectorAll('.top-nav-links li').forEach(item => item.classList.remove('active-top'));
+            document.querySelectorAll('.nav-links-web li').forEach(item => item.classList.remove('active'));
 
             if (element) {
-                if(element.classList.contains('nav-item')) element.classList.add('active');
-                else element.classList.add('active-top');
+                element.classList.add('active');
             }
 
-            if (window.innerWidth <= 768) {
+            if (window.innerWidth <= 900) {
                 document.getElementById('main-sidebar').classList.remove('open');
                 document.getElementById('sidebar-overlay').classList.remove('active');
             }
@@ -748,6 +910,8 @@
         }
 
         function cargarDatosDesdeSheets() {
+            mostrarSkeletons();
+
             Papa.parse(CSV_STARTUPS, {
                 download: true,
                 complete: function(results) {
@@ -771,8 +935,7 @@
                         }
                     }
                     
-                    actualizarListasStartups();
-                    actualizarListasIES();
+                    aplicarFiltrosCombine();
                     
                     document.getElementById('kpi-proyectos').innerText = startupsRegistry.length;
                     document.getElementById('footer-metric-proyectos').innerText = startupsRegistry.length;
@@ -813,14 +976,44 @@
             });
         }
 
-        function actualizarListasStartups(filtro = 'Todos') {
+        /* FILTRADO COMBINADO EN TIEMPO REAL */
+        function aplicarFiltrosCombine() {
+            const textoBusqueda = document.getElementById('buscador-global').value.toLowerCase().trim();
+            
+            // 1. Filtrar Startups
+            let startups = startupsRegistry.filter(s => s.tipo.toUpperCase() === 'STARTUP');
+            const totalStartupsBase = startups.length;
+
+            if(filtroIndustriaStartupActual !== 'Todos') {
+                startups = startups.filter(s => s.industria === filtroIndustriaStartupActual);
+            }
+            if(textoBusqueda !== '') {
+                startups = startups.filter(s => s.nombre.toLowerCase().includes(textoBusqueda) || s.queHace.toLowerCase().includes(textoBusqueda) || s.industria.toLowerCase().includes(textoBusqueda));
+            }
+
+            renderizarStartups(startups);
+            document.getElementById('contador-startups').innerText = `Mostrando ${startups.length} de ${totalStartupsBase} desarrollos en esta categoría`;
+
+            // 2. Filtrar IES
+            let universidades = startupsRegistry.filter(s => s.tipo.toUpperCase() === 'UNIVERSIDAD');
+            const totalIESBase = universidades.length;
+
+            if(filtroIndustriaIESActual !== 'Todos') {
+                universidades = universidades.filter(s => s.industria === filtroIndustriaIESActual);
+            }
+            if(textoBusqueda !== '') {
+                universidades = universidades.filter(s => s.nombre.toLowerCase().includes(textoBusqueda) || s.queHace.toLowerCase().includes(textoBusqueda) || s.industria.toLowerCase().includes(textoBusqueda));
+            }
+
+            renderizarIES(universidades);
+            document.getElementById('contador-ies').innerText = `Mostrando ${universidades.length} de ${totalIESBase} capacidades académicas`;
+        }
+
+        function renderizarStartups(startups) {
             const contenedor = document.getElementById('lista-startups');
             contenedor.innerHTML = '';
             
-            let startups = startupsRegistry.filter(s => s.tipo.toUpperCase() === 'STARTUP');
-            if(filtro !== 'Todos') startups = startups.filter(s => s.industria === filtro);
-            
-            if(startups.length === 0) { contenedor.innerHTML = '<p style="font-size: 13px; color: gray;">No hay Startups aprobadas en esta categoría.</p>'; return; }
+            if(startups.length === 0) { contenedor.innerHTML = '<p style="font-size: 13px; color: gray;">No hay Startups aprobadas que coincidan con la búsqueda.</p>'; return; }
 
             startups.forEach(s => {
                 contenedor.innerHTML += `
@@ -832,8 +1025,9 @@
                         <p style="font-size: 12px; color: var(--text-muted); margin-top:4px;"><b>Industria:</b> ${s.industria}</p>
                         <div style="margin-top: 14px; font-weight: 700; font-size: 12px; color: var(--cidere-blue);">TRL Validado: ${s.trlMax}</div>
                         
-                        <div style="margin-top: 16px;">
-                            <button class="btn-primary" style="background-color: var(--cidere-green-bright); width: 100%; justify-content: center;" onclick="solicitarContactoReal('${s.contacto}', '${s.nombre}')">Solicitar Contacto</button>
+                        <div style="margin-top: 16px; display: flex; gap: 8px;">
+                            <button class="btn-outline" style="flex: 1; font-size: 11.5px; padding: 8px;" onclick="abrirFichaTecnica('${s.nombre}')">Ver Ficha Técnica</button>
+                            <button class="btn-primary" style="background-color: var(--cidere-green-bright); flex: 1; font-size: 11.5px; padding: 8px; justify-content: center;" onclick="solicitarContactoReal('${s.contacto}', '${s.nombre}')">Contacto</button>
                         </div>
                     </div>
                 `;
@@ -841,14 +1035,11 @@
             lucide.createIcons();
         }
 
-        function actualizarListasIES(filtro = 'Todos') {
+        function renderizarIES(universidades) {
             const contenedor = document.getElementById('lista-ies');
             contenedor.innerHTML = '';
             
-            let universidades = startupsRegistry.filter(s => s.tipo.toUpperCase() === 'UNIVERSIDAD');
-            if(filtro !== 'Todos') universidades = universidades.filter(s => s.industria === filtro);
-            
-            if(universidades.length === 0) { contenedor.innerHTML = '<p style="font-size: 13px; color: gray;">No hay capacidades universitarias aprobadas en esta categoría.</p>'; return; }
+            if(universidades.length === 0) { contenedor.innerHTML = '<p style="font-size: 13px; color: gray;">No hay capacidades universitarias que coincidan con la búsqueda.</p>'; return; }
 
             universidades.forEach(s => {
                 contenedor.innerHTML += `
@@ -860,8 +1051,9 @@
                         <p style="font-size: 12px; color: var(--text-muted); margin-top:4px;"><b>Industria:</b> ${s.industria}</p>
                         <div style="margin-top: 14px; font-weight: 700; font-size: 12px; color: var(--cidere-blue);">TRL Validado: ${s.trlMax}</div>
                         
-                        <div style="margin-top: 16px;">
-                            <button class="btn-primary" style="background-color: var(--cidere-blue); width: 100%; justify-content: center;" onclick="solicitarContactoReal('${s.contacto}', '${s.nombre}')">Vincular Proyecto</button>
+                        <div style="margin-top: 16px; display: flex; gap: 8px;">
+                            <button class="btn-outline" style="flex: 1; font-size: 11.5px; padding: 8px;" onclick="abrirFichaTecnica('${s.nombre}')">Ver Ficha Técnica</button>
+                            <button class="btn-primary" style="background-color: var(--cidere-blue); flex: 1; font-size: 11.5px; padding: 8px; justify-content: center;" onclick="solicitarContactoReal('${s.contacto}', '${s.nombre}')">Vincular</button>
                         </div>
                     </div>
                 `;
@@ -871,12 +1063,37 @@
 
         function filtrarStartups(industria, btnElement) {
             document.getElementById('view-repositorio').querySelectorAll('.filter-pill').forEach(btn => btn.classList.remove('active'));
-            btnElement.classList.add('active'); actualizarListasStartups(industria);
+            btnElement.classList.add('active');
+            filtroIndustriaStartupActual = industria;
+            aplicarFiltrosCombine();
         }
 
         function filtrarIES(industria, btnElement) {
             document.getElementById('view-ies').querySelectorAll('.filter-pill').forEach(btn => btn.classList.remove('active'));
-            btnElement.classList.add('active'); actualizarListasIES(industria);
+            btnElement.classList.add('active');
+            filtroIndustriaIESActual = industria;
+            aplicarFiltrosCombine();
+        }
+
+        /* MODAL DE FICHA TÉCNICA EXPANDIDA */
+        function abrirFichaTecnica(nombre) {
+            const item = startupsRegistry.find(s => s.nombre === nombre);
+            if(!item) return;
+
+            document.getElementById('ficha-nombre').innerText = item.nombre;
+            document.getElementById('ficha-tipo-badge').innerText = item.tipo.toUpperCase();
+            document.getElementById('ficha-que-hace').innerText = item.queHace || 'Sin información disponible';
+            document.getElementById('ficha-como-hace').innerText = item.comoHace || 'Tecnología base en evaluación';
+            document.getElementById('ficha-industria').innerText = item.industria;
+            document.getElementById('ficha-contacto').innerText = item.contacto || 'Privado (Vía CIDERE)';
+            document.getElementById('ficha-trl-val').innerText = `Nivel TRL ${item.trlMax}`;
+            
+            document.getElementById('ficha-btn-contacto').onclick = function() {
+                closeModal('modal-ficha-tecnica');
+                solicitarContactoReal(item.contacto, item.nombre);
+            };
+
+            openModal('modal-ficha-tecnica');
         }
 
         function solicitarContactoReal(emailDestino, nombreStartup) {
