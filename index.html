@@ -40,7 +40,7 @@
 
         h1, h2, h3, h4, h5, h6, .font-title { font-family: var(--font-title); }
 
-        /* BARRA LATERAL (SIDEBAR ORIGINAL) */
+        /* BARRA LATERAL (SIDEBAR) */
         aside { width: 260px; background-color: var(--bg-sidebar); color: #ffffff; display: flex; flex-direction: column; justify-content: space-between; padding: 24px 16px; flex-shrink: 0; transition: left 0.3s ease; }
         .brand { padding: 0 8px 24px 8px; border-bottom: 1px solid rgba(255, 255, 255, 0.12); margin-bottom: 20px; display: flex; justify-content: center; }
         .nav-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
@@ -51,7 +51,7 @@
         .btn-sidebar-cta { background: var(--cidere-orange); color: white; border: none; padding: 14px; border-radius: 8px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: background 0.2s; width: 100%; margin-top: auto; font-family: var(--font-title); }
         .btn-sidebar-cta:hover { background-color: var(--cidere-orange-hover); }
 
-        /* AREA PRINCIPAL DE CONTENIDO ORIGINAL */
+        /* AREA PRINCIPAL DE CONTENIDO */
         main { flex-grow: 1; display: flex; flex-direction: column; height: 100vh; overflow-y: auto; }
         header { background-color: #ffffff; height: 64px; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; padding: 0 32px; position: sticky; top: 0; z-index: 10; }
         
@@ -184,7 +184,7 @@
     <!-- OVERLAY OSCURO PARA MÓVIL -->
     <div id="sidebar-overlay" class="sidebar-overlay" onclick="toggleSidebar()"></div>
 
-    <!-- SIDEBAR ORIGINAL -->
+    <!-- SIDEBAR -->
     <aside id="main-sidebar">
         <div>
             <div class="brand">
@@ -193,7 +193,7 @@
 
             <ul class="nav-list">
                 <li class="nav-item active" onclick="switchView('view-dashboard', this)">
-                    <i data-lucide="layout-dashboard"></i> Panel de Control
+                    <i data-lucide="home"></i> Inicio
                 </li>
                 <li class="nav-item" onclick="switchView('view-repositorio', this)">
                     <i data-lucide="rocket"></i> Startups Regionales
@@ -207,12 +207,6 @@
                 <li class="nav-item" onclick="switchView('view-ies', this)">
                     <i data-lucide="graduation-cap"></i> IES / Academias
                 </li>
-                <li class="nav-item" onclick="switchView('view-recursos', this)">
-                    <i data-lucide="folder-open"></i> Centro de Recursos
-                </li>
-                <li class="nav-item" onclick="switchView('view-eventos', this)">
-                    <i data-lucide="calendar"></i> Calendario Eventos
-                </li>
                 <li class="nav-item" onclick="switchView('view-mensajeria', this)">
                     <i data-lucide="message-square"></i> Mensajería
                 </li>
@@ -224,9 +218,9 @@
         </button>
     </aside>
 
-    <!-- CONTENIDO PRINCIPAL ORIGINAL -->
+    <!-- CONTENIDO PRINCIPAL -->
     <main>
-        <!-- HEADER TOP CON BUSCADOR DE ENTRADA EN VIVO -->
+        <!-- HEADER TOP CON BUSCADOR -->
         <header>
             <div style="display: flex; align-items: center; width: 100%;">
                 <button class="mobile-menu-btn" onclick="toggleSidebar()">
@@ -318,7 +312,7 @@
                 </div>
             </section>
 
-            <!-- PANTALLA 1: PANEL DE CONTROL -->
+            <!-- PANTALLA 1: INICIO -->
             <section id="view-dashboard" class="view-section active">
                 <div style="margin-bottom: 24px;">
                     <h1 style="font-size: 24px; font-weight: 800; color: var(--cidere-blue);">Panel de Innovación CIDERE</h1>
@@ -350,7 +344,7 @@
                 </div>
 
                 <div class="grid-2">
-                    <!-- COLUMNA IZQUIERDA: CARRUSEL DE GALERÍA -->
+                    <!-- CARRUSEL DE GALERÍA -->
                     <div>
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
                             <h3 style="font-size: 16px; color: var(--cidere-blue);">Galería CIDERE Biobío</h3>
@@ -381,7 +375,7 @@
                         </div>
                     </div>
 
-                    <!-- COLUMNA DERECHA: DESAFÍOS -->
+                    <!-- DESAFÍOS -->
                     <div>
                         <div class="card" style="background: var(--cidere-blue-dark); color: white;">
                             <h3 style="font-size: 15px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; font-family: var(--font-title);">
@@ -405,7 +399,6 @@
                     </button>
                 </div>
 
-                <!-- FILTROS (SIN SERVICIOS B2B) -->
                 <div style="display: flex; gap: 10px; margin-bottom: 16px; overflow-x: auto; padding-bottom: 8px;">
                     <button class="filter-pill active" onclick="filtrarStartups('Todos', this)">Todos los Proyectos</button>
                     <button class="filter-pill" onclick="filtrarStartups('Agroindustria', this)">Agroindustria</button>
@@ -421,9 +414,7 @@
                     <button class="filter-pill" onclick="filtrarStartups('Tecnología / Software', this)">Tecnología / Software</button>
                 </div>
 
-                <!-- CONTADOR DINÁMICO -->
                 <div id="contador-startups" class="results-counter">Cargando desarrollos...</div>
-
                 <div id="lista-startups" class="grid-3"></div>
             </section>
 
@@ -507,7 +498,6 @@
                     </div>
                 </div>
 
-                <!-- FILTROS (SIN SERVICIOS B2B) -->
                 <div style="display: flex; gap: 10px; margin-bottom: 16px; overflow-x: auto; padding-bottom: 8px;">
                     <button class="filter-pill active" id="btn-ies-todos" onclick="filtrarIES('Todos', this)">Todas</button>
                     <button class="filter-pill" onclick="filtrarIES('Agroindustria', this)">Agroindustria</button>
@@ -524,7 +514,6 @@
                 </div>
 
                 <div id="contador-ies" class="results-counter">Cargando capacidades académicas...</div>
-
                 <div id="lista-ies" class="grid-3"></div>
             </section>
 
@@ -585,35 +574,14 @@
                     <p style="color: var(--text-muted); font-size: 13px; margin-top: 4px;">Participa en los talleres de trabajo entre empresas socias, academia y emprendedores.</p>
                 </div>
 
-                <div>
-                    <div class="event-card">
-                        <div class="event-date-box">
-                            <div style="font-size: 22px; font-weight: 800; font-family: var(--font-mono);">20</div>
-                            <div style="font-size: 11px; font-weight: 700; text-transform: uppercase;">MAYO 2026</div>
-                        </div>
-                        <div style="flex-grow: 1;">
-                            <span class="badge badge-green">SESIÓN ONLINE</span>
-                            <h4 style="font-size: 16px; color: var(--cidere-blue); margin: 4px 0;">Profundización Desafío Arauco - Medición Fibra MDF</h4>
-                            <p style="font-size: 12px; color: var(--text-muted);">Reunión técnica con Juan Osses (Arauco) e instituciones académicas de la región.</p>
-                        </div>
-                        <button class="btn-primary" onclick="alert('Inscripción confirmada para la Sesión Arauco MDF')">
-                            Confirmar Asistencia
-                        </button>
-                    </div>
-
-                    <div class="event-card">
-                        <div class="event-date-box">
-                            <div style="font-size: 22px; font-weight: 800; font-family: var(--font-mono);">12</div>
-                            <div style="font-size: 11px; font-weight: 700; text-transform: uppercase;">JUN 2026</div>
-                        </div>
-                        <div style="flex-grow: 1;">
-                            <span class="badge badge-blue">PRESENCIAL / MESA</span>
-                            <h4 style="font-size: 16px; color: var(--cidere-blue); margin: 4px 0;">Comité Ejecutivo de la Mesa de Innovación</h4>
-                            <p style="font-size: 12px; color: var(--text-muted);">Sesión trimestral de revisión de proyectos aprobados y vinculaciones activas.</p>
-                        </div>
-                        <button class="btn-outline" onclick="alert('Inscripción confirmada para el Comité Ejecutivo')">
-                            Agendar
-                        </button>
+                <!-- ESTADO LIMPIO TEMPORAL -->
+                <div id="contenedor-eventos">
+                    <div class="card" style="text-align: center; padding: 48px 24px;">
+                        <i data-lucide="calendar-off" size="48" style="color: var(--cidere-blue); opacity: 0.35; margin-bottom: 12px;"></i>
+                        <h3 style="font-size: 16px; color: var(--cidere-blue);">No hay eventos programados por el momento</h3>
+                        <p style="font-size: 12px; color: var(--text-muted); margin-top: 4px; max-width: 500px; margin-left: auto; margin-right: auto;">
+                            Las próximas sesiones de profundización de desafíos, webinars y reuniones del Comité Ejecutivo de la Mesa de Innovación se publicarán en este espacio.
+                        </p>
                     </div>
                 </div>
             </section>
@@ -698,7 +666,7 @@
         </div>
     </div>
 
-    <!-- MODAL 2: SUBIR NUEVO DESARROLLO (SIN SERVICIOS B2B) -->
+    <!-- MODAL 2: SUBIR NUEVO DESARROLLO -->
     <div id="modal-subir-desarrollo" class="modal-overlay">
         <div class="modal-content">
             <h2 style="font-size: 18px; margin-bottom: 16px; color: var(--cidere-blue);">Registrar Nuevo Desarrollo / Startup</h2>
@@ -744,7 +712,7 @@
         </div>
     </div>
 
-    <!-- MODAL 3: PUBLICAR DESAFÍO ESTRUCTURADO (SIN SERVICIOS B2B) -->
+    <!-- MODAL 3: PUBLICAR DESAFÍO ESTRUCTURADO -->
     <div id="modal-publicar-desafio" class="modal-overlay">
         <div class="modal-content" style="width: 700px;">
             <h2 style="font-size: 18px; margin-bottom: 8px; color: var(--cidere-blue);">Estructurador de Desafíos</h2>
