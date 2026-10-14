@@ -14,13 +14,13 @@
     <style>
         :root {
             /* PALETA OFICIAL MANUAL DE MARCA CIDERE BIOBÍO 2026 */
-            --cidere-blue-dark: #112852;    /* Azul Oscuro Sidebar */
-            --cidere-blue: #3C63AD;         /* Azul Corporativo Principal */
-            --cidere-blue-light: #e8f0fe;   /* Azul Suave Fondo */
-            --cidere-orange: #EE731B;       /* Naranjo Área Innovación */
+            --cidere-blue-dark: #112852;    
+            --cidere-blue: #3C63AD;         
+            --cidere-blue-light: #e8f0fe;   
+            --cidere-orange: #EE731B;       
             --cidere-orange-hover: #d8620d;
-            --cidere-green: #598145;        /* Verde Corporativo */
-            --cidere-green-bright: #31AD72; /* Verde Mentores / CTAs */
+            --cidere-green: #598145;        
+            --cidere-green-bright: #31AD72; 
             --cidere-green-hover: #248a59;
             
             --bg-sidebar: var(--cidere-blue-dark);
@@ -181,7 +181,6 @@
 </head>
 <body>
 
-    <!-- OVERLAY OSCURO PARA MÓVIL -->
     <div id="sidebar-overlay" class="sidebar-overlay" onclick="toggleSidebar()"></div>
 
     <!-- SIDEBAR -->
@@ -218,9 +217,7 @@
         </button>
     </aside>
 
-    <!-- CONTENIDO PRINCIPAL -->
     <main>
-        <!-- HEADER TOP CON BUSCADOR -->
         <header>
             <div style="display: flex; align-items: center; width: 100%;">
                 <button class="mobile-menu-btn" onclick="toggleSidebar()">
@@ -249,14 +246,13 @@
 
         <div class="content-container">
 
-            <!-- VISTA: MESA DE INNOVACIÓN -->
             <section id="view-mesa-innovacion" class="view-section">
                 <div class="card" style="background: linear-gradient(135deg, var(--cidere-blue-dark) 0%, var(--cidere-blue) 100%); color: white; padding: 32px; margin-bottom: 24px;">
                     <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 20px;">
                         <div>
                             <h1 style="font-size: 28px; font-weight: 800; margin-bottom: 12px; font-family: var(--font-title);">¿Qué es la Mesa de Innovación?</h1>
                             <p style="font-size: 14px; opacity: 0.9; line-height: 1.6; max-width: 950px;">
-                                La Mesa de Innovación de CIDERE Biobío es una plataforma colaborativa que conecta a la industria, la academia y el ecosistema emprendedor para identificar desafíos estratégicos y co-crear soluciones innovadoras. Este espacio impulsa la transferencia de conocimiento, fortalece las capacidades de I+D del territorio y promueve la competitividad sostenible del Biobío mediante la colaboración entre empresas, instituciones educativas, centros de investigación y startups.
+                                La Mesa de Innovación de CIDERE Biobío es una plataforma colaborativa que conecta a la industria, la academia y el ecosistema emprendedor para identificar desafíos estratégicos y co-crear soluciones innovadoras. Este espacio impulsa la transferencia de conocimiento, fortalece las capacidades de I+D del territorio y promueve la competitividad sostenible del Biobío.
                             </p>
                         </div>
                         <i data-lucide="building-2" size="56" style="opacity: 0.35; flex-shrink: 0;"></i>
@@ -270,7 +266,7 @@
                             <div class="profile-card">
                                 <img src="hugo_garcia.png" alt="Hugo García" class="profile-img">
                                 <div class="profile-name">Hugo García</div>
-                                <div class="profile-role">Subgerente de Desarrollo e Innovación Comercial</div>
+                                <div class="profile-role">Subgerente de Desarrollo e Innovación</div>
                                 <div class="profile-logo-container">
                                     <img src="inchalam_logo.png" alt="Inchalam" class="profile-logo">
                                 </div>
@@ -278,7 +274,7 @@
                             <div class="profile-card">
                                 <img src="lila_rodriguez.png" alt="Lila Rodríguez" class="profile-img">
                                 <div class="profile-name">Lila Rodríguez</div>
-                                <div class="profile-role">Directora de Innovación y Vinculación con el Medio</div>
+                                <div class="profile-role">Directora de Innovación y Vinculación</div>
                                 <div class="profile-logo-container">
                                     <img src="inacap_logo.jpeg" alt="INACAP" class="profile-logo">
                                 </div>
@@ -305,14 +301,13 @@
 
                 <div class="card">
                     <h3 style="font-size: 16px; margin-bottom: 8px; color: var(--cidere-blue);">Acciones de la Mesa de Innovación</h3>
-                    <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px;">Desde esta sección las empresas participantes pueden ingresar sus problemáticas oficiales para ser canalizadas por el comité de CIDERE.</p>
+                    <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px;">Desde esta sección las empresas participantes pueden ingresar sus problemáticas oficiales para ser canalizadas por el comité.</p>
                     <button class="btn-primary" onclick="openModal('modal-publicar-desafio')">
                         <i data-lucide="plus"></i> Ingresar Nuevo Desafío a la Mesa
                     </button>
                 </div>
             </section>
 
-            <!-- PANTALLA 1: INICIO -->
             <section id="view-dashboard" class="view-section active">
                 <div style="margin-bottom: 24px;">
                     <h1 style="font-size: 24px; font-weight: 800; color: var(--cidere-blue);">Panel de Innovación CIDERE</h1>
@@ -344,7 +339,6 @@
                 </div>
 
                 <div class="grid-2">
-                    <!-- CARRUSEL DE GALERÍA -->
                     <div>
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
                             <h3 style="font-size: 16px; color: var(--cidere-blue);">Galería CIDERE Biobío</h3>
@@ -361,21 +355,15 @@
                                     <img src="foto3.jpg" alt="Actividad CIDERE" style="width: calc(50% - 6px); height: 100%; object-fit: cover; border-radius: 8px;">
                                     <img src="foto4.jpg" alt="Actividad CIDERE" style="width: calc(50% - 6px); height: 100%; object-fit: cover; border-radius: 8px;">
                                 </div>
-                                <div class="slide" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; gap: 12px; opacity: 0; transition: opacity 1.5s ease-in-out;">
-                                    <img src="foto5.jpg" alt="Actividad CIDERE" style="width: calc(50% - 6px); height: 100%; object-fit: cover; border-radius: 8px;">
-                                    <img src="foto6.png" alt="Actividad CIDERE" style="width: calc(50% - 6px); height: 100%; object-fit: cover; border-radius: 8px;">
-                                </div>
                             </div>
                             
                             <div style="display: flex; justify-content: center; gap: 6px; margin-top: 16px;">
                                 <div class="dot active" style="width: 8px; height: 8px; border-radius: 50%; background: var(--cidere-blue); transition: background 0.5s;"></div>
                                 <div class="dot" style="width: 8px; height: 8px; border-radius: 50%; background: var(--border-color); transition: background 0.5s;"></div>
-                                <div class="dot" style="width: 8px; height: 8px; border-radius: 50%; background: var(--border-color); transition: background 0.5s;"></div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- DESAFÍOS -->
                     <div>
                         <div class="card" style="background: var(--cidere-blue-dark); color: white;">
                             <h3 style="font-size: 15px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; font-family: var(--font-title);">
@@ -387,7 +375,6 @@
                 </div>
             </section>
 
-            <!-- PANTALLA 2: REPOSITORIO DE STARTUPS -->
             <section id="view-repositorio" class="view-section">
                 <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px;">
                     <div>
@@ -418,7 +405,6 @@
                 <div id="lista-startups" class="grid-3"></div>
             </section>
 
-            <!-- PANTALLA 3: DIAGNÓSTICO TRL -->
             <section id="view-ficha" class="view-section">
                 <div style="margin-bottom: 16px;">
                     <span class="badge badge-green">MEDICIÓN Y EVIDENCIAS DE MADUREZ</span>
@@ -451,7 +437,6 @@
                 </div>
             </section>
 
-            <!-- PANTALLA 4: DESAFÍOS INDUSTRIA -->
             <section id="view-desafio" class="view-section">
                 <div style="margin-bottom: 20px;">
                     <span class="badge badge-green" style="margin-bottom: 6px;">DESAFÍOS REGIONALES</span>
@@ -489,7 +474,6 @@
                 </div>
             </section>
 
-            <!-- PANTALLA 5: IES -->
             <section id="view-ies" class="view-section">
                 <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px;">
                     <div>
@@ -517,13 +501,12 @@
                 <div id="lista-ies" class="grid-3"></div>
             </section>
 
-            <!-- PANTALLA 6: RECURSOS -->
             <section id="view-recursos" class="view-section">
                 <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px;">
                     <div>
                         <span class="badge badge-blue" style="margin-bottom: 6px;">REPOSITORIO DOCUMENTAL</span>
                         <h1 style="font-size: 24px; font-weight: 800; color: var(--cidere-blue);">Recursos & Documentos de la Mesa</h1>
-                        <p style="color: var(--text-muted); font-size: 13px; margin-top: 4px;">Accede a reportes, minutas, manuales TRL y kits de innovación. Si tienes un nuevo recurso, súbelo para revisión.</p>
+                        <p style="color: var(--text-muted); font-size: 13px; margin-top: 4px;">Accede a reportes, minutas, manuales TRL y kits de innovación.</p>
                     </div>
                     <button class="btn-primary" style="background-color: var(--cidere-orange);" onclick="openModal('modal-subir-recurso')">
                         <i data-lucide="upload" size="16"></i> Subir Nuevo Recurso
@@ -535,69 +518,42 @@
                         <div>
                             <span class="badge badge-blue" style="margin-bottom: 10px;">GUÍA TÉCNICA</span>
                             <h4 style="font-size: 15px; color: var(--cidere-blue); margin-bottom: 8px;">Manual de Medición TRL 2026</h4>
-                            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">Estándar de madurez tecnológica para proyectos de I+D y Startups en la Región del Biobío.</p>
+                            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">Estándar de madurez tecnológica para proyectos de I+D en la Región del Biobío.</p>
                         </div>
-                        <button class="btn-outline" style="width: 100%; display: flex; justify-content: center; gap: 8px;" onclick="alert('Descargando Manual TRL 2026 en PDF...')">
+                        <button class="btn-outline" style="width: 100%; display: flex; justify-content: center; gap: 8px;" onclick="alert('Descargando Manual...')">
                             <i data-lucide="download" size="14"></i> Descargar Documento
-                        </button>
-                    </div>
-
-                    <div class="resource-item-card">
-                        <div>
-                            <span class="badge badge-green" style="margin-bottom: 10px;">MINUTA TÉCNICA</span>
-                            <h4 style="font-size: 15px; color: var(--cidere-blue); margin-bottom: 8px;">Minuta Sesión Arauco MDF</h4>
-                            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">Documento de profundización técnica del desafío de medición en línea de fibra MDF (Planta Trupán).</p>
-                        </div>
-                        <button class="btn-outline" style="width: 100%; display: flex; justify-content: center; gap: 8px;" onclick="alert('Descargando Minuta Arauco MDF en PDF...')">
-                            <i data-lucide="download" size="14"></i> Descargar Minuta
-                        </button>
-                    </div>
-
-                    <div class="resource-item-card">
-                        <div>
-                            <span class="badge badge-blue" style="margin-bottom: 10px;">PRESENTACIÓN</span>
-                            <h4 style="font-size: 15px; color: var(--cidere-blue); margin-bottom: 8px;">Kit Resiliencia Digital Camanchaca</h4>
-                            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">Presentación NEXS.O.S de logística de catástrofes para el Comité de Innovación.</p>
-                        </div>
-                        <button class="btn-outline" style="width: 100%; display: flex; justify-content: center; gap: 8px;" onclick="alert('Descargando Presentación NEXS.O.S...')">
-                            <i data-lucide="download" size="14"></i> Descargar Kit
                         </button>
                     </div>
                 </div>
             </section>
 
-            <!-- PANTALLA 7: EVENTOS -->
             <section id="view-eventos" class="view-section">
                 <div style="margin-bottom: 24px;">
                     <span class="badge badge-green" style="margin-bottom: 6px;">CALENDARIO MESA</span>
                     <h1 style="font-size: 24px; font-weight: 800; color: var(--cidere-blue);">Próximos Eventos & Sesiones de Profundización</h1>
-                    <p style="color: var(--text-muted); font-size: 13px; margin-top: 4px;">Participa en los talleres de trabajo entre empresas socias, academia y emprendedores.</p>
                 </div>
 
-                <!-- ESTADO LIMPIO TEMPORAL -->
                 <div id="contenedor-eventos">
                     <div class="card" style="text-align: center; padding: 48px 24px;">
                         <i data-lucide="calendar-off" size="48" style="color: var(--cidere-blue); opacity: 0.35; margin-bottom: 12px;"></i>
                         <h3 style="font-size: 16px; color: var(--cidere-blue);">No hay eventos programados por el momento</h3>
                         <p style="font-size: 12px; color: var(--text-muted); margin-top: 4px; max-width: 500px; margin-left: auto; margin-right: auto;">
-                            Las próximas sesiones de profundización de desafíos, webinars y reuniones del Comité Ejecutivo de la Mesa de Innovación se publicarán en este espacio.
+                            Las próximas sesiones de profundización de desafíos, webinars y reuniones se publicarán en este espacio.
                         </p>
                     </div>
                 </div>
             </section>
 
-            <!-- PANTALLA 8: MENSAJERÍA -->
             <section id="view-mensajeria" class="view-section">
                 <h1 style="font-size: 24px; font-weight: 800; color: var(--cidere-blue); margin-bottom: 8px;">Mensajería y Enlaces</h1>
-                <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 24px;">Bandeja de comunicación directa entre Empresas, Startups y la Mesa de Innovación CIDERE.</p>
+                <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 24px;">Bandeja de comunicación directa entre Empresas, Startups e IES.</p>
                 <div class="card" style="text-align: center; padding: 40px;">
                     <i data-lucide="message-square" size="48" style="color: var(--cidere-blue); opacity: 0.4; margin-bottom: 12px;"></i>
-                    <h3 style="font-size: 16px;">Buzón conectado a Apps Script</h3>
-                    <p style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">Los correos enviados a través de "Solicitar Contacto" son notificados internamente.</p>
+                    <h3 style="font-size: 16px;">Historial de Solicitudes Conectado</h3>
+                    <p style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">Los correos enviados a través de "Solicitar Contacto" son notificados a la OTL y a CIDERE automáticamente.</p>
                 </div>
             </section>
             
-            <!-- FOOTER COMÚN -->
             <div class="footer-banner">
                 <div>
                     <h4 style="font-size: 14px; text-transform: uppercase; font-family: var(--font-title); font-weight: 700;">Impacto Regional CIDERE Biobío</h4>
@@ -622,7 +578,7 @@
         </div>
     </main>
 
-    <!-- MODAL 1: FICHA TÉCNICA DETALLADA -->
+    <!-- MODALES -->
     <div id="modal-ficha-tecnica" class="modal-overlay">
         <div class="modal-content">
             <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px;">
@@ -666,43 +622,18 @@
         </div>
     </div>
 
-    <!-- MODAL 2: SUBIR NUEVO DESARROLLO -->
+    <!-- OTROS MODALES (Subir Desarrollo, Desafío, Recursos) -->
     <div id="modal-subir-desarrollo" class="modal-overlay">
         <div class="modal-content">
-            <h2 style="font-size: 18px; margin-bottom: 16px; color: var(--cidere-blue);">Registrar Nuevo Desarrollo / Startup</h2>
+            <h2 style="font-size: 18px; margin-bottom: 16px; color: var(--cidere-blue);">Registrar Nuevo Desarrollo</h2>
             <form onsubmit="registrarNuevoDesarrollo(event)">
-                <div style="margin-bottom: 14px;">
-                    <label style="font-size: 12px; font-weight: 600;">Datos de Contacto (Email / Teléfono):</label>
-                    <input type="text" id="reg-contacto" required>
+                <div style="margin-bottom: 14px;"><label style="font-size: 12px; font-weight: 600;">Contacto:</label><input type="text" id="reg-contacto" required></div>
+                <div style="margin-bottom: 14px;"><label style="font-size: 12px; font-weight: 600;">Nombre:</label><input type="text" id="reg-nombre" required></div>
+                <div style="margin-bottom: 14px;"><label style="font-size: 12px; font-weight: 600;">¿Qué hacemos?</label><textarea id="reg-que-hacemos" required></textarea></div>
+                <div style="margin-bottom: 14px;"><label style="font-size: 12px; font-weight: 600;">Industria:</label>
+                    <select id="reg-industria" required><option value="Agroindustria">Agroindustria</option><option value="Tecnología / Software">Tecnología / Software</option></select>
                 </div>
-                <div style="margin-bottom: 14px;">
-                    <label style="font-size: 12px; font-weight: 600;">Nombre de la Startup / Desarrollo:</label>
-                    <input type="text" id="reg-nombre" required>
-                </div>
-                <div style="margin-bottom: 14px;">
-                    <label style="font-size: 12px; font-weight: 600;">¿Qué hacemos?</label>
-                    <textarea id="reg-que-hacemos" required style="height: 80px;"></textarea>
-                </div>
-                <div style="margin-bottom: 14px;">
-                    <label style="font-size: 12px; font-weight: 600;">¿Para quién lo hacemos? (Industria):</label>
-                    <select id="reg-industria" required>
-                        <option value="Agroindustria">Agroindustria</option>
-                        <option value="Manufactura">Manufactura</option>
-                        <option value="Energía">Energía</option>
-                        <option value="Logística">Logística</option>
-                        <option value="Agua y Sanitario">Agua y Sanitario</option>
-                        <option value="Alimentos">Alimentos</option>
-                        <option value="Salud">Salud</option>
-                        <option value="Forestal">Forestal</option>
-                        <option value="Pesca y Acuicultura">Pesca y Acuicultura</option>
-                        <option value="Minería">Minería</option>
-                        <option value="Tecnología / Software">Tecnología / Software</option>
-                    </select>
-                </div>
-                <div style="margin-bottom: 20px;">
-                    <label style="font-size: 12px; font-weight: 600;">¿Cómo lo hacemos? (Tecnología base):</label>
-                    <input type="text" id="reg-como-hacemos" required>
-                </div>
+                <div style="margin-bottom: 20px;"><label style="font-size: 12px; font-weight: 600;">Tecnología base:</label><input type="text" id="reg-como-hacemos" required></div>
                 <div style="display: flex; justify-content: flex-end; gap: 10px; align-items: center;">
                     <span id="loader-startup" class="loader-text">Enviando a revisión...</span>
                     <button type="button" class="btn-outline" onclick="closeModal('modal-subir-desarrollo')">Cancelar</button>
@@ -712,91 +643,30 @@
         </div>
     </div>
 
-    <!-- MODAL 3: PUBLICAR DESAFÍO ESTRUCTURADO -->
     <div id="modal-publicar-desafio" class="modal-overlay">
         <div class="modal-content" style="width: 700px;">
             <h2 style="font-size: 18px; margin-bottom: 8px; color: var(--cidere-blue);">Estructurador de Desafíos</h2>
-            
             <form onsubmit="guardarDesafioMesa(event)">
                 <div class="grid-2" style="gap: 16px; margin-bottom: 14px;">
-                    <div>
-                        <label style="font-size: 12px; font-weight: 600;">Empresa Solicitante:</label>
-                        <input type="text" id="des-empresa" required>
-                    </div>
-                    <div>
-                        <label style="font-size: 12px; font-weight: 600;">Sector / Industria:</label>
-                        <select id="des-rubro" required>
-                            <option value="Agroindustria">Agroindustria</option>
-                            <option value="Manufactura">Manufactura</option>
-                            <option value="Energía">Energía</option>
-                            <option value="Logística">Logística</option>
-                            <option value="Agua y Sanitario">Agua y Sanitario</option>
-                            <option value="Alimentos">Alimentos</option>
-                            <option value="Salud">Salud</option>
-                            <option value="Forestal">Forestal</option>
-                            <option value="Pesca y Acuicultura">Pesca y Acuicultura</option>
-                            <option value="Minería">Minería</option>
-                            <option value="Tecnología / Software">Tecnología / Software</option>
-                        </select>
-                    </div>
+                    <div><label style="font-size: 12px; font-weight: 600;">Empresa:</label><input type="text" id="des-empresa" required></div>
+                    <div><label style="font-size: 12px; font-weight: 600;">Rubro:</label><select id="des-rubro" required><option value="Agroindustria">Agroindustria</option></select></div>
                 </div>
-                <div style="margin-bottom: 20px;">
-                    <label style="font-size: 12px; font-weight: 600;">Título del Desafío:</label>
-                    <input type="text" id="des-titulo" required>
-                </div>
+                <div style="margin-bottom: 20px;"><label style="font-size: 12px; font-weight: 600;">Título:</label><input type="text" id="des-titulo" required></div>
                 <div style="background: #f8fafc; padding: 16px; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 24px;">
-                    <div style="margin-bottom: 14px;">
-                        <label style="font-size: 12px; font-weight: 600; color: var(--cidere-blue);">1. Contexto del Problema:</label>
-                        <textarea id="des-contexto" required style="height: 55px;"></textarea>
-                    </div>
-                    <div style="margin-bottom: 14px;">
-                        <label style="font-size: 12px; font-weight: 600; color: var(--cidere-blue);">2. Impacto Esperado:</label>
-                        <textarea id="des-impacto" required style="height: 55px;"></textarea>
-                    </div>
-                    <div>
-                        <label style="font-size: 12px; font-weight: 600; color: var(--cidere-blue);">3. Restricciones:</label>
-                        <textarea id="des-restricciones" required style="height: 55px;"></textarea>
-                    </div>
+                    <div style="margin-bottom: 14px;"><label style="font-size: 12px; font-weight: 600; color: var(--cidere-blue);">1. Contexto:</label><textarea id="des-contexto" required style="height: 55px;"></textarea></div>
+                    <div style="margin-bottom: 14px;"><label style="font-size: 12px; font-weight: 600; color: var(--cidere-blue);">2. Impacto:</label><textarea id="des-impacto" required style="height: 55px;"></textarea></div>
+                    <div><label style="font-size: 12px; font-weight: 600; color: var(--cidere-blue);">3. Restricciones:</label><textarea id="des-restricciones" required style="height: 55px;"></textarea></div>
                 </div>
                 <div style="display: flex; justify-content: flex-end; gap: 10px; align-items: center;">
-                    <span id="loader-desafio" class="loader-text">Enviando a revisión...</span>
+                    <span id="loader-desafio" class="loader-text">Enviando...</span>
                     <button type="button" class="btn-outline" onclick="closeModal('modal-publicar-desafio')">Cancelar</button>
-                    <button type="submit" class="btn-primary">Enviar a Mesa de Innovación</button>
+                    <button type="submit" class="btn-primary">Enviar a Mesa</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- MODAL 4: SUBIR RECURSO DOCUMENTAL -->
-    <div id="modal-subir-recurso" class="modal-overlay">
-        <div class="modal-content">
-            <h2 style="font-size: 18px; margin-bottom: 16px; color: var(--cidere-blue);">Subir Recurso o Reporte para Revisión</h2>
-            <form onsubmit="alert('¡Gracias! El documento ha sido enviado al equipo de CIDERE para su aprobación.'); closeModal('modal-subir-recurso'); event.preventDefault();">
-                <div style="margin-bottom: 14px;">
-                    <label style="font-size: 12px; font-weight: 600;">Título del Recurso:</label>
-                    <input type="text" required placeholder="Ej: Reporte de Innovación Agroindustrial 2026">
-                </div>
-                <div style="margin-bottom: 14px;">
-                    <label style="font-size: 12px; font-weight: 600;">Tipo de Recurso:</label>
-                    <select required>
-                        <option value="Minuta">Minuta Técnica</option>
-                        <option value="Reporte">Reporte / Estudio</option>
-                        <option value="Manual">Manual o Guía TRL</option>
-                        <option value="Presentacion">Presentación</option>
-                    </select>
-                </div>
-                <div style="margin-bottom: 20px;">
-                    <label style="font-size: 12px; font-weight: 600;">Enlace al Documento (Google Drive / PDF):</label>
-                    <input type="text" required placeholder="https://...">
-                </div>
-                <div style="display: flex; justify-content: flex-end; gap: 10px;">
-                    <button type="button" class="btn-outline" onclick="closeModal('modal-subir-recurso')">Cancelar</button>
-                    <button type="submit" class="btn-primary" style="background-color: var(--cidere-orange);">Enviar a Revisión</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
+    <!-- SCRIPT DE INTERACCIÓN -->
     <script>
         lucide.createIcons();
 
@@ -805,8 +675,10 @@
             document.getElementById('sidebar-overlay').classList.toggle('active');
         }
 
+        // --- ATENCIÓN: PEGA AQUÍ TU URL DE LA WEB APP DE GOOGLE APPS SCRIPT ---
         const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxN3oEYr2N8JZ5byhat94XMa_QwPe48sv-6Z6get94tmDpWrJwsTqg2-6LVC_5QWDH_GQ/exec"; 
         
+        // TUS CSV ACTUALES
         const CSV_STARTUPS = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ9bjV9qSRsPyVgCceJH3oKnkmMkJ2kd_aIE-FEQcUXhd7Tdo_BnRsMLtfSe7CMCETDOn5Il4kmfD5n/pub?gid=174902125&single=true&output=csv";
         const CSV_DESAFIOS = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ9bjV9qSRsPyVgCceJH3oKnkmMkJ2kd_aIE-FEQcUXhd7Tdo_BnRsMLtfSe7CMCETDOn5Il4kmfD5n/pub?gid=1430585904&single=true&output=csv";
 
@@ -865,6 +737,7 @@
             element.classList.add('selected');
         }
 
+        // LECTURA DE GOOGLE SHEETS
         function cargarDatosDesdeSheets() {
             mostrarSkeletons();
 
@@ -877,15 +750,16 @@
                     for(let i = 1; i < filas.length; i++) {
                         let ultimaColumna = filas[i][filas[i].length - 1];
                         
-                        if(filas[i].length >= 5 && filas[i][1] && ultimaColumna && ultimaColumna.trim() === 'Aprobado') {
+                        if(filas[i].length >= 8 && filas[i][1] && ultimaColumna && ultimaColumna.trim() === 'Aprobado') {
                             startupsRegistry.push({
                                 nombre: filas[i][1],
                                 tipo: filas[i][2] || "Startup",
-                                industria: filas[i][3],
-                                queHace: filas[i][4],
-                                comoHace: filas[i][5],
-                                trlMax: parseInt(filas[i][6]) || 1,
-                                contacto: filas[i][7],
+                                institucion: filas[i][3] || "", // NUEVA COLUMNA INSTITUCIÓN
+                                industria: filas[i][4],
+                                queHace: filas[i][5],
+                                comoHace: filas[i][6],
+                                trlMax: parseInt(filas[i][7]) || "Por validar",
+                                contacto: filas[i][8],
                                 evidencias: {}
                             });
                         }
@@ -950,15 +824,15 @@
             renderizarStartups(startups);
             document.getElementById('contador-startups').innerText = `Mostrando ${startups.length} de ${totalStartupsBase} desarrollos en esta categoría`;
 
-            // 2. Filtrar IES
-            let universidades = startupsRegistry.filter(s => s.tipo.toUpperCase() === 'UNIVERSIDAD');
+            // 2. Filtrar IES (ANTES DECÍA 'UNIVERSIDAD')
+            let universidades = startupsRegistry.filter(s => s.tipo.toUpperCase() === 'IES');
             const totalIESBase = universidades.length;
 
             if(filtroIndustriaIESActual !== 'Todos') {
                 universidades = universidades.filter(s => s.industria === filtroIndustriaIESActual);
             }
             if(textoBusqueda !== '') {
-                universidades = universidades.filter(s => s.nombre.toLowerCase().includes(textoBusqueda) || s.queHace.toLowerCase().includes(textoBusqueda) || s.industria.toLowerCase().includes(textoBusqueda));
+                universidades = universidades.filter(s => s.nombre.toLowerCase().includes(textoBusqueda) || s.queHace.toLowerCase().includes(textoBusqueda) || s.industria.toLowerCase().includes(textoBusqueda) || s.institucion.toLowerCase().includes(textoBusqueda));
             }
 
             renderizarIES(universidades);
@@ -995,12 +869,12 @@
             const contenedor = document.getElementById('lista-ies');
             contenedor.innerHTML = '';
             
-            if(universidades.length === 0) { contenedor.innerHTML = '<p style="font-size: 13px; color: gray;">No hay capacidades universitarias que coincidan con la búsqueda.</p>'; return; }
+            if(universidades.length === 0) { contenedor.innerHTML = '<p style="font-size: 13px; color: gray;">No hay capacidades de IES que coincidan con la búsqueda.</p>'; return; }
 
             universidades.forEach(s => {
                 contenedor.innerHTML += `
                     <div class="card">
-                        <span class="badge badge-blue" style="margin-bottom: 8px;">IES / ACADEMIA</span>
+                        <span class="badge badge-blue" style="margin-bottom: 8px;">IES | ${s.institucion}</span>
                         <h4 style="font-size: 15px; color: var(--cidere-blue);">${s.nombre}</h4>
                         <p style="font-size: 11px; color: var(--text-muted); margin: 4px 0 10px 0;">Contacto OTL: ${s.contacto || 'Privado'}</p>
                         <p style="font-size: 12px; color: var(--text-muted);"><b>Capacidad / Proyecto:</b> ${s.queHace}</p>
@@ -1031,18 +905,21 @@
             aplicarFiltrosCombine();
         }
 
-        /* MODAL DE FICHA TÉCNICA EXPANDIDA */
         function abrirFichaTecnica(nombre) {
             const item = startupsRegistry.find(s => s.nombre === nombre);
             if(!item) return;
 
             document.getElementById('ficha-nombre').innerText = item.nombre;
-            document.getElementById('ficha-tipo-badge').innerText = item.tipo.toUpperCase();
+            
+            let badgeText = item.tipo.toUpperCase();
+            if(item.institucion) badgeText += ' | ' + item.institucion;
+            document.getElementById('ficha-tipo-badge').innerText = badgeText;
+            
             document.getElementById('ficha-que-hace').innerText = item.queHace || 'Sin información disponible';
             document.getElementById('ficha-como-hace').innerText = item.comoHace || 'Tecnología base en evaluación';
             document.getElementById('ficha-industria').innerText = item.industria;
             document.getElementById('ficha-contacto').innerText = item.contacto || 'Privado (Vía CIDERE)';
-            document.getElementById('ficha-trl-val').innerText = `Nivel TRL ${item.trlMax}`;
+            document.getElementById('ficha-trl-val').innerText = (item.trlMax === "Por validar") ? "Por validar" : `Nivel TRL ${item.trlMax}`;
             
             document.getElementById('ficha-btn-contacto').onclick = function() {
                 closeModal('modal-ficha-tecnica');
@@ -1086,7 +963,7 @@
 
             fetch(APPS_SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: formData })
             .then(() => {
-                alert("¡Recibido! Tu desarrollo pasará por la revisión del comité CIDERE y, al ser aprobado, aparecerá en la plataforma pública.");
+                alert("¡Recibido! Tu desarrollo pasará por revisión.");
                 document.getElementById('loader-startup').style.display = 'none';
                 closeModal('modal-subir-desarrollo');
             })
@@ -1100,9 +977,9 @@
             event.preventDefault();
             document.getElementById('loader-desafio').style.display = 'inline';
 
-            const descripcionEstructurada = "1. CONTEXTO DEL PROBLEMA:\n" + document.getElementById('des-contexto').value + 
+            const descripcionEstructurada = "1. CONTEXTO:\n" + document.getElementById('des-contexto').value + 
                                             "\n\n2. IMPACTO ESPERADO:\n" + document.getElementById('des-impacto').value + 
-                                            "\n\n3. RESTRICCIONES Y EXPERIENCIA PREVIA:\n" + document.getElementById('des-restricciones').value;
+                                            "\n\n3. RESTRICCIONES:\n" + document.getElementById('des-restricciones').value;
 
             const formData = new FormData();
             formData.append('tipoFormulario', 'Desafio');
@@ -1113,7 +990,7 @@
 
             fetch(APPS_SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: formData })
             .then(() => {
-                alert("¡Desafío enviado con éxito! El equipo de la Mesa de Innovación lo revisará antes de publicarlo.");
+                alert("¡Desafío enviado con éxito!");
                 document.getElementById('loader-desafio').style.display = 'none';
                 closeModal('modal-publicar-desafio');
             })
@@ -1127,8 +1004,8 @@
             const container = document.getElementById('cuestionario-lineal-container');
             container.innerHTML = '';
             trlDefinitions.forEach(step => {
-                const trlMax = empresaSeleccionadaActual ? empresaSeleccionadaActual.trlMax : 1;
-                const isCompleted = step.level <= trlMax;
+                const trlVal = empresaSeleccionadaActual ? (parseInt(empresaSeleccionadaActual.trlMax) || 1) : 1;
+                const isCompleted = step.level <= trlVal;
                 container.innerHTML += `
                     <div class="trl-step-card ${isCompleted ? 'completed' : ''}">
                         <div class="trl-step-header">
@@ -1155,15 +1032,10 @@
 
         function actualizarEstadoTRLLineal(level, checked) {
             if(!empresaSeleccionadaActual) { alert("Seleccione primero un proyecto."); renderizarCuestionarioTRLLineal(); return; }
-            if(checked) empresaSeleccionadaActual.trlMax = Math.max(empresaSeleccionadaActual.trlMax, level);
+            let actual = parseInt(empresaSeleccionadaActual.trlMax) || 1;
+            if(checked) empresaSeleccionadaActual.trlMax = Math.max(actual, level);
             else empresaSeleccionadaActual.trlMax = Math.max(1, level - 1);
             renderizarCuestionarioTRLLineal();
-        }
-
-        function encontrarSolucionesEjemplo() {
-            document.getElementById('resultado-soluciones-ejemplo').style.display = 'block';
-            document.getElementById('texto-solucion-generada').innerHTML = `Analizando requerimiento... Se sugerirán vinculaciones con IES y Startups de la base de datos de CIDERE.`;
-            lucide.createIcons();
         }
 
         // CARRUSEL
@@ -1171,16 +1043,13 @@
         setInterval(() => {
             const slides = document.querySelectorAll('.slide');
             const dots = document.querySelectorAll('.dot');
-            
             if(slides.length > 0) {
                 slides[slideIndex].style.opacity = '0';
                 if(dots.length > 0) {
                     dots[slideIndex].style.background = 'var(--border-color)';
                     dots[slideIndex].classList.remove('active');
                 }
-                
                 slideIndex = (slideIndex + 1) % slides.length;
-                
                 slides[slideIndex].style.opacity = '1';
                 if(dots.length > 0) {
                     dots[slideIndex].style.background = 'var(--cidere-blue)';
