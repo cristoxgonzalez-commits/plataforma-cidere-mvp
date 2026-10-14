@@ -103,7 +103,7 @@
         /* MODALES FLOTANTES */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(17, 40, 82, 0.6); backdrop-filter: blur(2px); display: none; align-items: center; justify-content: center; z-index: 1000; }
         .modal-overlay.active { display: flex; }
-        .modal-content { background: white; padding: 30px; border-radius: 12px; width: 620px; max-width: 90%; max-height: 90vh; overflow-y: auto; }
+        .modal-content { background: white; padding: 30px; border-radius: 12px; width: 640px; max-width: 90%; max-height: 90vh; overflow-y: auto; }
 
         /* TRL & KPIS */
         .trl-step-card { border: 1px solid var(--border-color); border-radius: 10px; padding: 18px; margin-bottom: 16px; background: #ffffff; transition: all 0.2s ease; }
@@ -148,15 +148,13 @@
         .profile-logo { max-height: 100%; max-width: 90%; object-fit: contain; }
         
         /* TARJETAS DE EVENTOS Y RECURSOS */
-        .event-card { border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; background: white; margin-bottom: 16px; display: flex; gap: 20px; align-items: center; }
-        .event-date-box { background: var(--cidere-blue-light); color: var(--cidere-blue); padding: 12px 18px; border-radius: 10px; text-align: center; min-width: 90px; }
         .resource-item-card { border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; background: white; display: flex; flex-direction: column; justify-content: space-between; height: 100%; }
 
         /* OVERLAY PARA CELULARES */
         .sidebar-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 90; }
         .sidebar-overlay.active { display: block; }
 
-        /* ADAPTACIÓN MÓVIL (RESPONSIVE) */
+        /* ADAPTACIÓN MÓVIL */
         @media (max-width: 768px) {
             .mobile-menu-btn { display: block; }
             aside { position: fixed; left: -260px; top: 0; bottom: 0; z-index: 100; height: 100vh; }
@@ -175,7 +173,6 @@
             .metric-group { flex-direction: column; width: 100%; gap: 16px; }
             .metric-item { border-left: none; border-top: 1px solid rgba(255,255,255,0.2); padding-left: 0; padding-top: 16px; }
             .modal-content { width: 95%; padding: 20px; }
-            .event-card { flex-direction: column; text-align: center; }
         }
     </style>
 </head>
@@ -246,6 +243,7 @@
 
         <div class="content-container">
 
+            <!-- VISTA: MESA DE INNOVACIÓN -->
             <section id="view-mesa-innovacion" class="view-section">
                 <div class="card" style="background: linear-gradient(135deg, var(--cidere-blue-dark) 0%, var(--cidere-blue) 100%); color: white; padding: 32px; margin-bottom: 24px;">
                     <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 20px;">
@@ -308,6 +306,7 @@
                 </div>
             </section>
 
+            <!-- VISTA: DASHBOARD -->
             <section id="view-dashboard" class="view-section active">
                 <div style="margin-bottom: 24px;">
                     <h1 style="font-size: 24px; font-weight: 800; color: var(--cidere-blue);">Panel de Innovación CIDERE</h1>
@@ -375,6 +374,7 @@
                 </div>
             </section>
 
+            <!-- VISTA: REPOSITORIO STARTUPS -->
             <section id="view-repositorio" class="view-section">
                 <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px;">
                     <div>
@@ -405,6 +405,7 @@
                 <div id="lista-startups" class="grid-3"></div>
             </section>
 
+            <!-- VISTA: DIAGNÓSTICO TRL -->
             <section id="view-ficha" class="view-section">
                 <div style="margin-bottom: 16px;">
                     <span class="badge badge-green">MEDICIÓN Y EVIDENCIAS DE MADUREZ</span>
@@ -437,6 +438,7 @@
                 </div>
             </section>
 
+            <!-- VISTA: DESAFÍOS INDUSTRIA -->
             <section id="view-desafio" class="view-section">
                 <div style="margin-bottom: 20px;">
                     <span class="badge badge-green" style="margin-bottom: 6px;">DESAFÍOS REGIONALES</span>
@@ -474,6 +476,7 @@
                 </div>
             </section>
 
+            <!-- VISTA: IES / ACADEMIAS -->
             <section id="view-ies" class="view-section">
                 <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px;">
                     <div>
@@ -501,6 +504,7 @@
                 <div id="lista-ies" class="grid-3"></div>
             </section>
 
+            <!-- VISTA: RECURSOS -->
             <section id="view-recursos" class="view-section">
                 <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px;">
                     <div>
@@ -527,6 +531,7 @@
                 </div>
             </section>
 
+            <!-- VISTA: EVENTOS -->
             <section id="view-eventos" class="view-section">
                 <div style="margin-bottom: 24px;">
                     <span class="badge badge-green" style="margin-bottom: 6px;">CALENDARIO MESA</span>
@@ -544,6 +549,7 @@
                 </div>
             </section>
 
+            <!-- VISTA: MENSAJERÍA -->
             <section id="view-mensajeria" class="view-section">
                 <h1 style="font-size: 24px; font-weight: 800; color: var(--cidere-blue); margin-bottom: 8px;">Mensajería y Enlaces</h1>
                 <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 24px;">Bandeja de comunicación directa entre Empresas, Startups e IES.</p>
@@ -554,6 +560,7 @@
                 </div>
             </section>
             
+            <!-- FOOTER BANNER -->
             <div class="footer-banner">
                 <div>
                     <h4 style="font-size: 14px; text-transform: uppercase; font-family: var(--font-title); font-weight: 700;">Impacto Regional CIDERE Biobío</h4>
@@ -578,7 +585,7 @@
         </div>
     </main>
 
-    <!-- MODALES -->
+    <!-- MODAL: FICHA TÉCNICA DETALLADA -->
     <div id="modal-ficha-tecnica" class="modal-overlay">
         <div class="modal-content">
             <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px;">
@@ -598,7 +605,11 @@
                     <label style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; font-family: var(--font-mono);">Tecnología Base (¿Cómo lo hacemos?):</label>
                     <p id="ficha-como-hace" style="font-size: 13px; color: var(--text-main); margin-top: 2px;">-</p>
                 </div>
-                <div style="display: flex; gap: 20px;">
+                <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-top: 12px;">
+                    <div>
+                        <label style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; font-family: var(--font-mono);">Institución / Origen:</label>
+                        <p id="ficha-institucion" style="font-size: 13px; font-weight: 600; color: var(--cidere-blue);">-</p>
+                    </div>
                     <div>
                         <label style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; font-family: var(--font-mono);">Industria:</label>
                         <p id="ficha-industria" style="font-size: 13px; font-weight: 600; color: var(--cidere-blue);">-</p>
@@ -622,7 +633,7 @@
         </div>
     </div>
 
-    <!-- OTROS MODALES (Subir Desarrollo, Desafío, Recursos) -->
+    <!-- MODAL: REGISTRAR STARTUP -->
     <div id="modal-subir-desarrollo" class="modal-overlay">
         <div class="modal-content">
             <h2 style="font-size: 18px; margin-bottom: 16px; color: var(--cidere-blue);">Registrar Nuevo Desarrollo</h2>
@@ -643,6 +654,7 @@
         </div>
     </div>
 
+    <!-- MODAL: PUBLICAR DESAFÍO -->
     <div id="modal-publicar-desafio" class="modal-overlay">
         <div class="modal-content" style="width: 700px;">
             <h2 style="font-size: 18px; margin-bottom: 8px; color: var(--cidere-blue);">Estructurador de Desafíos</h2>
@@ -666,7 +678,7 @@
         </div>
     </div>
 
-    <!-- SCRIPT DE INTERACCIÓN -->
+    <!-- SCRIPT DE INTERACCIÓN Y LÓGICA -->
     <script>
         lucide.createIcons();
 
@@ -675,10 +687,10 @@
             document.getElementById('sidebar-overlay').classList.toggle('active');
         }
 
-        // --- ATENCIÓN: PEGA AQUÍ TU URL DE LA WEB APP DE GOOGLE APPS SCRIPT ---
+        // --- URL WEB APP GOOGLE APPS SCRIPT ---
         const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxN3oEYr2N8JZ5byhat94XMa_QwPe48sv-6Z6get94tmDpWrJwsTqg2-6LVC_5QWDH_GQ/exec"; 
         
-        // TUS CSV ACTUALES
+        // CSV GOOGLE SHEETS
         const CSV_STARTUPS = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ9bjV9qSRsPyVgCceJH3oKnkmMkJ2kd_aIE-FEQcUXhd7Tdo_BnRsMLtfSe7CMCETDOn5Il4kmfD5n/pub?gid=174902125&single=true&output=csv";
         const CSV_DESAFIOS = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ9bjV9qSRsPyVgCceJH3oKnkmMkJ2kd_aIE-FEQcUXhd7Tdo_BnRsMLtfSe7CMCETDOn5Il4kmfD5n/pub?gid=1430585904&single=true&output=csv";
 
@@ -754,11 +766,11 @@
                             startupsRegistry.push({
                                 nombre: filas[i][1],
                                 tipo: filas[i][2] || "Startup",
-                                institucion: filas[i][3] || "", // NUEVA COLUMNA INSTITUCIÓN
+                                institucion: filas[i][3] || "", // COLUMNA INSTITUCIÓN
                                 industria: filas[i][4],
                                 queHace: filas[i][5],
                                 comoHace: filas[i][6],
-                                trlMax: parseInt(filas[i][7]) || "Por validar",
+                                trlMax: filas[i][7] ? (isNaN(parseInt(filas[i][7])) ? filas[i][7] : parseInt(filas[i][7])) : "Por validar",
                                 contacto: filas[i][8],
                                 evidencias: {}
                             });
@@ -824,7 +836,7 @@
             renderizarStartups(startups);
             document.getElementById('contador-startups').innerText = `Mostrando ${startups.length} de ${totalStartupsBase} desarrollos en esta categoría`;
 
-            // 2. Filtrar IES (ANTES DECÍA 'UNIVERSIDAD')
+            // 2. Filtrar IES
             let universidades = startupsRegistry.filter(s => s.tipo.toUpperCase() === 'IES');
             const totalIESBase = universidades.length;
 
@@ -843,7 +855,10 @@
             const contenedor = document.getElementById('lista-startups');
             contenedor.innerHTML = '';
             
-            if(startups.length === 0) { contenedor.innerHTML = '<p style="font-size: 13px; color: gray;">No hay Startups aprobadas que coincidan con la búsqueda.</p>'; return; }
+            if(startups.length === 0) { 
+                contenedor.innerHTML = '<p style="font-size: 13px; color: gray;">No hay Startups aprobadas que coincidan con la búsqueda.</p>'; 
+                return; 
+            }
 
             startups.forEach(s => {
                 contenedor.innerHTML += `
@@ -869,16 +884,23 @@
             const contenedor = document.getElementById('lista-ies');
             contenedor.innerHTML = '';
             
-            if(universidades.length === 0) { contenedor.innerHTML = '<p style="font-size: 13px; color: gray;">No hay capacidades de IES que coincidan con la búsqueda.</p>'; return; }
+            if(universidades.length === 0) { 
+                contenedor.innerHTML = '<p style="font-size: 13px; color: gray;">No hay capacidades de IES que coincidan con la búsqueda.</p>'; 
+                return; 
+            }
 
             universidades.forEach(s => {
                 contenedor.innerHTML += `
                     <div class="card">
-                        <span class="badge badge-blue" style="margin-bottom: 8px;">IES | ${s.institucion}</span>
+                        <span class="badge badge-blue" style="margin-bottom: 8px;">IES</span>
                         <h4 style="font-size: 15px; color: var(--cidere-blue);">${s.nombre}</h4>
                         <p style="font-size: 11px; color: var(--text-muted); margin: 4px 0 10px 0;">Contacto OTL: ${s.contacto || 'Privado'}</p>
+                        
+                        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">
+                            <b>Institución:</b> <span style="color: var(--cidere-blue); font-weight: 600;">${s.institucion || 'No especificada'}</span>
+                        </p>
                         <p style="font-size: 12px; color: var(--text-muted);"><b>Capacidad / Proyecto:</b> ${s.queHace}</p>
-                        <p style="font-size: 12px; color: var(--text-muted); margin-top:4px;"><b>Industria:</b> ${s.industria}</p>
+                        <p style="font-size: 12px; color: var(--text-muted); margin-top: 4px;"><b>Industria:</b> ${s.industria}</p>
                         <div style="margin-top: 14px; font-weight: 700; font-size: 12px; color: var(--cidere-blue);">TRL Validado: ${s.trlMax}</div>
                         
                         <div style="margin-top: 16px; display: flex; gap: 8px;">
@@ -910,11 +932,8 @@
             if(!item) return;
 
             document.getElementById('ficha-nombre').innerText = item.nombre;
-            
-            let badgeText = item.tipo.toUpperCase();
-            if(item.institucion) badgeText += ' | ' + item.institucion;
-            document.getElementById('ficha-tipo-badge').innerText = badgeText;
-            
+            document.getElementById('ficha-tipo-badge').innerText = item.tipo.toUpperCase();
+            document.getElementById('ficha-institucion').innerText = item.institucion || (item.tipo === 'Startup' ? 'Emprendimiento Independiente' : 'No especificada');
             document.getElementById('ficha-que-hace').innerText = item.queHace || 'Sin información disponible';
             document.getElementById('ficha-como-hace').innerText = item.comoHace || 'Tecnología base en evaluación';
             document.getElementById('ficha-industria').innerText = item.industria;
