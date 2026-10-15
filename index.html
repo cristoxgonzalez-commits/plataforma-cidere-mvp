@@ -1219,7 +1219,7 @@
             const totalIESBase = universidades.length;
 
             if (filtroIndustriaIESActual !== 'Todos') {
-                universidades = universidades.filter(s => s.industria === filtroIndustriaIESActual);
+                universidades = universitiesFilter = startupsRegistry.filter(s => s.tipo.toUpperCase() === 'IES' && (filtroIndustriaIESActual === 'Todos' || s.industria === filtroIndustriaIESActual));
             }
             if (textoBusqueda !== '') {
                 universidades = universidades.filter(s => 
@@ -1285,7 +1285,7 @@
         }
 
         // ==============================================================
-        // RENDERIZADO ESTANDARIZADO DE IES (330px FIJO)
+        // RENDERIZADO ESTANDARIZADO DE IES (330px FIJO - BOTÓN "CONTACTO")
         // ==============================================================
         function renderizarIES(universidades) {
             const contenedor = document.getElementById('lista-ies');
@@ -1325,7 +1325,7 @@
                         
                         <div class="uniform-card-footer">
                             <button class="btn-outline card-btn" onclick="abrirFichaTecnica('${s.nombre}')">Ver Ficha Técnica</button>
-                            <button class="btn-primary card-btn" style="background-color: var(--cidere-blue);" onclick="solicitarContactoReal('${s.contacto}', '${s.nombre}')">Vincular</button>
+                            <button class="btn-primary card-btn" style="background-color: var(--cidere-blue);" onclick="solicitarContactoReal('${s.contacto}', '${s.nombre}')">Contacto</button>
                         </div>
                     </div>
                 `;
