@@ -842,7 +842,7 @@
         </div>
     </div>
 
-    <!-- MODAL: REGISTRAR CAPACIDAD O STARTUP (CAMPOS 1:1 CON BBDD) -->
+    <!-- MODAL: REGISTRAR CAPACIDAD O STARTUP (CAMPOS 1:1 CON BBDD Y 12 IES OFICIALES) -->
     <div id="modal-subir-capacidad" class="modal-overlay">
         <div class="modal-content">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
@@ -860,20 +860,24 @@
                     </select>
                 </div>
 
-                <!-- 2. Institución (Solo visible si Tipo == IES) -->
+                <!-- 2. Institución (Desplegable oficial cerrado para IES) -->
                 <div id="campo-institucion-container" style="margin-bottom: 14px; display: none;">
                     <label style="font-size: 12px; font-weight: 600; display: block; margin-bottom: 4px;">Institución / Universidad / Centro:</label>
-                    <input type="text" id="reg-institucion" placeholder="Ej: Universidad de Concepción, UBB, USM, UDLA..." list="lista-ies-sugerencias">
-                    <datalist id="lista-ies-sugerencias">
-                        <option value="Universidad de Concepción">
-                        <option value="Universidad del Bío-Bío">
-                        <option value="Universidad Técnica Federico Santa María">
-                        <option value="Universidad de Las Américas">
-                        <option value="Universidad Católica de la Santísima Concepción">
-                        <option value="INACAP">
-                        <option value="Duoc UC">
-                        <option value="Instituto Profesional Virginio Gómez">
-                    </datalist>
+                    <select id="reg-institucion">
+                        <option value="">-- Seleccione una institución oficial --</option>
+                        <option value="Instituto Nacional de Capacitación Profesional (INACAP)">Instituto Nacional de Capacitación Profesional (INACAP)</option>
+                        <option value="Instituto Profesional Virginio Gómez (IPVG)">Instituto Profesional Virginio Gómez (IPVG)</option>
+                        <option value="Instituto de Investigaciones Tecnológicas (IIT UdeC)">Instituto de Investigaciones Tecnológicas (IIT UdeC)</option>
+                        <option value="Universidad Andrés Bello (UNAB)">Universidad Andrés Bello (UNAB)</option>
+                        <option value="Universidad Católica de la Santísima Concepción (UCSC)">Universidad Católica de la Santísima Concepción (UCSC)</option>
+                        <option value="Universidad de Concepción (UdeC)">Universidad de Concepción (UdeC)</option>
+                        <option value="Universidad de Las Américas (UDLA)">Universidad de Las Américas (UDLA)</option>
+                        <option value="Universidad del Bío-Bío (UBB)">Universidad del Bío-Bío (UBB)</option>
+                        <option value="Universidad del Desarrollo (UDD)">Universidad del Desarrollo (UDD)</option>
+                        <option value="Universidad San Sebastián (USS)">Universidad San Sebastián (USS)</option>
+                        <option value="Universidad Santo Tomás (UST)">Universidad Santo Tomás (UST)</option>
+                        <option value="Universidad Técnica Federico Santa María (USM)">Universidad Técnica Federico Santa María (USM)</option>
+                    </select>
                 </div>
 
                 <!-- 3. Nombre del Proyecto -->
@@ -1094,15 +1098,15 @@
         function toggleInstitucionField() {
             const tipo = document.getElementById('reg-tipo').value;
             const container = document.getElementById('campo-institucion-container');
-            const inputInst = document.getElementById('reg-institucion');
+            const selectInst = document.getElementById('reg-institucion');
             
             if (tipo === 'IES') {
                 container.style.display = 'block';
-                inputInst.required = true;
+                selectInst.required = true;
             } else {
                 container.style.display = 'none';
-                inputInst.required = false;
-                inputInst.value = ''; // Queda vacía para no ocupar celda en la hoja
+                selectInst.required = false;
+                selectInst.value = ''; // Queda vacía para no ocupar celda en la hoja
             }
         }
 
@@ -1365,7 +1369,7 @@
             const totalIESBase = universidades.length;
 
             if (filtroIndustriaIESActual !== 'Todos') {
-                universidades = universitiesFilter = startupsRegistry.filter(s => s.tipo.toUpperCase() === 'IES' && (filtroIndustriaIESActual === 'Todos' || s.industria === filtroIndustriaIESActual));
+                universidades = startupsRegistry.filter(s => s.tipo.toUpperCase() === 'IES' && (filtroIndustriaIESActual === 'Todos' || s.industria === filtroIndustriaIESActual));
             }
             if (textoBusqueda !== '') {
                 universidades = universidades.filter(s => 
@@ -1489,6 +1493,7 @@
             aplicarFiltrosCombine();
         }
 
+        // APERTURA DE FICHA TÉCNICA (MODAL CON DATOS COMPLETOS)
         function abrirFichaTecnica(nombre) {
             const item = startupsRegistry.find(s => s.nombre === nombre);
             if(!item) return;
