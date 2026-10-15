@@ -57,7 +57,7 @@
         
         .mobile-menu-btn { display: none; background: transparent; border: none; cursor: pointer; color: var(--text-main); margin-right: 16px; }
         
-        /* BUSCADOR SPOTLIGHT / OMNIBOX */
+        /* BUSCADOR SPOTLIGHT */
         .search-bar { 
             position: relative;
             display: flex; 
@@ -135,7 +135,7 @@
         .user-profile { display: flex; align-items: center; gap: 12px; padding-left: 16px; border-left: 1px solid var(--border-color); }
         .avatar { width: 36px; height: 36px; border-radius: 50%; background-color: #ccc; object-fit: cover; }
 
-        /* CONTENEDOR DE VISTAS CON TRANSICIONES SUAVES */
+        /* CONTENEDOR DE VISTAS */
         .content-container { padding: 32px; max-width: 1280px; margin: 0 auto; width: 100%; }
         
         .view-section {
@@ -157,10 +157,43 @@
             100% { opacity: 1; transform: translateY(0) scale(1); }
         }
 
-        /* ENTRADA ANIMADA DE TARJETAS */
-        #lista-startups .card, 
-        #lista-ies .card {
+        /* COMPONENTES REUTILIZABLES */
+        .badge { font-family: var(--font-mono); font-size: 10px; padding: 3px 8px; border-radius: 4px; font-weight: 600; text-transform: uppercase; display: inline-block; }
+        .badge-green { background: #d1fae5; color: #065f46; }
+        .badge-blue { background: var(--cidere-blue-light); color: var(--cidere-blue); }
+        .badge-gray { background: #f1f5f9; color: #475569; }
+
+        .btn-primary { background-color: var(--cidere-blue); color: white; border: none; padding: 9px 16px; border-radius: 6px; font-weight: 600; font-size: 12.5px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-title); transition: background 0.2s; }
+        .btn-primary:hover { background-color: #2f4f8a; }
+        .btn-outline { background: transparent; border: 1px solid var(--border-color); color: var(--text-main); padding: 8px 14px; border-radius: 6px; font-weight: 500; font-size: 12px; cursor: pointer; font-family: var(--font-title); transition: all 0.2s; }
+        .btn-outline:hover { border-color: var(--cidere-blue); color: var(--cidere-blue); background: var(--cidere-blue-light); }
+
+        .card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 24px; margin-bottom: 20px; }
+        .grid-2 { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+
+        /* ============================================================== */
+        /* TARJETAS ESTANDARIZADAS COMPACTAS (IES Y STARTUPS)            */
+        /* ============================================================== */
+        .uniform-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
+            min-height: 290px;
+            box-shadow: 0 2px 6px rgba(17, 40, 82, 0.03);
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
             animation: smoothCardEntry 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+        .uniform-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(17, 40, 82, 0.08);
+            border-color: #cbd5e1;
         }
 
         @keyframes smoothCardEntry {
@@ -168,21 +201,84 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* COMPONENTES REUTILIZABLES */
-        .badge { font-family: var(--font-mono); font-size: 10px; padding: 3px 8px; border-radius: 4px; font-weight: 600; text-transform: uppercase; display: inline-block; }
-        .badge-green { background: #d1fae5; color: #065f46; }
-        .badge-blue { background: var(--cidere-blue-light); color: var(--cidere-blue); }
-        .badge-gray { background: #f1f5f9; color: #475569; }
+        .uniform-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
 
-        .btn-primary { background-color: var(--cidere-blue); color: white; border: none; padding: 10px 18px; border-radius: 6px; font-weight: 600; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-title); transition: background 0.2s; }
-        .btn-primary:hover { background-color: #2f4f8a; }
-        .btn-outline { background: transparent; border: 1px solid var(--border-color); color: var(--text-main); padding: 8px 14px; border-radius: 6px; font-weight: 500; font-size: 13px; cursor: pointer; font-family: var(--font-title); transition: all 0.2s; }
-        .btn-outline:hover { border-color: var(--cidere-blue); color: var(--cidere-blue); }
+        /* Título limitado exactamente a 2 líneas fijas con elipsis */
+        .uniform-card-title {
+            font-size: 14.5px;
+            font-weight: 700;
+            color: var(--cidere-blue);
+            line-height: 1.35;
+            height: 40px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-bottom: 6px;
+        }
 
-        .card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 24px; margin-bottom: 20px; }
-        .grid-2 { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; }
-        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-        .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+        /* Metadatos (Institución y Contacto) */
+        .uniform-card-meta {
+            font-size: 11px;
+            color: var(--text-muted);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-bottom: 10px;
+            height: 18px;
+        }
+        .uniform-card-meta b {
+            color: var(--text-main);
+        }
+
+        /* Separador formal y discreto */
+        .uniform-card-divider {
+            height: 1px;
+            background-color: #edf2f7;
+            margin: 6px 0 10px 0;
+            width: 100%;
+        }
+
+        /* Descripción 'Qué hace' limitada a 3 líneas compactas */
+        .uniform-card-desc {
+            font-size: 12px;
+            color: #475569;
+            line-height: 1.45;
+            height: 52px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-bottom: 8px;
+        }
+
+        /* Industria Tag */
+        .uniform-card-industry {
+            font-size: 11.5px;
+            color: var(--text-muted);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .uniform-card-industry b {
+            color: var(--text-main);
+        }
+
+        /* Pie de tarjeta con botones siempre anclados abajo */
+        .uniform-card-footer {
+            margin-top: auto;
+            padding-top: 14px;
+            border-top: 1px solid #edf2f7;
+            display: flex;
+            gap: 8px;
+        }
 
         /* SKELETON LOADERS */
         .skeleton-card { background: #ffffff; border: 1px solid var(--border-color); border-radius: 12px; padding: 24px; animation: skeleton-pulse 1.5s infinite ease-in-out; }
@@ -222,7 +318,7 @@
         textarea, input[type="text"], select { width: 100%; border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; font-family: inherit; font-size: 13px; outline: none; background: #fff; }
         textarea:focus, input:focus, select:focus { border-color: var(--cidere-blue); }
 
-        /* FOOTER IMPACTO REGIONAL */
+        /* FOOTER BANNER */
         .footer-banner { background-color: var(--cidere-blue-dark); color: white; border-radius: 12px; padding: 24px 32px; display: flex; align-items: center; justify-content: space-between; margin-top: 30px; }
         .metric-group { display: flex; gap: 40px; }
         .metric-item { border-left: 2px solid rgba(255,255,255,0.2); padding-left: 16px; }
@@ -678,27 +774,27 @@
         </div>
     </main>
 
-    <!-- MODAL: FICHA TÉCNICA DETALLADA -->
+    <!-- MODAL: FICHA TÉCNICA DETALLADA (INFORMACIÓN COMPLETA SIN CORTES) -->
     <div id="modal-ficha-tecnica" class="modal-overlay">
         <div class="modal-content">
             <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px;">
                 <div>
                     <span id="ficha-tipo-badge" class="badge badge-green">STARTUP</span>
-                    <h2 id="ficha-nombre" style="font-size: 20px; color: var(--cidere-blue); margin-top: 4px;">Nombre del Proyecto</h2>
+                    <h2 id="ficha-nombre" style="font-size: 19px; color: var(--cidere-blue); margin-top: 4px; line-height: 1.35;">Nombre del Proyecto</h2>
                 </div>
                 <button class="btn-outline" style="padding: 4px 10px; border: none; font-size: 18px;" onclick="closeModal('modal-ficha-tecnica')">✕</button>
             </div>
 
-            <div style="background: #f8fafc; padding: 16px; border-radius: 10px; border: 1px solid var(--border-color); margin-bottom: 20px;">
-                <div style="margin-bottom: 12px;">
-                    <label style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; font-family: var(--font-mono);">¿Qué hacemos?</label>
-                    <p id="ficha-que-hace" style="font-size: 13px; color: var(--text-main); margin-top: 2px;">-</p>
+            <div style="background: #f8fafc; padding: 18px; border-radius: 10px; border: 1px solid var(--border-color); margin-bottom: 20px;">
+                <div style="margin-bottom: 14px;">
+                    <label style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; font-family: var(--font-mono);">¿Qué hacemos? / Capacidad:</label>
+                    <p id="ficha-que-hace" style="font-size: 13px; color: var(--text-main); margin-top: 3px; line-height: 1.5;">-</p>
                 </div>
-                <div style="margin-bottom: 12px;">
+                <div style="margin-bottom: 14px;">
                     <label style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; font-family: var(--font-mono);">Tecnología Base (¿Cómo lo hacemos?):</label>
-                    <p id="ficha-como-hace" style="font-size: 13px; color: var(--text-main); margin-top: 2px;">-</p>
+                    <p id="ficha-como-hace" style="font-size: 13px; color: var(--text-main); margin-top: 3px; line-height: 1.5;">-</p>
                 </div>
-                <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-top: 12px;">
+                <div style="display: flex; gap: 24px; flex-wrap: wrap; margin-top: 14px; padding-top: 12px; border-top: 1px solid #edf2f7;">
                     <div>
                         <label style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; font-family: var(--font-mono);">Institución / Origen:</label>
                         <p id="ficha-institucion" style="font-size: 13px; font-weight: 600; color: var(--cidere-blue);">-</p>
@@ -780,7 +876,7 @@
             document.getElementById('sidebar-overlay').classList.toggle('active');
         }
 
-        // --- NORMALIZADOR ANTI-TILDES Y CARACTERES ---
+        // NORMALIZADOR ANTI-TILDES
         function normalizar(texto) {
             if (!texto) return '';
             return texto.toString().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
@@ -822,7 +918,7 @@
             document.getElementById('lista-ies').innerHTML = skeletonHTML;
         }
 
-        // CAMBIO DE VISTA CON SINCRONIZACIÓN DE BARRA LATERAL
+        // CAMBIO DE VISTA CON VINCULACIÓN A LA BARRA LATERAL
         function switchView(viewId, element = null) {
             document.querySelectorAll('.view-section').forEach(section => section.classList.remove('active'));
             const target = document.getElementById(viewId);
@@ -862,7 +958,7 @@
             element.classList.add('selected');
         }
 
-        // LECTURA DE GOOGLE SHEETS
+        // LECTURA DE DATOS
         function cargarDatosDesdeSheets() {
             mostrarSkeletons();
 
@@ -879,7 +975,7 @@
                             startupsRegistry.push({
                                 nombre: filas[i][1],
                                 tipo: filas[i][2] || "Startup",
-                                institucion: filas[i][3] || "", // COLUMNA INSTITUCIÓN
+                                institucion: filas[i][3] || "",
                                 industria: filas[i][4],
                                 queHace: filas[i][5],
                                 comoHace: filas[i][6],
@@ -931,7 +1027,7 @@
             });
         }
 
-        // BUSCADOR SPOTLIGHT CON DEBOUNCE Y ENTER SMOOTH
+        // BÚSQUEDA PREDICTIVA Y EVENTO ENTER CON FEEDBACK SMOOTH
         let debounceTimeout = null;
         const inputBuscador = document.getElementById('buscador-global');
         const dropdownBuscador = document.getElementById('search-dropdown-results');
@@ -947,7 +1043,6 @@
             if (e.key === 'Enter') {
                 e.preventDefault();
                 
-                // Microinteracción visual suave en barra
                 const searchBarEl = this.closest('.search-bar');
                 searchBarEl.classList.add('searching');
                 setTimeout(() => searchBarEl.classList.remove('searching'), 450);
@@ -957,7 +1052,6 @@
                 const q = normalizar(this.value);
                 if (!q) return;
 
-                // Enrutamiento según cantidad de matches
                 const matchIES = startupsRegistry.filter(s => s.tipo.toUpperCase() === 'IES' && (
                     normalizar(s.nombre).includes(q) || 
                     normalizar(s.queHace).includes(q) || 
@@ -1065,7 +1159,7 @@
             abrirFichaTecnica(nombreItem);
         }
 
-        // FILTRADO COMBINADO CON NORMALIZACIÓN
+        // APLICAR FILTROS COMBINADOS
         function aplicarFiltrosCombine() {
             const textoBusqueda = normalizar(document.getElementById('buscador-global').value);
             
@@ -1109,6 +1203,9 @@
             document.getElementById('contador-ies').innerText = `Mostrando ${universidades.length} de ${totalIESBase} capacidades académicas`;
         }
 
+        // ==============================================================
+        // RENDERIZADO ESTANDARIZADO DE STARTUPS (ALINEADO Y COMPACTO)
+        // ==============================================================
         function renderizarStartups(startups) {
             const contenedor = document.getElementById('lista-startups');
             contenedor.innerHTML = '';
@@ -1119,18 +1216,35 @@
             }
 
             startups.forEach(s => {
+                const trlText = (s.trlMax === "Por validar") ? "Por validar" : `TRL ${s.trlMax}`;
                 contenedor.innerHTML += `
-                    <div class="card">
-                        <span class="badge badge-green" style="margin-bottom: 8px;">STARTUP</span>
-                        <h4 style="font-size: 15px; color: var(--cidere-blue);">${s.nombre}</h4>
-                        <p style="font-size: 11px; color: var(--text-muted); margin: 4px 0 10px 0;">Contacto: ${s.contacto || 'Privado'}</p>
-                        <p style="font-size: 12px; color: var(--text-muted);"><b>Qué hacemos:</b> ${s.queHace}</p>
-                        <p style="font-size: 12px; color: var(--text-muted); margin-top:4px;"><b>Industria:</b> ${s.industria}</p>
-                        <div style="margin-top: 14px; font-weight: 700; font-size: 12px; color: var(--cidere-blue);">TRL Validado: ${s.trlMax}</div>
+                    <div class="uniform-card">
+                        <div>
+                            <div class="uniform-card-header">
+                                <span class="badge badge-green">STARTUP</span>
+                                <span class="badge badge-gray" style="font-weight: 700;">${trlText}</span>
+                            </div>
+                            
+                            <h4 class="uniform-card-title" title="${s.nombre}">${s.nombre}</h4>
+                            
+                            <div class="uniform-card-meta">
+                                <b>Contacto:</b> ${s.contacto || 'Privado (Vía CIDERE)'}
+                            </div>
+                            
+                            <div class="uniform-card-divider"></div>
+                            
+                            <div class="uniform-card-desc" title="${s.queHace}">
+                                ${s.queHace}
+                            </div>
+                            
+                            <div class="uniform-card-industry">
+                                <b>Industria:</b> ${s.industria}
+                            </div>
+                        </div>
                         
-                        <div style="margin-top: 16px; display: flex; gap: 8px;">
-                            <button class="btn-outline" style="flex: 1; font-size: 11.5px; padding: 8px;" onclick="abrirFichaTecnica('${s.nombre}')">Ver Ficha Técnica</button>
-                            <button class="btn-primary" style="background-color: var(--cidere-green-bright); flex: 1; font-size: 11.5px; padding: 8px; justify-content: center;" onclick="solicitarContactoReal('${s.contacto}', '${s.nombre}')">Contacto</button>
+                        <div class="uniform-card-footer">
+                            <button class="btn-outline" style="flex: 1; text-align: center;" onclick="abrirFichaTecnica('${s.nombre}')">Ver Ficha Técnica</button>
+                            <button class="btn-primary" style="background-color: var(--cidere-green-bright); flex: 1; justify-content: center;" onclick="solicitarContactoReal('${s.contacto}', '${s.nombre}')">Contacto</button>
                         </div>
                     </div>
                 `;
@@ -1138,6 +1252,9 @@
             lucide.createIcons();
         }
 
+        // ==============================================================
+        // RENDERIZADO ESTANDARIZADO DE IES (ALINEADO Y COMPACTO)
+        // ==============================================================
         function renderizarIES(universidades) {
             const contenedor = document.getElementById('lista-ies');
             contenedor.innerHTML = '';
@@ -1148,22 +1265,35 @@
             }
 
             universidades.forEach(s => {
+                const trlText = (s.trlMax === "Por validar") ? "Por validar" : `TRL ${s.trlMax}`;
                 contenedor.innerHTML += `
-                    <div class="card">
-                        <span class="badge badge-blue" style="margin-bottom: 8px;">IES</span>
-                        <h4 style="font-size: 15px; color: var(--cidere-blue);">${s.nombre}</h4>
-                        <p style="font-size: 11px; color: var(--text-muted); margin: 4px 0 10px 0;">Contacto OTL: ${s.contacto || 'Privado'}</p>
+                    <div class="uniform-card">
+                        <div>
+                            <div class="uniform-card-header">
+                                <span class="badge badge-blue">IES</span>
+                                <span class="badge badge-gray" style="font-weight: 700;">${trlText}</span>
+                            </div>
+                            
+                            <h4 class="uniform-card-title" title="${s.nombre}">${s.nombre}</h4>
+                            
+                            <div class="uniform-card-meta">
+                                <b>Institución:</b> <span style="color: var(--cidere-blue); font-weight: 600;">${s.institucion || 'No especificada'}</span>
+                            </div>
+                            
+                            <div class="uniform-card-divider"></div>
+                            
+                            <div class="uniform-card-desc" title="${s.queHace}">
+                                ${s.queHace}
+                            </div>
+                            
+                            <div class="uniform-card-industry">
+                                <b>Industria:</b> ${s.industria}
+                            </div>
+                        </div>
                         
-                        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">
-                            <b>Institución:</b> <span style="color: var(--cidere-blue); font-weight: 600;">${s.institucion || 'No especificada'}</span>
-                        </p>
-                        <p style="font-size: 12px; color: var(--text-muted);"><b>Capacidad / Proyecto:</b> ${s.queHace}</p>
-                        <p style="font-size: 12px; color: var(--text-muted); margin-top: 4px;"><b>Industria:</b> ${s.industria}</p>
-                        <div style="margin-top: 14px; font-weight: 700; font-size: 12px; color: var(--cidere-blue);">TRL Validado: ${s.trlMax}</div>
-                        
-                        <div style="margin-top: 16px; display: flex; gap: 8px;">
-                            <button class="btn-outline" style="flex: 1; font-size: 11.5px; padding: 8px;" onclick="abrirFichaTecnica('${s.nombre}')">Ver Ficha Técnica</button>
-                            <button class="btn-primary" style="background-color: var(--cidere-blue); flex: 1; font-size: 11.5px; padding: 8px; justify-content: center;" onclick="solicitarContactoReal('${s.contacto}', '${s.nombre}')">Vincular</button>
+                        <div class="uniform-card-footer">
+                            <button class="btn-outline" style="flex: 1; text-align: center;" onclick="abrirFichaTecnica('${s.nombre}')">Ver Ficha Técnica</button>
+                            <button class="btn-primary" style="background-color: var(--cidere-blue); flex: 1; justify-content: center;" onclick="solicitarContactoReal('${s.contacto}', '${s.nombre}')">Vincular</button>
                         </div>
                     </div>
                 `;
@@ -1185,6 +1315,7 @@
             aplicarFiltrosCombine();
         }
 
+        // APERTURA DE FICHA TÉCNICA (MODAL CON DATOS COMPLETOS)
         function abrirFichaTecnica(nombre) {
             const item = startupsRegistry.find(s => s.nombre === nombre);
             if(!item) return;
