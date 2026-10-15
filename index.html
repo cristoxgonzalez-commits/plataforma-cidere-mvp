@@ -8,7 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     
-    <!-- LIBRERÍA PARA LEER EXCEL EN TIEMPO REAL -->
+    <!-- LIBRERÍA PARA LEER EXCEL / CSV EN TIEMPO REAL -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 
     <style>
@@ -51,15 +51,81 @@
         .btn-sidebar-cta { background: var(--cidere-orange); color: white; border: none; padding: 14px; border-radius: 8px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: background 0.2s; width: 100%; margin-top: auto; font-family: var(--font-title); }
         .btn-sidebar-cta:hover { background-color: var(--cidere-orange-hover); }
 
-        /* AREA PRINCIPAL DE CONTENIDO */
-        main { flex-grow: 1; display: flex; flex-direction: column; height: 100vh; overflow-y: auto; }
+        /* ÁREA PRINCIPAL */
+        main { flex-grow: 1; display: flex; flex-direction: column; height: 100vh; overflow-y: auto; scroll-behavior: smooth; }
         header { background-color: #ffffff; height: 64px; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; padding: 0 32px; position: sticky; top: 0; z-index: 10; }
         
         .mobile-menu-btn { display: none; background: transparent; border: none; cursor: pointer; color: var(--text-main); margin-right: 16px; }
         
-        .search-bar { display: flex; align-items: center; background-color: var(--bg-body); border: 1px solid var(--border-color); border-radius: 8px; padding: 8px 16px; width: 400px; gap: 10px; }
+        /* BUSCADOR SPOTLIGHT / OMNIBOX */
+        .search-bar { 
+            position: relative;
+            display: flex; 
+            align-items: center; 
+            background-color: var(--bg-body); 
+            border: 1px solid var(--border-color); 
+            border-radius: 8px; 
+            padding: 8px 16px; 
+            width: 440px; 
+            gap: 10px; 
+            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .search-bar.searching {
+            border-color: var(--cidere-blue);
+            box-shadow: 0 0 0 4px rgba(60, 99, 173, 0.18), 0 8px 20px rgba(17, 40, 82, 0.08);
+            transform: translateY(-1px);
+        }
         .search-bar input { border: none; background: transparent; outline: none; width: 100%; font-size: 13px; font-family: var(--font-sans); }
-        
+
+        .search-dropdown {
+            position: absolute;
+            top: calc(100% + 8px);
+            left: 0;
+            width: 100%;
+            min-width: 440px;
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            box-shadow: 0 12px 28px rgba(17, 40, 82, 0.15);
+            z-index: 1000;
+            max-height: 420px;
+            overflow-y: auto;
+            display: none;
+            animation: smoothDropdownEntry 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .search-dropdown.active { display: block; }
+
+        @keyframes smoothDropdownEntry {
+            from { opacity: 0; transform: translateY(-6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .search-group-title {
+            padding: 8px 14px;
+            font-size: 11px;
+            font-family: var(--font-mono);
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            background: #f8fafc;
+            border-bottom: 1px solid var(--border-color);
+            letter-spacing: 0.5px;
+        }
+        .search-item {
+            padding: 10px 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #f1f5f9;
+            transition: background 0.15s ease;
+        }
+        .search-item:hover { background: var(--cidere-blue-light); }
+        .search-item-info { display: flex; flex-direction: column; gap: 2px; max-width: 78%; }
+        .search-item-title { font-size: 13px; font-weight: 600; color: var(--cidere-blue-dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .search-item-sub { font-size: 11px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .search-no-results { padding: 18px; text-align: center; font-size: 12.5px; color: var(--text-muted); }
+
         .top-menu { display: flex; align-items: center; gap: 24px; }
         .top-nav-links { display: flex; gap: 20px; list-style: none; font-size: 13px; font-weight: 600; color: var(--text-muted); font-family: var(--font-title); }
         .top-nav-links li { cursor: pointer; padding: 6px 10px; border-radius: 6px; transition: all 0.2s; }
@@ -69,11 +135,38 @@
         .user-profile { display: flex; align-items: center; gap: 12px; padding-left: 16px; border-left: 1px solid var(--border-color); }
         .avatar { width: 36px; height: 36px; border-radius: 50%; background-color: #ccc; object-fit: cover; }
 
-        /* CONTENEDOR DE VISTAS */
+        /* CONTENEDOR DE VISTAS CON TRANSICIONES SUAVES */
         .content-container { padding: 32px; max-width: 1280px; margin: 0 auto; width: 100%; }
-        .view-section { display: none; }
-        .view-section.active { display: block; animation: fadeIn 0.25s ease-in-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .view-section {
+            display: none;
+            opacity: 0;
+            transform: translateY(14px) scale(0.992);
+            transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1), transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .view-section.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            animation: smoothSectionFade 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes smoothSectionFade {
+            0% { opacity: 0; transform: translateY(12px) scale(0.99); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        /* ENTRADA ANIMADA DE TARJETAS */
+        #lista-startups .card, 
+        #lista-ies .card {
+            animation: smoothCardEntry 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+
+        @keyframes smoothCardEntry {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
         /* COMPONENTES REUTILIZABLES */
         .badge { font-family: var(--font-mono); font-size: 10px; padding: 3px 8px; border-radius: 4px; font-weight: 600; text-transform: uppercase; display: inline-block; }
@@ -81,7 +174,7 @@
         .badge-blue { background: var(--cidere-blue-light); color: var(--cidere-blue); }
         .badge-gray { background: #f1f5f9; color: #475569; }
 
-        .btn-primary { background-color: var(--cidere-blue); color: white; border: none; padding: 10px 18px; border-radius: 6px; font-weight: 600; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-title); }
+        .btn-primary { background-color: var(--cidere-blue); color: white; border: none; padding: 10px 18px; border-radius: 6px; font-weight: 600; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-title); transition: background 0.2s; }
         .btn-primary:hover { background-color: #2f4f8a; }
         .btn-outline { background: transparent; border: 1px solid var(--border-color); color: var(--text-main); padding: 8px 14px; border-radius: 6px; font-weight: 500; font-size: 13px; cursor: pointer; font-family: var(--font-title); transition: all 0.2s; }
         .btn-outline:hover { border-color: var(--cidere-blue); color: var(--cidere-blue); }
@@ -100,7 +193,7 @@
 
         .results-counter { font-size: 12.5px; color: var(--text-muted); font-weight: 600; margin-bottom: 16px; font-family: var(--font-title); }
 
-        /* MODALES FLOTANTES */
+        /* MODALES */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(17, 40, 82, 0.6); backdrop-filter: blur(2px); display: none; align-items: center; justify-content: center; z-index: 1000; }
         .modal-overlay.active { display: flex; }
         .modal-content { background: white; padding: 30px; border-radius: 12px; width: 640px; max-width: 90%; max-height: 90vh; overflow-y: auto; }
@@ -116,7 +209,7 @@
         .kpi-value { font-size: 32px; font-weight: 800; color: var(--cidere-blue); font-family: var(--font-mono); }
         .kpi-label { font-size: 11px; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.5px; font-family: var(--font-title); font-weight: 700; }
 
-        .filter-pill { padding: 6px 14px; border-radius: 20px; border: 1px solid var(--border-color); background: white; font-size: 12px; cursor: pointer; font-weight: 600; white-space: nowrap; font-family: var(--font-title); }
+        .filter-pill { padding: 6px 14px; border-radius: 20px; border: 1px solid var(--border-color); background: white; font-size: 12px; cursor: pointer; font-weight: 600; white-space: nowrap; font-family: var(--font-title); transition: all 0.2s; }
         .filter-pill.active { background: var(--cidere-blue); color: white; border-color: var(--cidere-blue); }
 
         .trl-gauge-card { background: var(--cidere-blue-dark); color: white; border-radius: 12px; padding: 24px; text-align: center; position: sticky; top: 80px; }
@@ -138,7 +231,7 @@
         
         .loader-text { font-size: 12px; color: var(--cidere-green-bright); font-weight: bold; margin-right: 10px; display: none; }
         
-        /* ESTILOS TARJETAS DE DIRECTIVA */
+        /* TARJETAS DIRECTIVA */
         .profile-card { background: #ffffff; border-radius: 10px; padding: 24px 16px 16px; text-align: center; color: var(--text-main); box-shadow: 0 4px 12px rgba(0,0,0,0.06); display: flex; flex-direction: column; justify-content: space-between; height: 100%; transition: transform 0.2s; }
         .profile-card:hover { transform: translateY(-4px); }
         .profile-img { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; margin: 0 auto 12px; border: 2px solid var(--border-color); }
@@ -147,14 +240,12 @@
         .profile-logo-container { border-top: 1px solid var(--border-color); padding-top: 12px; display: flex; justify-content: center; align-items: center; height: 45px; }
         .profile-logo { max-height: 100%; max-width: 90%; object-fit: contain; }
         
-        /* TARJETAS DE EVENTOS Y RECURSOS */
         .resource-item-card { border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; background: white; display: flex; flex-direction: column; justify-content: space-between; height: 100%; }
 
-        /* OVERLAY PARA CELULARES */
+        /* OVERLAY MÓVIL */
         .sidebar-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 90; }
         .sidebar-overlay.active { display: block; }
 
-        /* ADAPTACIÓN MÓVIL */
         @media (max-width: 768px) {
             .mobile-menu-btn { display: block; }
             aside { position: fixed; left: -260px; top: 0; bottom: 0; z-index: 100; height: 100vh; }
@@ -162,6 +253,7 @@
             header { padding: 0 16px; }
             .top-nav-links { display: none; }
             .search-bar { flex-grow: 1; width: auto; margin-left: 12px; }
+            .search-dropdown { min-width: calc(100vw - 32px); left: -60px; }
             .user-profile { display: none; }
             .content-container { padding: 16px; }
             .grid-2, .grid-3, .grid-4, .kpi-container { grid-template-columns: 1fr; gap: 16px; }
@@ -180,7 +272,7 @@
 
     <div id="sidebar-overlay" class="sidebar-overlay" onclick="toggleSidebar()"></div>
 
-    <!-- SIDEBAR -->
+    <!-- BARRA LATERAL -->
     <aside id="main-sidebar">
         <div>
             <div class="brand">
@@ -222,7 +314,8 @@
                 </button>
                 <div class="search-bar">
                     <i data-lucide="search" size="16" style="color: var(--text-muted)"></i>
-                    <input type="text" id="buscador-global" oninput="aplicarFiltrosCombine()" placeholder="Buscar startups, IES, recursos en vivo...">
+                    <input type="text" id="buscador-global" placeholder="Buscar startups, IES, desafíos, tecnologías..." autocomplete="off">
+                    <div id="search-dropdown-results" class="search-dropdown"></div>
                 </div>
             </div>
 
@@ -678,13 +771,19 @@
         </div>
     </div>
 
-    <!-- SCRIPT DE INTERACCIÓN Y LÓGICA -->
+    <!-- SCRIPT DE LÓGICA Y NAVEGACIÓN -->
     <script>
         lucide.createIcons();
 
         function toggleSidebar() {
             document.getElementById('main-sidebar').classList.toggle('open');
             document.getElementById('sidebar-overlay').classList.toggle('active');
+        }
+
+        // --- NORMALIZADOR ANTI-TILDES Y CARACTERES ---
+        function normalizar(texto) {
+            if (!texto) return '';
+            return texto.toString().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
         }
 
         // --- URL WEB APP GOOGLE APPS SCRIPT ---
@@ -723,6 +822,7 @@
             document.getElementById('lista-ies').innerHTML = skeletonHTML;
         }
 
+        // CAMBIO DE VISTA CON SINCRONIZACIÓN DE BARRA LATERAL
         function switchView(viewId, element = null) {
             document.querySelectorAll('.view-section').forEach(section => section.classList.remove('active'));
             const target = document.getElementById(viewId);
@@ -734,6 +834,19 @@
             if (element) {
                 if(element.classList.contains('nav-item')) element.classList.add('active');
                 else element.classList.add('active-top');
+            } else {
+                const vistaAMenu = {
+                    'view-dashboard': 0,
+                    'view-repositorio': 1,
+                    'view-ficha': 2,
+                    'view-desafio': 3,
+                    'view-ies': 4,
+                    'view-mensajeria': 5
+                };
+                const items = document.querySelectorAll('.nav-list .nav-item');
+                if (vistaAMenu[viewId] !== undefined && items[vistaAMenu[viewId]]) {
+                    items[vistaAMenu[viewId]].classList.add('active');
+                }
             }
 
             if (window.innerWidth <= 768) {
@@ -818,19 +931,158 @@
             });
         }
 
-        /* FILTRADO COMBINADO EN TIEMPO REAL */
+        // BUSCADOR SPOTLIGHT CON DEBOUNCE Y ENTER SMOOTH
+        let debounceTimeout = null;
+        const inputBuscador = document.getElementById('buscador-global');
+        const dropdownBuscador = document.getElementById('search-dropdown-results');
+
+        inputBuscador.addEventListener('input', function() {
+            clearTimeout(debounceTimeout);
+            debounceTimeout = setTimeout(() => {
+                ejecutarBusquedaPredictiva(this.value);
+            }, 180);
+        });
+
+        inputBuscador.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                
+                // Microinteracción visual suave en barra
+                const searchBarEl = this.closest('.search-bar');
+                searchBarEl.classList.add('searching');
+                setTimeout(() => searchBarEl.classList.remove('searching'), 450);
+
+                dropdownBuscador.classList.remove('active');
+                
+                const q = normalizar(this.value);
+                if (!q) return;
+
+                // Enrutamiento según cantidad de matches
+                const matchIES = startupsRegistry.filter(s => s.tipo.toUpperCase() === 'IES' && (
+                    normalizar(s.nombre).includes(q) || 
+                    normalizar(s.queHace).includes(q) || 
+                    normalizar(s.comoHace).includes(q) || 
+                    normalizar(s.institucion).includes(q) || 
+                    normalizar(s.industria).includes(q)
+                )).length;
+
+                const matchStartups = startupsRegistry.filter(s => s.tipo.toUpperCase() === 'STARTUP' && (
+                    normalizar(s.nombre).includes(q) || 
+                    normalizar(s.queHace).includes(q) || 
+                    normalizar(s.comoHace).includes(q) || 
+                    normalizar(s.industria).includes(q)
+                )).length;
+
+                const destino = (matchIES > matchStartups) ? 'view-ies' : 'view-repositorio';
+                switchView(destino);
+                aplicarFiltrosCombine();
+
+                const mainContainer = document.querySelector('main');
+                if (mainContainer) {
+                    mainContainer.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+            }
+        });
+
+        document.addEventListener('click', function(e) {
+            if (!inputBuscador.contains(e.target) && !dropdownBuscador.contains(e.target)) {
+                dropdownBuscador.classList.remove('active');
+            }
+        });
+
+        function ejecutarBusquedaPredictiva(termino) {
+            const q = normalizar(termino);
+            if (q.length < 2) {
+                dropdownBuscador.innerHTML = '';
+                dropdownBuscador.classList.remove('active');
+                aplicarFiltrosCombine();
+                return;
+            }
+
+            const resStartups = startupsRegistry.filter(s => s.tipo.toUpperCase() === 'STARTUP' && (
+                normalizar(s.nombre).includes(q) || 
+                normalizar(s.queHace).includes(q) || 
+                normalizar(s.comoHace).includes(q) || 
+                normalizar(s.industria).includes(q)
+            )).slice(0, 4);
+
+            const resIES = startupsRegistry.filter(s => s.tipo.toUpperCase() === 'IES' && (
+                normalizar(s.nombre).includes(q) || 
+                normalizar(s.queHace).includes(q) || 
+                normalizar(s.comoHace).includes(q) || 
+                normalizar(s.institucion).includes(q) || 
+                normalizar(s.industria).includes(q)
+            )).slice(0, 4);
+
+            if (resStartups.length === 0 && resIES.length === 0) {
+                dropdownBuscador.innerHTML = `<div class="search-no-results">No se encontraron resultados para "<b>${termino}</b>"</div>`;
+                dropdownBuscador.classList.add('active');
+                return;
+            }
+
+            let html = '';
+
+            if (resIES.length > 0) {
+                html += `<div class="search-group-title">Capacidades IES / Academias</div>`;
+                resIES.forEach(item => {
+                    html += `
+                        <div class="search-item" onclick="navegarDesdeBuscador('view-ies', '${item.nombre}')">
+                            <div class="search-item-info">
+                                <div class="search-item-title">${item.nombre}</div>
+                                <div class="search-item-sub">${item.institucion ? item.institucion + ' • ' : ''}${item.queHace}</div>
+                            </div>
+                            <span class="badge badge-blue">IES</span>
+                        </div>
+                    `;
+                });
+            }
+
+            if (resStartups.length > 0) {
+                html += `<div class="search-group-title">Startups Regionales</div>`;
+                resStartups.forEach(item => {
+                    html += `
+                        <div class="search-item" onclick="navegarDesdeBuscador('view-repositorio', '${item.nombre}')">
+                            <div class="search-item-info">
+                                <div class="search-item-title">${item.nombre}</div>
+                                <div class="search-item-sub">${item.industria} • ${item.queHace}</div>
+                            </div>
+                            <span class="badge badge-green">STARTUP</span>
+                        </div>
+                    `;
+                });
+            }
+
+            dropdownBuscador.innerHTML = html;
+            dropdownBuscador.classList.add('active');
+            lucide.createIcons();
+            aplicarFiltrosCombine();
+        }
+
+        function navegarDesdeBuscador(viewId, nombreItem) {
+            dropdownBuscador.classList.remove('active');
+            switchView(viewId);
+            aplicarFiltrosCombine();
+            abrirFichaTecnica(nombreItem);
+        }
+
+        // FILTRADO COMBINADO CON NORMALIZACIÓN
         function aplicarFiltrosCombine() {
-            const textoBusqueda = document.getElementById('buscador-global').value.toLowerCase().trim();
+            const textoBusqueda = normalizar(document.getElementById('buscador-global').value);
             
             // 1. Filtrar Startups
             let startups = startupsRegistry.filter(s => s.tipo.toUpperCase() === 'STARTUP');
             const totalStartupsBase = startups.length;
 
-            if(filtroIndustriaStartupActual !== 'Todos') {
+            if (filtroIndustriaStartupActual !== 'Todos') {
                 startups = startups.filter(s => s.industria === filtroIndustriaStartupActual);
             }
-            if(textoBusqueda !== '') {
-                startups = startups.filter(s => s.nombre.toLowerCase().includes(textoBusqueda) || s.queHace.toLowerCase().includes(textoBusqueda) || s.industria.toLowerCase().includes(textoBusqueda));
+            if (textoBusqueda !== '') {
+                startups = startups.filter(s => 
+                    normalizar(s.nombre).includes(textoBusqueda) || 
+                    normalizar(s.queHace).includes(textoBusqueda) || 
+                    normalizar(s.comoHace).includes(textoBusqueda) || 
+                    normalizar(s.industria).includes(textoBusqueda)
+                );
             }
 
             renderizarStartups(startups);
@@ -840,11 +1092,17 @@
             let universidades = startupsRegistry.filter(s => s.tipo.toUpperCase() === 'IES');
             const totalIESBase = universidades.length;
 
-            if(filtroIndustriaIESActual !== 'Todos') {
+            if (filtroIndustriaIESActual !== 'Todos') {
                 universidades = universidades.filter(s => s.industria === filtroIndustriaIESActual);
             }
-            if(textoBusqueda !== '') {
-                universidades = universidades.filter(s => s.nombre.toLowerCase().includes(textoBusqueda) || s.queHace.toLowerCase().includes(textoBusqueda) || s.industria.toLowerCase().includes(textoBusqueda) || s.institucion.toLowerCase().includes(textoBusqueda));
+            if (textoBusqueda !== '') {
+                universidades = universidades.filter(s => 
+                    normalizar(s.nombre).includes(textoBusqueda) || 
+                    normalizar(s.queHace).includes(textoBusqueda) || 
+                    normalizar(s.comoHace).includes(textoBusqueda) || 
+                    normalizar(s.industria).includes(textoBusqueda) || 
+                    normalizar(s.institucion).includes(textoBusqueda)
+                );
             }
 
             renderizarIES(universidades);
