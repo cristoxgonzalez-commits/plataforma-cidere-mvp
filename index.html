@@ -339,11 +339,11 @@
         
         .loader-text { font-size: 12px; color: var(--cidere-green-bright); font-weight: bold; margin-right: 10px; display: none; }
         
-        /* TARJETAS DIRECTIVA (NUEVO BALANCE ÓPTICO) */
+        /* TARJETAS DIRECTIVA: COMPACTAS, ESTILIZADAS Y PROPORCIONALES */
         .profile-card { 
             background: #ffffff; 
             border-radius: 12px; 
-            padding: 26px 20px 22px; 
+            padding: 22px 16px 18px; 
             text-align: center; 
             color: var(--text-main); 
             box-shadow: 0 4px 14px rgba(0,0,0,0.06); 
@@ -351,7 +351,9 @@
             flex-direction: column; 
             justify-content: space-between; 
             height: 100%; 
-            min-height: 290px;
+            max-width: 275px; 
+            width: 100%;
+            margin: 0 auto;
             transition: transform 0.2s, box-shadow 0.2s; 
         }
         .profile-card:hover { 
@@ -359,25 +361,38 @@
             box-shadow: 0 8px 22px rgba(17, 40, 82, 0.12);
         }
         .profile-img { 
-            width: 84px; 
-            height: 84px; 
+            width: 78px; 
+            height: 78px; 
             border-radius: 50%; 
             object-fit: cover; 
             border: 2px solid transparent; 
         }
-        .profile-name { font-size: 15.5px; font-weight: 700; color: var(--cidere-blue); margin-bottom: 4px; font-family: var(--font-title); }
-        .profile-role { font-size: 10.5px; font-family: var(--font-mono); text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.5px; margin-bottom: 16px; flex-grow: 1; display: flex; align-items: center; justify-content: center; }
+        .profile-name { font-size: 14.5px; font-weight: 700; color: var(--cidere-blue); margin-bottom: 4px; font-family: var(--font-title); }
+        .profile-role { 
+            font-size: 10px; 
+            font-family: var(--font-mono); 
+            text-transform: uppercase; 
+            color: var(--text-muted); 
+            letter-spacing: 0.5px; 
+            margin-bottom: 12px; 
+            flex-grow: 1; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            min-height: 32px;
+            line-height: 1.35;
+        }
         
         .profile-logo-container { 
             border-top: 1px solid #edf2f7; 
-            padding-top: 14px; 
+            padding-top: 12px; 
             display: flex; 
             justify-content: center; 
             align-items: center; 
-            height: 60px; 
+            height: 52px; 
             overflow: visible;
         }
-        .profile-logo { max-height: 100%; max-width: 90%; object-fit: contain; }
+        .profile-logo { max-height: 100%; max-width: 88%; object-fit: contain; }
         
         .resource-item-card { border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; background: white; display: flex; flex-direction: column; justify-content: space-between; height: 100%; }
 
@@ -479,7 +494,7 @@
 
         <div class="content-container">
 
-            <!-- VISTA: MESA DE INNOVACIÓN (GRILLA DE 3 DIRECTIVOS BALANCEADA) -->
+            <!-- VISTA: MESA DE INNOVACIÓN (GRILLA COMPACTA Y CENTRADA) -->
             <section id="view-mesa-innovacion" class="view-section">
                 <div class="card" style="background: linear-gradient(135deg, var(--cidere-blue-dark) 0%, var(--cidere-blue) 100%); color: white; padding: 32px; margin-bottom: 24px;">
                     <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 20px;">
@@ -493,58 +508,58 @@
                     </div>
 
                     <div style="margin-top: 28px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.15);">
-                        <h4 style="font-size: 12px; font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 1px; color: #01DCFF; margin-bottom: 16px;">
+                        <h4 style="font-size: 12px; font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 1px; color: #01DCFF; margin-bottom: 20px; text-align: center;">
                             Directiva & Comité Ejecutivo de la Mesa
                         </h4>
                         
-                        <!-- GRILLA SIMÉTRICA DE 3 INTEGRANTES CON BALANCE ÓPTICO -->
-                        <div class="grid-3" style="gap: 22px;">
+                        <!-- CONTENEDOR LIMITADO A 880PX PARA REPRODUCIR LA PROPORCIÓN ANTERIOR -->
+                        <div class="grid-3" style="gap: 24px; max-width: 880px; margin: 0 auto;">
                             
                             <!-- TARJETA 1: LILA RODRÍGUEZ -->
                             <div class="profile-card">
                                 <div>
-                                    <div style="position: relative; display: inline-block; margin-bottom: 12px;">
-                                        <img src="lila_rodriguez.png" alt="Lila Rodríguez" class="profile-img" style="box-shadow: 0 0 0 4px #ffffff, 0 4px 12px rgba(17, 40, 82, 0.08); border: 1px solid #e2e8f0;">
+                                    <div style="position: relative; display: inline-block; margin-bottom: 10px;">
+                                        <img src="lila_rodriguez.png" alt="Lila Rodríguez" class="profile-img" style="box-shadow: 0 0 0 3px #ffffff, 0 4px 10px rgba(17, 40, 82, 0.08); border: 1px solid #e2e8f0;">
                                     </div>
                                     <div class="profile-name">Lila Rodríguez</div>
-                                    <div class="profile-role" style="min-height: 34px; display: flex; align-items: center; justify-content: center; line-height: 1.3;">
+                                    <div class="profile-role">
                                         Directora de Innovación y Vinculación
                                     </div>
                                 </div>
-                                <div class="profile-logo-container" style="height: 60px; border-top: 1px solid #edf2f7; display: flex; align-items: center; justify-content: center; padding-top: 10px;">
-                                    <img src="Logo_INACAP.webp" alt="INACAP" style="max-height: 36px; max-width: 135px; object-fit: contain;">
+                                <div class="profile-logo-container">
+                                    <img src="Logo_INACAP.webp" alt="INACAP" style="max-height: 32px; max-width: 120px; object-fit: contain;">
                                 </div>
                             </div>
 
                             <!-- TARJETA 2: ALEJANDRO PARADA -->
                             <div class="profile-card">
                                 <div>
-                                    <div style="position: relative; display: inline-block; margin-bottom: 12px;">
-                                        <img src="alejandro_parada.png" alt="Alejandro Parada" class="profile-img" style="box-shadow: 0 0 0 4px #ffffff, 0 4px 12px rgba(17, 40, 82, 0.08); border: 1px solid #e2e8f0;">
+                                    <div style="position: relative; display: inline-block; margin-bottom: 10px;">
+                                        <img src="alejandro_parada.png" alt="Alejandro Parada" class="profile-img" style="box-shadow: 0 0 0 3px #ffffff, 0 4px 10px rgba(17, 40, 82, 0.08); border: 1px solid #e2e8f0;">
                                     </div>
                                     <div class="profile-name">Alejandro Parada</div>
-                                    <div class="profile-role" style="min-height: 34px; display: flex; align-items: center; justify-content: center; line-height: 1.3;">
+                                    <div class="profile-role">
                                         Jefe de Vinculación y Encadenamiento
                                     </div>
                                 </div>
-                                <div class="profile-logo-container" style="height: 60px; border-top: 1px solid #edf2f7; display: flex; align-items: center; justify-content: center; padding-top: 10px;">
-                                    <img src="arauco_logo.png" alt="Arauco" style="max-height: 30px; max-width: 130px; object-fit: contain; opacity: 0.88;">
+                                <div class="profile-logo-container">
+                                    <img src="arauco_logo.png" alt="Arauco" style="max-height: 25px; max-width: 110px; object-fit: contain; opacity: 0.88;">
                                 </div>
                             </div>
 
                             <!-- TARJETA 3: DAVID FERNÁNDEZ -->
                             <div class="profile-card">
                                 <div>
-                                    <div style="position: relative; display: inline-block; margin-bottom: 12px;">
-                                        <img src="david_fernandez.png" alt="David Fernández" class="profile-img" style="box-shadow: 0 0 0 4px #ffffff, 0 4px 12px rgba(17, 40, 82, 0.08); border: 1px solid #e2e8f0;">
+                                    <div style="position: relative; display: inline-block; margin-bottom: 10px;">
+                                        <img src="david_fernandez.png" alt="David Fernández" class="profile-img" style="box-shadow: 0 0 0 3px #ffffff, 0 4px 10px rgba(17, 40, 82, 0.08); border: 1px solid #e2e8f0;">
                                     </div>
                                     <div class="profile-name">David Fernández</div>
-                                    <div class="profile-role" style="min-height: 34px; display: flex; align-items: center; justify-content: center; line-height: 1.3;">
+                                    <div class="profile-role">
                                         Gerente General
                                     </div>
                                 </div>
-                                <div class="profile-logo-container" style="height: 60px; border-top: 1px solid #edf2f7; display: flex; align-items: center; justify-content: center; padding-top: 10px;">
-                                    <img src="Logo_CIDERE_MIC.png" alt="CIDERE Biobío" style="max-height: 52px; transform: scale(1.2); transform-origin: center; object-fit: contain;">
+                                <div class="profile-logo-container">
+                                    <img src="Logo_CIDERE_MIC.png" alt="CIDERE Biobío" style="max-height: 48px; transform: scale(1.15); transform-origin: center; object-fit: contain;">
                                 </div>
                             </div>
 
@@ -908,7 +923,6 @@
                     </select>
                 </div>
 
-                <!-- 12 IES OFICIALES DE LA MESA -->
                 <div id="campo-institucion-container" style="margin-bottom: 14px; display: none;">
                     <label style="font-size: 12px; font-weight: 600; display: block; margin-bottom: 4px;">Institución / Universidad / Centro:</label>
                     <select id="reg-institucion">
@@ -1484,7 +1498,7 @@
                 universidades = startupsRegistry.filter(s => s.tipo.toUpperCase() === 'IES' && (filtroIndustriaIESActual === 'Todos' || s.industria === filtroIndustriaIESActual));
             }
             if (textoBusqueda !== '') {
-                universidades = universidades.filter(s => 
+                universidades = universitiesFilter = universidades.filter(s => 
                     normalizar(s.nombre).includes(textoBusqueda) || 
                     normalizar(s.queHace).includes(textoBusqueda) || 
                     normalizar(s.comoHace).includes(textoBusqueda) || 
