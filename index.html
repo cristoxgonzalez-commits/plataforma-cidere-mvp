@@ -178,7 +178,6 @@
             gap: 20px; 
             align-items: stretch;
         }
-        .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
 
         /* TARJETAS ESTANDARIZADAS COMPACTAS (330px FIJO) */
         .uniform-card {
@@ -340,13 +339,39 @@
         
         .loader-text { font-size: 12px; color: var(--cidere-green-bright); font-weight: bold; margin-right: 10px; display: none; }
         
-        /* TARJETAS DIRECTIVA */
-        .profile-card { background: #ffffff; border-radius: 10px; padding: 24px 16px 16px; text-align: center; color: var(--text-main); box-shadow: 0 4px 12px rgba(0,0,0,0.06); display: flex; flex-direction: column; justify-content: space-between; height: 100%; transition: transform 0.2s; }
-        .profile-card:hover { transform: translateY(-4px); }
-        .profile-img { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; margin: 0 auto 12px; border: 2px solid var(--border-color); }
-        .profile-name { font-size: 15px; font-weight: 700; color: var(--cidere-blue); margin-bottom: 4px; font-family: var(--font-title); }
-        .profile-role { font-size: 10px; font-family: var(--font-mono); text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.5px; margin-bottom: 16px; flex-grow: 1; display: flex; align-items: center; justify-content: center; }
-        .profile-logo-container { border-top: 1px solid var(--border-color); padding-top: 12px; display: flex; justify-content: center; align-items: center; height: 45px; }
+        /* TARJETAS DIRECTIVA (AJUSTADAS Y CON MAYOR AMPLITUD) */
+        .profile-card { 
+            background: #ffffff; 
+            border-radius: 12px; 
+            padding: 26px 20px 22px; 
+            text-align: center; 
+            color: var(--text-main); 
+            box-shadow: 0 4px 14px rgba(0,0,0,0.06); 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: space-between; 
+            height: 100%; 
+            min-height: 290px;
+            transition: transform 0.2s, box-shadow 0.2s; 
+        }
+        .profile-card:hover { 
+            transform: translateY(-4px); 
+            box-shadow: 0 8px 22px rgba(17, 40, 82, 0.12);
+        }
+        .profile-img { width: 84px; height: 84px; border-radius: 50%; object-fit: cover; margin: 0 auto 12px; border: 2px solid var(--border-color); }
+        .profile-name { font-size: 15.5px; font-weight: 700; color: var(--cidere-blue); margin-bottom: 4px; font-family: var(--font-title); }
+        .profile-role { font-size: 10.5px; font-family: var(--font-mono); text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.5px; margin-bottom: 16px; flex-grow: 1; display: flex; align-items: center; justify-content: center; }
+        
+        /* CONTENEDOR DE LOGOS INSTITUCIONALES EN DIRECTIVA */
+        .profile-logo-container { 
+            border-top: 1px solid var(--border-color); 
+            padding-top: 14px; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 64px; 
+            overflow: visible;
+        }
         .profile-logo { max-height: 100%; max-width: 90%; object-fit: contain; }
         
         .resource-item-card { border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; background: white; display: flex; flex-direction: column; justify-content: space-between; height: 100%; }
@@ -369,7 +394,7 @@
             .search-dropdown { min-width: calc(100vw - 32px); left: -60px; }
             .user-profile { display: none; }
             .content-container { padding: 16px; }
-            .grid-2, .grid-3, .grid-4, .kpi-container { grid-template-columns: 1fr; gap: 16px; }
+            .grid-2, .grid-3, .kpi-container { grid-template-columns: 1fr; gap: 16px; }
             .carrusel-card { height: auto !important; padding: 16px !important; }
             #carrusel-fotos { height: 320px !important; }
             .slide { flex-direction: column; }
@@ -474,7 +499,7 @@
                                 <div class="profile-name">Lila Rodríguez</div>
                                 <div class="profile-role">Directora de Innovación y Vinculación</div>
                                 <div class="profile-logo-container">
-                                    <img src="inacap_logo.jpeg" alt="INACAP" class="profile-logo">
+                                    <img src="Logo_INACAP.webp" alt="INACAP" class="profile-logo" style="max-height: 48px;">
                                 </div>
                             </div>
                             <div class="profile-card">
@@ -482,16 +507,15 @@
                                 <div class="profile-name">Alejandro Parada</div>
                                 <div class="profile-role">Jefe de Vinculación y Encadenamiento</div>
                                 <div class="profile-logo-container">
-                                    <img src="arauco_logo.png" alt="Arauco" class="profile-logo">
+                                    <img src="arauco_logo.png" alt="Arauco" class="profile-logo" style="max-height: 44px;">
                                 </div>
                             </div>
                             <div class="profile-card">
                                 <img src="david_fernandez.png" alt="David Fernández" class="profile-img">
                                 <div class="profile-name">David Fernández</div>
                                 <div class="profile-role">Gerente General</div>
-                                <!-- LOGO CIDERE ESCALADO -->
-                                <div class="profile-logo-container" style="overflow: visible;">
-                                    <img src="Logo_CIDERE_MIC.png" alt="CIDERE Biobío" class="profile-logo" style="max-height: 54px; transform: scale(1.45); transform-origin: center;">
+                                <div class="profile-logo-container">
+                                    <img src="Logo_CIDERE_MIC.png" alt="CIDERE Biobío" class="profile-logo" style="max-height: 58px; transform: scale(1.4); transform-origin: center;">
                                 </div>
                             </div>
                         </div>
@@ -1430,7 +1454,7 @@
                 universidades = startupsRegistry.filter(s => s.tipo.toUpperCase() === 'IES' && (filtroIndustriaIESActual === 'Todos' || s.industria === filtroIndustriaIESActual));
             }
             if (textoBusqueda !== '') {
-                universidades = universidades.filter(s => 
+                universidades = universitiesFilter = universidades.filter(s => 
                     normalizar(s.nombre).includes(textoBusqueda) || 
                     normalizar(s.queHace).includes(textoBusqueda) || 
                     normalizar(s.comoHace).includes(textoBusqueda) || 
