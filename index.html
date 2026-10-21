@@ -13,7 +13,6 @@
 
     <style>
         :root {
-            /* PALETA OFICIAL MANUAL DE MARCA CIDERE BIOBÍO */
             --cidere-blue-dark: #112852;    
             --cidere-blue: #3C63AD;         
             --cidere-blue-light: #e8f0fe;   
@@ -40,7 +39,7 @@
 
         h1, h2, h3, h4, h5, h6, .font-title { font-family: var(--font-title); }
 
-        /* BARRA LATERAL (SIDEBAR) */
+        /* BARRA LATERAL */
         aside { width: 260px; background-color: var(--bg-sidebar); color: #ffffff; display: flex; flex-direction: column; justify-content: space-between; padding: 24px 16px; flex-shrink: 0; transition: left 0.3s ease; }
         .brand { padding: 0 8px 24px 8px; border-bottom: 1px solid rgba(255, 255, 255, 0.12); margin-bottom: 20px; display: flex; justify-content: center; }
         .nav-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
@@ -178,7 +177,6 @@
             gap: 20px; 
             align-items: stretch;
         }
-        .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
 
         /* TARJETAS ESTANDARIZADAS COMPACTAS (330px FIJO) */
         .uniform-card {
@@ -369,7 +367,7 @@
             .search-dropdown { min-width: calc(100vw - 32px); left: -60px; }
             .user-profile { display: none; }
             .content-container { padding: 16px; }
-            .grid-2, .grid-3, .grid-4, .kpi-container { grid-template-columns: 1fr; gap: 16px; }
+            .grid-2, .grid-3, .kpi-container { grid-template-columns: 1fr; gap: 16px; }
             .carrusel-card { height: auto !important; padding: 16px !important; }
             #carrusel-fotos { height: 320px !important; }
             .slide { flex-direction: column; }
@@ -385,11 +383,11 @@
 
     <div id="sidebar-overlay" class="sidebar-overlay" onclick="toggleSidebar()"></div>
 
-    <!-- BARRA LATERAL -->
+    <!-- BARRA LATERAL CON LOGO OFICIAL ACTUALIZADO -->
     <aside id="main-sidebar">
         <div>
             <div class="brand">
-                <img src="logo.png" alt="Logo CIDERE" style="max-width: 100%; height: auto;">
+                <img src="Logo_CIDERE_principal.png" alt="Logo CIDERE Biobío" style="max-width: 100%; height: auto;">
             </div>
 
             <ul class="nav-list">
@@ -449,7 +447,7 @@
 
         <div class="content-container">
 
-            <!-- VISTA: MESA DE INNOVACIÓN -->
+            <!-- VISTA: MESA DE INNOVACIÓN (GRILLA DE 3 DIRECTIVOS) -->
             <section id="view-mesa-innovacion" class="view-section">
                 <div class="card" style="background: linear-gradient(135deg, var(--cidere-blue-dark) 0%, var(--cidere-blue) 100%); color: white; padding: 32px; margin-bottom: 24px;">
                     <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 20px;">
@@ -466,15 +464,9 @@
                         <h4 style="font-size: 12px; font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 1px; color: #01DCFF; margin-bottom: 16px;">
                             Directiva & Comité Ejecutivo de la Mesa
                         </h4>
-                        <div class="grid-4" style="gap: 16px;">
-                            <div class="profile-card">
-                                <img src="hugo_garcia.png" alt="Hugo García" class="profile-img">
-                                <div class="profile-name">Hugo García</div>
-                                <div class="profile-role">Subgerente de Desarrollo e Innovación</div>
-                                <div class="profile-logo-container">
-                                    <img src="inchalam_logo.png" alt="Inchalam" class="profile-logo">
-                                </div>
-                            </div>
+                        
+                        <!-- GRILLA SIMÉTRICA DE 3 INTEGRANTES -->
+                        <div class="grid-3" style="gap: 20px;">
                             <div class="profile-card">
                                 <img src="lila_rodriguez.png" alt="Lila Rodríguez" class="profile-img">
                                 <div class="profile-name">Lila Rodríguez</div>
@@ -496,7 +488,7 @@
                                 <div class="profile-name">David Fernández</div>
                                 <div class="profile-role">Gerente General</div>
                                 <div class="profile-logo-container">
-                                    <img src="cidere_logo.jpg" alt="CIDERE Biobío" class="profile-logo">
+                                    <img src="Logo_CIDERE_MIC.png" alt="CIDERE Biobío" class="profile-logo">
                                 </div>
                             </div>
                         </div>
@@ -694,7 +686,7 @@
                     </button>
                 </div>
 
-                <div style="display: gap: 10px; margin-bottom: 16px; overflow-x: auto; padding-bottom: 8px; display: flex;">
+                <div style="display: flex; gap: 10px; margin-bottom: 16px; overflow-x: auto; padding-bottom: 8px;">
                     <button class="filter-pill active" id="btn-ies-todos" onclick="filtrarIES('Todos', this)">Todas</button>
                     <button class="filter-pill" onclick="filtrarIES('Agroindustria', this)">Agroindustria</button>
                     <button class="filter-pill" onclick="filtrarIES('Manufactura', this)">Manufactura</button>
@@ -1243,7 +1235,6 @@
                             conteo++;
                             const empresa = fila[1] || 'Empresa';
                             
-                            // Filtrar los textos válidos que no sean Estado, Empresa o número puro
                             let textosCandidatos = fila.slice(2, fila.length - 1)
                                 .map(t => (t ? t.trim() : ''))
                                 .filter(t => t !== '' && t !== 'Empresa' && t !== 'Aprobado' && isNaN(t));
