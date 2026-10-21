@@ -13,7 +13,6 @@
 
     <style>
         :root {
-            /* PALETA OFICIAL MANUAL DE MARCA CIDERE BIOBÍO 2026 */
             --cidere-blue-dark: #112852;    
             --cidere-blue: #3C63AD;         
             --cidere-blue-light: #e8f0fe;   
@@ -40,7 +39,7 @@
 
         h1, h2, h3, h4, h5, h6, .font-title { font-family: var(--font-title); }
 
-        /* BARRA LATERAL (SIDEBAR) */
+        /* BARRA LATERAL */
         aside { width: 260px; background-color: var(--bg-sidebar); color: #ffffff; display: flex; flex-direction: column; justify-content: space-between; padding: 24px 16px; flex-shrink: 0; transition: left 0.3s ease; }
         .brand { padding: 0 8px 24px 8px; border-bottom: 1px solid rgba(255, 255, 255, 0.12); margin-bottom: 20px; display: flex; justify-content: center; }
         .nav-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
@@ -135,7 +134,7 @@
         .user-profile { display: flex; align-items: center; gap: 12px; padding-left: 16px; border-left: 1px solid var(--border-color); }
         .avatar { width: 36px; height: 36px; border-radius: 50%; background-color: #ccc; object-fit: cover; }
 
-        /* CONTENEDOR DE VISTAS */
+        /* VISTAS Y TRANSICIONES */
         .content-container { padding: 32px; max-width: 1280px; margin: 0 auto; width: 100%; }
         
         .view-section {
@@ -171,7 +170,7 @@
         .card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 24px; margin-bottom: 20px; }
         .grid-2 { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; }
         
-        /* GRILLA ESTRICTA DE 3 COLUMNAS SIMÉTRICAS */
+        /* GRILLA ESTRICTA DE 3 COLUMNAS */
         .grid-3 { 
             display: grid; 
             grid-template-columns: repeat(3, minmax(0, 1fr)); 
@@ -794,7 +793,7 @@
         </div>
     </main>
 
-    <!-- MODAL: FICHA TÉCNICA DETALLADA (INFORMACIÓN COMPLETA SIN RECORTES) -->
+    <!-- MODAL: FICHA TÉCNICA DETALLADA -->
     <div id="modal-ficha-tecnica" class="modal-overlay">
         <div class="modal-content">
             <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px;">
@@ -842,7 +841,7 @@
         </div>
     </div>
 
-    <!-- MODAL: REGISTRAR CAPACIDAD O STARTUP (CAMPOS 1:1 CON BBDD Y 12 IES OFICIALES) -->
+    <!-- MODAL: REGISTRAR CAPACIDAD O STARTUP (10 CAMPOS 1:1 CON BBDD) -->
     <div id="modal-subir-capacidad" class="modal-overlay">
         <div class="modal-content">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
@@ -851,7 +850,6 @@
             </div>
             
             <form id="form-registro-capacidad" onsubmit="enviarCapacidadEcosistema(event)">
-                <!-- 1. Tipo de Entidad -->
                 <div style="margin-bottom: 14px;">
                     <label style="font-size: 12px; font-weight: 600; display: block; margin-bottom: 4px;">Tipo de Entidad:</label>
                     <select id="reg-tipo" onchange="toggleInstitucionField()" required>
@@ -860,7 +858,7 @@
                     </select>
                 </div>
 
-                <!-- 2. Institución (Desplegable oficial cerrado para IES) -->
+                <!-- 12 IES OFICIALES DE LA MESA -->
                 <div id="campo-institucion-container" style="margin-bottom: 14px; display: none;">
                     <label style="font-size: 12px; font-weight: 600; display: block; margin-bottom: 4px;">Institución / Universidad / Centro:</label>
                     <select id="reg-institucion">
@@ -880,13 +878,11 @@
                     </select>
                 </div>
 
-                <!-- 3. Nombre del Proyecto -->
                 <div style="margin-bottom: 14px;">
                     <label style="font-size: 12px; font-weight: 600; display: block; margin-bottom: 4px;">Nombre del Proyecto o Capacidad:</label>
                     <input type="text" id="reg-nombre" placeholder="Ej: Sistema Biobasado de Aislación Infrarroja" required>
                 </div>
 
-                <!-- 4. Industria -->
                 <div style="margin-bottom: 14px;">
                     <label style="font-size: 12px; font-weight: 600; display: block; margin-bottom: 4px;">Rubro / Industria Oficial CIDERE:</label>
                     <select id="reg-industria" required>
@@ -905,20 +901,17 @@
                     </select>
                 </div>
 
-                <!-- 5. Qué hace -->
                 <div style="margin-bottom: 14px;">
                     <label style="font-size: 12px; font-weight: 600; display: block; margin-bottom: 4px;">¿Qué hace? (Resumen Ejecutivo):</label>
-                    <textarea id="reg-que-hace" style="height: 60px;" placeholder="Describe la solución, producto o servicio que entrega a la industria..." required></textarea>
+                    <textarea id="reg-que-hace" style="height: 60px;" placeholder="Describe la solución o servicio entregado..." required></textarea>
                 </div>
 
-                <!-- 6. Cómo lo hace (Tecnología base) -->
                 <div style="margin-bottom: 14px;">
                     <label style="font-size: 12px; font-weight: 600; display: block; margin-bottom: 4px;">¿Cómo lo hace? (Tecnología Base y Metodología):</label>
-                    <textarea id="reg-como-hace" style="height: 60px;" placeholder="Equipamiento, formulación físico-química, software, modelos o técnicas empleadas..." required></textarea>
+                    <textarea id="reg-como-hace" style="height: 60px;" placeholder="Equipamiento, formulación, software o técnicas empleadas..." required></textarea>
                 </div>
 
                 <div class="grid-2" style="gap: 16px; margin-bottom: 20px;">
-                    <!-- 7. TRL Actual -->
                     <div>
                         <label style="font-size: 12px; font-weight: 600; display: block; margin-bottom: 4px;">Nivel TRL Actual:</label>
                         <select id="reg-trl" required>
@@ -935,7 +928,6 @@
                         </select>
                     </div>
 
-                    <!-- 8. Contacto / Email -->
                     <div>
                         <label style="font-size: 12px; font-weight: 600; display: block; margin-bottom: 4px;">Correo(s) de Contacto / OTL:</label>
                         <input type="text" id="reg-contacto" placeholder="ejemplo@correo.cl, otl@universidad.cl" required>
@@ -951,15 +943,29 @@
         </div>
     </div>
 
-    <!-- MODAL: PUBLICAR DESAFÍO -->
+    <!-- MODAL: PUBLICAR DESAFÍO (CON CONTACTO INTEGRADO) -->
     <div id="modal-publicar-desafio" class="modal-overlay">
         <div class="modal-content" style="width: 700px;">
-            <h2 style="font-size: 18px; margin-bottom: 8px; color: var(--cidere-blue);">Estructurador de Desafíos</h2>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                <h2 style="font-size: 18px; color: var(--cidere-blue);">Estructurador de Desafíos</h2>
+                <button class="btn-outline" style="padding: 4px 8px; border: none; font-size: 16px;" onclick="closeModal('modal-publicar-desafio')">✕</button>
+            </div>
+            
             <form onsubmit="guardarDesafioMesa(event)">
                 <div class="grid-2" style="gap: 16px; margin-bottom: 14px;">
-                    <div><label style="font-size: 12px; font-weight: 600;">Empresa:</label><input type="text" id="des-empresa" required></div>
                     <div>
-                        <label style="font-size: 12px; font-weight: 600;">Rubro:</label>
+                        <label style="font-size: 12px; font-weight: 600; display: block; margin-bottom: 4px;">Empresa Solicitante:</label>
+                        <input type="text" id="des-empresa" placeholder="Ej: Inchalam, Arauco, Molycop..." required>
+                    </div>
+                    <div>
+                        <label style="font-size: 12px; font-weight: 600; display: block; margin-bottom: 4px;">Email / Contacto del Solicitante:</label>
+                        <input type="email" id="des-contacto" placeholder="innovacion@empresa.cl" required>
+                    </div>
+                </div>
+
+                <div class="grid-2" style="gap: 16px; margin-bottom: 14px;">
+                    <div>
+                        <label style="font-size: 12px; font-weight: 600; display: block; margin-bottom: 4px;">Rubro / Sector:</label>
                         <select id="des-rubro" required>
                             <option value="Agroindustria">Agroindustria</option>
                             <option value="Manufactura">Manufactura</option>
@@ -974,15 +980,29 @@
                             <option value="Tecnología / Software">Tecnología / Software</option>
                         </select>
                     </div>
+                    <div>
+                        <label style="font-size: 12px; font-weight: 600; display: block; margin-bottom: 4px;">Título del Desafío:</label>
+                        <input type="text" id="des-titulo" placeholder="Ej: Optimización energética en hornos" required>
+                    </div>
                 </div>
-                <div style="margin-bottom: 20px;"><label style="font-size: 12px; font-weight: 600;">Título:</label><input type="text" id="des-titulo" required></div>
-                <div style="background: #f8fafc; padding: 16px; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 24px;">
-                    <div style="margin-bottom: 14px;"><label style="font-size: 12px; font-weight: 600; color: var(--cidere-blue);">1. Contexto:</label><textarea id="des-contexto" required style="height: 55px;"></textarea></div>
-                    <div style="margin-bottom: 14px;"><label style="font-size: 12px; font-weight: 600; color: var(--cidere-blue);">2. Impacto:</label><textarea id="des-impacto" required style="height: 55px;"></textarea></div>
-                    <div><label style="font-size: 12px; font-weight: 600; color: var(--cidere-blue);">3. Restricciones:</label><textarea id="des-restricciones" required style="height: 55px;"></textarea></div>
+
+                <div style="background: #f8fafc; padding: 16px; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 20px;">
+                    <div style="margin-bottom: 12px;">
+                        <label style="font-size: 12px; font-weight: 600; color: var(--cidere-blue); display: block; margin-bottom: 4px;">1. Contexto:</label>
+                        <textarea id="des-contexto" required style="height: 50px;" placeholder="¿Cuál es el problema o proceso actual?"></textarea>
+                    </div>
+                    <div style="margin-bottom: 12px;">
+                        <label style="font-size: 12px; font-weight: 600; color: var(--cidere-blue); display: block; margin-bottom: 4px;">2. Impacto:</label>
+                        <textarea id="des-impacto" required style="height: 50px;" placeholder="¿Qué beneficio cuantitativo o cualitativo esperan?"></textarea>
+                    </div>
+                    <div>
+                        <label style="font-size: 12px; font-weight: 600; color: var(--cidere-blue); display: block; margin-bottom: 4px;">3. Restricciones:</label>
+                        <textarea id="des-restricciones" required style="height: 50px;" placeholder="Presupuesto, normativas, tiempos o condiciones operativas"></textarea>
+                    </div>
                 </div>
+
                 <div style="display: flex; justify-content: flex-end; gap: 10px; align-items: center;">
-                    <span id="loader-desafio" class="loader-text">Enviando...</span>
+                    <span id="loader-desafio" class="loader-text">Enviando a la Mesa...</span>
                     <button type="button" class="btn-outline" onclick="closeModal('modal-publicar-desafio')">Cancelar</button>
                     <button type="submit" class="btn-primary">Enviar a Mesa</button>
                 </div>
@@ -999,13 +1019,12 @@
             document.getElementById('sidebar-overlay').classList.toggle('active');
         }
 
-        // NORMALIZADOR ANTI-TILDES
         function normalizar(texto) {
             if (!texto) return '';
             return texto.toString().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
         }
 
-        // --- URL WEB APP GOOGLE APPS SCRIPT ---
+        // --- URL WEB APP GOOGLE APPS SCRIPT OFICIAL ---
         const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxN3oEYr2N8JZ5byhat94XMa_QwPe48sv-6Z6get94tmDpWrJwsTqg2-6LVC_5QWDH_GQ/exec"; 
         
         // CSV GOOGLE SHEETS
@@ -1041,7 +1060,6 @@
             document.getElementById('lista-ies').innerHTML = skeletonHTML;
         }
 
-        // CAMBIO DE VISTA CON VINCULACIÓN A LA BARRA LATERAL
         function switchView(viewId, element = null) {
             document.querySelectorAll('.view-section').forEach(section => section.classList.remove('active'));
             const target = document.getElementById(viewId);
@@ -1081,7 +1099,6 @@
             element.classList.add('selected');
         }
 
-        // CONTROL DINÁMICO DEL MODAL DE CAPACIDADES
         function abrirModalCapacidad(tipoPredefinido = 'Startup') {
             document.getElementById('form-registro-capacidad').reset();
             const selectTipo = document.getElementById('reg-tipo');
@@ -1106,11 +1123,10 @@
             } else {
                 container.style.display = 'none';
                 selectInst.required = false;
-                selectInst.value = ''; // Queda vacía para no ocupar celda en la hoja
+                selectInst.value = '';
             }
         }
 
-        // ENVÍO AL SHEET "Ecosistema Regional"
         function enviarCapacidadEcosistema(event) {
             event.preventDefault();
             document.getElementById('loader-capacidad').style.display = 'inline';
@@ -1138,7 +1154,34 @@
             });
         }
 
-        // LECTURA DE DATOS DESDE GOOGLE SHEETS
+        function guardarDesafioMesa(event) {
+            event.preventDefault();
+            document.getElementById('loader-desafio').style.display = 'inline';
+
+            const descripcionEstructurada = "1. CONTEXTO:\n" + document.getElementById('des-contexto').value + 
+                                            "\n\n2. IMPACTO ESPERADO:\n" + document.getElementById('des-impacto').value + 
+                                            "\n\n3. RESTRICCIONES:\n" + document.getElementById('des-restricciones').value;
+
+            const formData = new FormData();
+            formData.append('tipoFormulario', 'Desafio');
+            formData.append('empresa', document.getElementById('des-empresa').value);
+            formData.append('contactoEmail', document.getElementById('des-contacto').value);
+            formData.append('rubro', document.getElementById('des-rubro').value);
+            formData.append('titulo', document.getElementById('des-titulo').value);
+            formData.append('descripcion', descripcionEstructurada);
+
+            fetch(APPS_SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: formData })
+            .then(() => {
+                alert("¡Desafío enviado con éxito! El equipo de CIDERE Biobío lo revisará para su validación.");
+                document.getElementById('loader-desafio').style.display = 'none';
+                closeModal('modal-publicar-desafio');
+            })
+            .catch(error => {
+                alert("Hubo un error de conexión.");
+                document.getElementById('loader-desafio').style.display = 'none';
+            });
+        }
+
         function cargarDatosDesdeSheets() {
             mostrarSkeletons();
 
@@ -1151,7 +1194,6 @@
                     for(let i = 1; i < filas.length; i++) {
                         let ultimaColumna = filas[i][filas[i].length - 1];
                         
-                        // Solo se publican si están expresamente marcadas como 'Aprobado'
                         if(filas[i].length >= 8 && filas[i][1] && ultimaColumna && ultimaColumna.trim() === 'Aprobado') {
                             startupsRegistry.push({
                                 id: filas[i][0],
@@ -1194,11 +1236,13 @@
                         
                         if(filas[i].length >= 4 && filas[i][1] && ultimaColumnaDesafio && ultimaColumnaDesafio.trim() === 'Aprobado') {
                             conteo++;
+                            const tituloDes = filas[i][5] || filas[i][4] || "Desafío de Innovación";
+                            const descDes = filas[i][6] || filas[i][5] || "";
                             contenedor.innerHTML += `
                                 <div style="border-bottom: 1px solid rgba(255,255,255,0.12); padding-bottom: 12px; margin-bottom: 12px;">
                                     <span class="badge badge-green" style="background: rgba(255,255,255,0.15); color: white;">INDUSTRIA</span>
-                                    <h5 style="margin-top: 6px; font-size: 14px; color: #01DCFF;">${filas[i][3]}</h5>
-                                    <p style="font-size: 12px; opacity: 0.85; margin-top: 4px;"><b>${filas[i][1]}:</b> ${filas[i][4]}</p>
+                                    <h5 style="margin-top: 6px; font-size: 14px; color: #01DCFF;">${tituloDes}</h5>
+                                    <p style="font-size: 12px; opacity: 0.85; margin-top: 4px;"><b>${filas[i][1]}:</b> ${descDes}</p>
                                 </div>
                             `;
                         }
@@ -1209,7 +1253,6 @@
             });
         }
 
-        // BÚSQUEDA PREDICTIVA Y EVENTO ENTER
         let debounceTimeout = null;
         const inputBuscador = document.getElementById('buscador-global');
         const dropdownBuscador = document.getElementById('search-dropdown-results');
@@ -1341,11 +1384,9 @@
             abrirFichaTecnica(nombreItem);
         }
 
-        // APLICAR FILTROS COMBINADOS
         function aplicarFiltrosCombine() {
             const textoBusqueda = normalizar(document.getElementById('buscador-global').value);
             
-            // 1. Filtrar Startups
             let startups = startupsRegistry.filter(s => s.tipo.toUpperCase() === 'STARTUP');
             const totalStartupsBase = startups.length;
 
@@ -1364,7 +1405,6 @@
             renderizarStartups(startups);
             document.getElementById('contador-startups').innerText = `Mostrando ${startups.length} de ${totalStartupsBase} desarrollos en esta categoría`;
 
-            // 2. Filtrar IES
             let universidades = startupsRegistry.filter(s => s.tipo.toUpperCase() === 'IES');
             const totalIESBase = universidades.length;
 
@@ -1372,7 +1412,7 @@
                 universidades = startupsRegistry.filter(s => s.tipo.toUpperCase() === 'IES' && (filtroIndustriaIESActual === 'Todos' || s.industria === filtroIndustriaIESActual));
             }
             if (textoBusqueda !== '') {
-                universidades = universidades.filter(s => 
+                universidades = universitiesFilter = universidades.filter(s => 
                     normalizar(s.nombre).includes(textoBusqueda) || 
                     normalizar(s.queHace).includes(textoBusqueda) || 
                     normalizar(s.comoHace).includes(textoBusqueda) || 
@@ -1385,7 +1425,6 @@
             document.getElementById('contador-ies').innerText = `Mostrando ${universidades.length} de ${totalIESBase} capacidades académicas`;
         }
 
-        // RENDERIZADO DE STARTUPS (330px FIJO)
         function renderizarStartups(startups) {
             const contenedor = document.getElementById('lista-startups');
             contenedor.innerHTML = '';
@@ -1432,7 +1471,6 @@
             lucide.createIcons();
         }
 
-        // RENDERIZADO DE IES (330px FIJO)
         function renderizarIES(universidades) {
             const contenedor = document.getElementById('lista-ies');
             contenedor.innerHTML = '';
@@ -1493,7 +1531,6 @@
             aplicarFiltrosCombine();
         }
 
-        // APERTURA DE FICHA TÉCNICA (MODAL CON DATOS COMPLETOS)
         function abrirFichaTecnica(nombre) {
             const item = startupsRegistry.find(s => s.nombre === nombre);
             if(!item) return;
@@ -1533,33 +1570,6 @@
                 alert("¡Solicitud enviada exitosamente! El equipo de CIDERE y " + nombreStartup + " han sido notificados.");
             })
             .catch(error => alert("Hubo un error al procesar la solicitud de contacto."));
-        }
-
-        function guardarDesafioMesa(event) {
-            event.preventDefault();
-            document.getElementById('loader-desafio').style.display = 'inline';
-
-            const descripcionEstructurada = "1. CONTEXTO:\n" + document.getElementById('des-contexto').value + 
-                                            "\n\n2. IMPACTO ESPERADO:\n" + document.getElementById('des-impacto').value + 
-                                            "\n\n3. RESTRICCIONES:\n" + document.getElementById('des-restricciones').value;
-
-            const formData = new FormData();
-            formData.append('tipoFormulario', 'Desafio');
-            formData.append('empresa', document.getElementById('des-empresa').value);
-            formData.append('rubro', document.getElementById('des-rubro').value);
-            formData.append('titulo', document.getElementById('des-titulo').value);
-            formData.append('descripcion', descripcionEstructurada);
-
-            fetch(APPS_SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: formData })
-            .then(() => {
-                alert("¡Desafío enviado con éxito!");
-                document.getElementById('loader-desafio').style.display = 'none';
-                closeModal('modal-publicar-desafio');
-            })
-            .catch(error => {
-                alert("Hubo un error de conexión.");
-                document.getElementById('loader-desafio').style.display = 'none';
-            });
         }
 
         function renderizarCuestionarioTRLLineal() {
