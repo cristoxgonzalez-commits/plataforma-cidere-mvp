@@ -13,6 +13,7 @@
 
     <style>
         :root {
+            /* PALETA OFICIAL MANUAL DE MARCA CIDERE BIOBÍO */
             --cidere-blue-dark: #112852;    
             --cidere-blue: #3C63AD;         
             --cidere-blue-light: #e8f0fe;   
@@ -177,6 +178,7 @@
             gap: 20px; 
             align-items: stretch;
         }
+        .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
 
         /* TARJETAS ESTANDARIZADAS COMPACTAS (330px FIJO) */
         .uniform-card {
@@ -367,7 +369,7 @@
             .search-dropdown { min-width: calc(100vw - 32px); left: -60px; }
             .user-profile { display: none; }
             .content-container { padding: 16px; }
-            .grid-2, .grid-3, .kpi-container { grid-template-columns: 1fr; gap: 16px; }
+            .grid-2, .grid-3, .grid-4, .kpi-container { grid-template-columns: 1fr; gap: 16px; }
             .carrusel-card { height: auto !important; padding: 16px !important; }
             #carrusel-fotos { height: 320px !important; }
             .slide { flex-direction: column; }
@@ -487,8 +489,9 @@
                                 <img src="david_fernandez.png" alt="David Fernández" class="profile-img">
                                 <div class="profile-name">David Fernández</div>
                                 <div class="profile-role">Gerente General</div>
-                                <div class="profile-logo-container">
-                                    <img src="Logo_CIDERE_MIC.png" alt="CIDERE Biobío" class="profile-logo">
+                                <!-- LOGO CIDERE ESCALADO -->
+                                <div class="profile-logo-container" style="overflow: visible;">
+                                    <img src="Logo_CIDERE_MIC.png" alt="CIDERE Biobío" class="profile-logo" style="max-height: 54px; transform: scale(1.45); transform-origin: center;">
                                 </div>
                             </div>
                         </div>
@@ -1216,7 +1219,7 @@
                 }
             });
 
-            // PARSER ROBUSTO PARA DESAFÍOS (MUESTRA TÍTULO Y DESCRIPCIÓN REALES)
+            // PARSER ROBUSTO PARA DESAFÍOS
             Papa.parse(CSV_DESAFIOS, {
                 download: true,
                 complete: function(results) {
