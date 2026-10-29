@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Plataforma CIDERE Biobío - MVP Interactivo</title>
     <!-- Fuentes Oficiales CIDERE Biobío -->
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Montserrat:wght@400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     
     <!-- Librerías CDN estándar -->
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -154,15 +154,66 @@
 
             <!-- VISTA: DASHBOARD -->
             <section id="view-dashboard" class="view-section active">
-                <div style="margin-bottom: 24px;">
-                    <h1 style="font-size: 24px; font-weight: 800; color: var(--cidere-blue);">Panel de Innovación CIDERE</h1>
-                    <p style="color: var(--text-muted); font-size: 13px;">Impulsando el desarrollo regional mediante la conexión entre Academia, Industria y Capital.</p>
+                
+                <!-- CAMBIO 1: BLOQUE DE INTRODUCCIÓN HERO -->
+                <div class="hero-intro-card">
+                    <div class="hero-intro-grid">
+                        
+                        <!-- Columna izquierda: Textos y Enlace -->
+                        <div class="hero-text-col">
+                            <h1 class="hero-title">Plataforma de Capacidades Regionales</h1>
+                            <p class="hero-p">
+                                El conocimiento para resolver muchos problemas de la industria del Biobío ya existe en la región, pero está disperso entre universidades, centros tecnológicos y startups. Esta plataforma lo hace visible y lo conecta directamente con las empresas socias de CIDERE Biobío.
+                            </p>
+                            <p class="hero-p">
+                                Nace desde la <strong>Mesa de Innovación de CIDERE (MIC)</strong>, que reúne a empresas, academia y ecosistema para transformar necesidades productivas en soluciones con impacto regional.
+                            </p>
+                            <a href="#view-mesa-innovacion" class="hero-link" id="hero-link-mesa">
+                                Conoce la Mesa de Innovación &rarr;
+                            </a>
+                        </div>
+
+                        <!-- Columna derecha: Grilla de Cifras 3x2 -->
+                        <div class="hero-stats-wrapper">
+                            <div class="hero-stats-grid">
+                                <div class="hero-stat-card">
+                                    <div class="hero-stat-num">60 años</div>
+                                    <div class="hero-stat-desc">impulsando el desarrollo del Biobío</div>
+                                </div>
+                                <div class="hero-stat-card">
+                                    <div class="hero-stat-num">+2.200</div>
+                                    <div class="hero-stat-desc">proyectos e iniciativas</div>
+                                </div>
+                                <div class="hero-stat-card">
+                                    <div class="hero-stat-num">+290</div>
+                                    <div class="hero-stat-desc">tecnologías desarrolladas o adaptadas</div>
+                                </div>
+                                <div class="hero-stat-card">
+                                    <div class="hero-stat-num">+400</div>
+                                    <div class="hero-stat-desc">actores en mesas de colaboración</div>
+                                </div>
+                                <div class="hero-stat-card">
+                                    <div class="hero-stat-num">+4.300</div>
+                                    <div class="hero-stat-desc">emprendimientos y microempresas impactadas</div>
+                                </div>
+                                <div class="hero-stat-card">
+                                    <div class="hero-stat-num">70</div>
+                                    <div class="hero-stat-desc">comunas impactadas</div>
+                                </div>
+                            </div>
+                            <div class="hero-caption">
+                                Fuente: presentación institucional CIDERE Biobío 2025–2026.
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
 
+                <!-- CAMBIO 3: TARJETAS DE INDICADORES DEL PANEL (Capacidades) -->
                 <div class="kpi-container">
                     <div class="kpi-card">
                         <div>
-                            <div class="kpi-label">Proyectos Aprobados</div>
+                            <div class="kpi-label">Capacidades</div>
                             <div class="kpi-value" id="kpi-proyectos">0</div>
                         </div>
                         <i data-lucide="flask-conical" size="32" style="color: var(--cidere-blue); opacity: 0.3;"></i>
@@ -374,7 +425,7 @@
                 </div>
             </section>
             
-            <!-- FOOTER BANNER -->
+            <!-- CAMBIO 2: FOOTER BANNER CON INDICADORES ACTUALIZADOS -->
             <div class="footer-banner">
                 <div>
                     <h4 style="font-size: 14px; text-transform: uppercase; font-family: var(--font-title); font-weight: 700;">Impacto Regional CIDERE Biobío</h4>
@@ -383,14 +434,14 @@
                 <div class="metric-group">
                     <div class="metric-item">
                         <div class="metric-val" id="footer-metric-proyectos">0</div>
-                        <div class="metric-lbl">Proyectos Activos</div>
+                        <div class="metric-lbl">Capacidades</div>
                     </div>
                     <div class="metric-item">
-                        <div class="metric-val">84</div>
-                        <div class="metric-lbl">Patentes Biobío</div>
+                        <div class="metric-val">+45.000</div>
+                        <div class="metric-lbl">Empleos y ocupaciones generadas</div>
                     </div>
                     <div class="metric-item">
-                        <div class="metric-val">312</div>
+                        <div class="metric-val">41</div>
                         <div class="metric-lbl">Empresas Socias</div>
                     </div>
                 </div>
