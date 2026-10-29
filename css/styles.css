@@ -17,6 +17,7 @@
     
     --font-title: 'Montserrat', sans-serif;
     --font-sans: 'Poppins', sans-serif;
+    --font-inter: 'Inter', sans-serif;
     --font-mono: 'JetBrains Mono', monospace;
 }
 
@@ -140,6 +141,126 @@ header { background-color: #ffffff; height: 64px; border-bottom: 1px solid var(-
 @keyframes smoothSectionFade {
     0% { opacity: 0; transform: translateY(12px) scale(0.99); }
     100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ========================================================
+   CAMBIO 1: BLOQUE INTRODUCTORIO HERO (INICIO)
+   ======================================================== */
+.hero-intro-card {
+    background: linear-gradient(135deg, #17386d 0%, #1d4f8f 48%, #0f766e 100%);
+    border-radius: 14px;
+    padding: 32px 36px;
+    color: #ffffff;
+    margin-bottom: 24px;
+    box-shadow: 0 10px 28px rgba(15, 118, 110, 0.12), 0 4px 12px rgba(23, 56, 109, 0.08);
+}
+
+.hero-intro-grid {
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    gap: 36px;
+    align-items: center;
+}
+
+.hero-text-col {
+    font-family: var(--font-inter);
+    color: #ffffff;
+}
+
+.hero-title {
+    font-family: var(--font-inter);
+    font-size: 27px;
+    font-weight: 800;
+    color: #ffffff;
+    margin-bottom: 14px;
+    line-height: 1.25;
+    letter-spacing: -0.3px;
+}
+
+.hero-p {
+    font-family: var(--font-inter);
+    font-size: 13.5px;
+    line-height: 1.58;
+    color: #ffffff;
+    opacity: 0.95;
+    margin-bottom: 12px;
+}
+
+.hero-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #a7f3d0;
+    font-family: var(--font-inter);
+    font-size: 13.5px;
+    font-weight: 700;
+    text-decoration: none;
+    margin-top: 6px;
+    cursor: pointer;
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.hero-link:hover {
+    color: #ffffff;
+    transform: translateX(4px);
+}
+
+.hero-stats-wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+.hero-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+
+.hero-stat-card {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 10px;
+    padding: 14px 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 88px;
+    box-sizing: border-box;
+    backdrop-filter: blur(4px);
+    transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.hero-stat-card:hover {
+    background: rgba(255, 255, 255, 0.12);
+    transform: translateY(-2px);
+}
+
+.hero-stat-num {
+    font-family: var(--font-mono);
+    font-size: 21px;
+    font-weight: 700;
+    color: #a7f3d0;
+    line-height: 1.15;
+    margin-bottom: 6px;
+    white-space: nowrap;
+}
+
+.hero-stat-desc {
+    font-family: var(--font-inter);
+    font-size: 11px;
+    color: #ffffff;
+    line-height: 1.35;
+    opacity: 0.92;
+}
+
+.hero-caption {
+    font-family: var(--font-inter);
+    font-size: 10.5px;
+    color: #ffffff;
+    opacity: 0.72;
+    text-align: right;
+    margin-top: 10px;
+    letter-spacing: 0.2px;
 }
 
 /* COMPONENTES REUTILIZABLES */
@@ -290,8 +411,10 @@ textarea:focus, input:focus, select:focus { border-color: var(--cidere-blue); }
 .sidebar-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 90; }
 .sidebar-overlay.active { display: block; }
 
+/* REGLAS RESPONSIVE */
 @media (max-width: 992px) {
     .grid-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .hero-intro-grid { grid-template-columns: 1fr; gap: 28px; }
 }
 
 @media (max-width: 768px) {
@@ -313,4 +436,11 @@ textarea:focus, input:focus, select:focus { border-color: var(--cidere-blue); }
     .metric-group { flex-direction: column; width: 100%; gap: 16px; }
     .metric-item { border-left: none; border-top: 1px solid rgba(255,255,255,0.2); padding-left: 0; padding-top: 16px; }
     .modal-content { width: 95%; padding: 20px; }
+
+    /* Adaptación del Bloque Hero en móviles */
+    .hero-intro-card { padding: 22px 18px; }
+    .hero-title { font-size: 22px; }
+    .hero-stats-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .hero-stat-card { min-height: 80px; padding: 10px; }
+    .hero-stat-num { font-size: 18px; }
 }
