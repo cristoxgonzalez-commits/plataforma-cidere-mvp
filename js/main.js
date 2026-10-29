@@ -73,6 +73,12 @@ function initNavegacion() {
         });
     });
 
+    // Enlace del bloque Hero hacia la Mesa de Innovación
+    document.getElementById('hero-link-mesa')?.addEventListener('click', (e) => {
+        e.preventDefault();
+        switchView('view-mesa-innovacion', document.getElementById('btn-top-mesa'));
+    });
+
     document.getElementById('btn-sidebar-publicar')?.addEventListener('click', () => openModal('modal-publicar-desafio'));
     document.getElementById('btn-mesa-publicar')?.addEventListener('click', () => openModal('modal-publicar-desafio'));
     document.getElementById('btn-subir-startup')?.addEventListener('click', () => abrirModalCapacidad('Startup'));
@@ -125,8 +131,10 @@ async function cargarDatos() {
         const [startups, desafios] = await Promise.all([fetchStartups(), fetchDesafios()]);
         startupsRegistry = startups;
 
-        document.getElementById('kpi-proyectos').innerText = startupsRegistry.length;
-        document.getElementById('footer-metric-proyectos').innerText = startupsRegistry.length;
+        // Fuente única de conteo en vivo para Panel y Pie Institucional
+        const conteoCapacidades = startupsRegistry.length;
+        document.getElementById('kpi-proyectos').innerText = conteoCapacidades;
+        document.getElementById('footer-metric-proyectos').innerText = conteoCapacidades;
         document.getElementById('kpi-desafios').innerText = desafios.length;
 
         renderDesafios(desafios);
