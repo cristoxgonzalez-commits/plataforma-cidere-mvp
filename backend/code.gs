@@ -61,10 +61,31 @@ function doPost(e) {
       return ContentService.createTextOutput("Desafío registrado exitosamente").setMimeType(ContentService.MimeType.TEXT);
     }
 
-    // 3. REGISTRO DE CONTACTO / CRM
+    // 3. REGISTRO DE CONTACTO / CRM (CON TRAZABILIDAD DE MATCHMAKING)
     if (tipoFormulario === 'Contacto') {
       var sheetContacto = doc.getSheetByName('Historial_Contactos') || doc.insertSheet('Historial_Contactos');
-      sheetContacto.appendRow([new Date(), e.parameter.correoDestino, e.parameter.nombreStartup, "Pendiente de contacto"]);
+      
+      // Si la hoja está recién creada, añadimos los encabezados
+      if (sheetContacto.getLastRow() === 0) {
+        sheetContacto.appendRow(["Fecha", "Empresa Solicitante", "Email Solicitante", "Capacidad / Startup", "Email Contacto", "Origen", "Estado"]);
+      }
+      
+      var solicitanteEmpresa = e.parameter.solicitanteEmpresa ? e.parameter.solicitanteEmpresa.trim() : "Empresa Socia";
+      var solicitanteEmail = e.parameter.solicitanteEmail ? e.parameter.solicitanteEmail.trim() : "No especificado";
+      var nombreStartup = e.parameter.nombreStartup ? e.parameter.nombreStartup.trim() : "";
+      var correoDestino = e.parameter.correoDestino ? e.parameter.correoDestino.trim() : "";
+      var origenContacto = e.parameter.origenContacto ? e.parameter.origenContacto.trim() : "Contacto Ficha Técnica";
+
+      sheetContacto.appendRow([
+        new Date(),
+        solicitanteEmpresa,
+        solicitanteEmail,
+        nombreStartup,
+        correoDestino,
+        origenContacto,
+        "Pendiente de articulación"
+      ]);
+      
       return ContentService.createTextOutput("Contacto registrado").setMimeType(ContentService.MimeType.TEXT);
     }
   } catch (error) {
