@@ -79,28 +79,15 @@ function initNavegacion() {
         switchView('view-mesa-innovacion', document.getElementById('btn-top-mesa'));
     });
 
+    // Botones para abrir el modal de publicación de desafíos
     document.getElementById('btn-sidebar-publicar')?.addEventListener('click', () => openModal('modal-publicar-desafio'));
     document.getElementById('btn-mesa-publicar')?.addEventListener('click', () => openModal('modal-publicar-desafio'));
+    document.getElementById('btn-desafios-publicar')?.addEventListener('click', () => openModal('modal-publicar-desafio'));
+
     document.getElementById('btn-subir-startup')?.addEventListener('click', () => abrirModalCapacidad('Startup'));
     document.getElementById('btn-subir-ies')?.addEventListener('click', () => abrirModalCapacidad('IES'));
     document.getElementById('btn-notif')?.addEventListener('click', () => alert('No tienes nuevas notificaciones'));
     document.getElementById('btn-settings')?.addEventListener('click', () => alert('Ajustes de cuenta...'));
-
-    document.querySelectorAll('.rubro-card').forEach(card => {
-        card.addEventListener('click', () => {
-            document.querySelectorAll('.rubro-card').forEach(c => c.classList.remove('selected'));
-            card.classList.add('selected');
-        });
-    });
-
-    document.getElementById('btn-encontrar-soluciones')?.addEventListener('click', () => {
-        const desc = document.getElementById('input-descripcion-desafio').value;
-        if (!desc.trim()) { alert('Por favor describe tu desafío primero.'); return; }
-        const res = document.getElementById('resultado-soluciones-ejemplo');
-        const txt = document.getElementById('texto-solucion-generada');
-        res.style.display = 'block';
-        txt.innerHTML = `Identificadas <b>3 capacidades</b> en el Ecosistema Regional para atender la problemática descrita.`;
-    });
 }
 
 function switchView(viewId, element = null) {
@@ -157,22 +144,37 @@ function mostrarSkeletons() {
     document.getElementById('lista-ies').innerHTML = sk;
 }
 
+// RENDERIZADO DE DESAFÍOS EN SU SECCIÓN DEDICADA
 function renderDesafios(desafios) {
-    const contenedor = document.getElementById('lista-desafios-dashboard');
+    const contenedor = document.getElementById('lista-desafios-vigentes');
+    if (!contenedor) return;
     contenedor.innerHTML = '';
     if (desafios.length === 0) {
-        contenedor.innerHTML = '<p style="font-size:12px; opacity:0.8;">No hay desafíos aprobados aún.</p>';
+        contenedor.innerHTML = '<p style="font-size:13px; color:gray; grid-column: span 2;">No hay desafíos aprobados actualmente en convocatoria.</p>';
         return;
     }
     desafios.forEach(d => {
         contenedor.innerHTML += `
-            <div style="border-bottom: 1px solid rgba(255,255,255,0.12); padding-bottom: 12px; margin-bottom: 12px;">
-                <span class="badge badge-green" style="background: rgba(255,255,255,0.15); color: white;">INDUSTRIA</span>
-                <h5 style="margin-top: 6px; font-size: 14px; color: #01DCFF;">${d.titulo}</h5>
-                <p style="font-size: 12px; opacity: 0.85; margin-top: 4px;"><b>${d.empresa}:</b> ${d.descripcion}</p>
+            <div class="desafio-card-dark">
+                <div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                        <span class="badge badge-green" style="background: rgba(255,255,255,0.18); color: #ffffff;">INDUSTRIA</span>
+                        <span style="font-size: 11px; font-family: var(--font-mono); color: #01DCFF; letter-spacing: 0.5px; font-weight: 600;">CONVOCATORIA ACTIVA</span>
+                    </div>
+                    <h4 style="font-size: 16px; font-weight: 700; color: #01DCFF; margin-bottom: 12px; line-height: 1.35;">${d.titulo}</h4>
+                    <p style="font-size: 13px; line-height: 1.6; opacity: 0.92; color: #ffffff; margin-bottom: 16px;">
+                        <strong style="color: #ffffff;">${d.empresa}:</strong> ${d.descripcion}
+                    </p>
+                </div>
+                <div style="border-top: 1px solid rgba(255,255,255,0.12); padding-top: 14px; display: flex; justify-content: flex-end;">
+                    <button class="btn-primary" style="background-color: var(--cidere-green-bright); padding: 6px 12px; font-size: 11.5px;" onclick="alert('Para postular una solución a este desafío, utiliza el canal de mensajería o solicita contacto directo con CIDERE Biobío.')">
+                        Postular Solución
+                    </button>
+                </div>
             </div>
         `;
     });
+    refreshIcons();
 }
 
 // FILTROS
