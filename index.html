@@ -632,82 +632,121 @@
         </div>
     </div>
 
-    <!-- MODAL PUBLICAR DESAFÍO (CON NUEVO CAMPO DE NIVEL DE RIESGO) -->
+    <!-- MODAL PUBLICAR DESAFÍO (CON MATCHMAKING AUTOMÁTICO EN 2 FASES) -->
     <div id="modal-publicar-desafio" class="modal-overlay">
-        <div class="modal-content" style="width: 700px;">
+        <div class="modal-content" style="width: 720px;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                <h2 style="font-size: 18px; color: var(--cidere-blue);">Estructurador de Desafíos</h2>
+                <h2 id="titulo-modal-desafio" style="font-size: 18px; color: var(--cidere-blue);">Estructurador de Desafíos de Innovación</h2>
                 <button class="btn-outline close-modal" data-modal="modal-publicar-desafio">✕</button>
             </div>
             
-            <form id="form-publicar-desafio">
-                <div class="grid-2" style="gap: 16px; margin-bottom: 14px;">
-                    <div>
-                        <label style="font-size: 12px; font-weight: 600; display: block; margin-bottom: 4px;">Empresa Solicitante:</label>
-                        <input type="text" id="des-empresa" placeholder="Ej: Inchalam, Arauco, Camanchaca..." required>
+            <!-- FASE 1: FORMULARIO DE POSTULACIÓN -->
+            <div id="desafio-paso-formulario">
+                <form id="form-publicar-desafio">
+                    <div class="grid-2" style="gap: 16px; margin-bottom: 14px;">
+                        <div>
+                            <label style="font-size: 12px; font-weight: 600; display: block; margin-bottom: 4px;">Empresa Solicitante:</label>
+                            <input type="text" id="des-empresa" placeholder="Ej: Inchalam, Arauco, Camanchaca..." required>
+                        </div>
+                        <div>
+                            <label style="font-size: 12px; font-weight: 600; display: block; margin-bottom: 4px;">Email / Contacto del Solicitante:</label>
+                            <input type="email" id="des-contacto" placeholder="innovacion@empresa.cl" required>
+                        </div>
+                    </div>
+
+                    <div class="grid-2" style="gap: 16px; margin-bottom: 14px;">
+                        <div>
+                            <label style="font-size: 12px; font-weight: 600; display: block; margin-bottom: 4px;">Rubro / Sector:</label>
+                            <select id="des-rubro" required>
+                                <option value="">-- Seleccionar rubro --</option>
+                                <option value="Agroindustria">Agroindustria</option>
+                                <option value="Manufactura">Manufactura</option>
+                                <option value="Energía">Energía</option>
+                                <option value="Logística">Logística</option>
+                                <option value="Agua y Sanitario">Agua y Sanitario</option>
+                                <option value="Alimentos">Alimentos</option>
+                                <option value="Salud">Salud</option>
+                                <option value="Forestal">Forestal</option>
+                                <option value="Pesca y Acuicultura">Pesca y Acuicultura</option>
+                                <option value="Minería">Minería</option>
+                                <option value="Tecnología / Software">Tecnología / Software</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="font-size: 12px; font-weight: 600; display: block; margin-bottom: 4px;">Nivel de Riesgo (Tolerancia TRL):</label>
+                            <select id="des-riesgo" required>
+                                <option value="">-- Seleccionar tolerancia al riesgo --</option>
+                                <option value="Riesgo Alto (TRL 1-3)">Riesgo Alto (I+D Inicial / Exploratoria — TRL 1 al 3)</option>
+                                <option value="Riesgo Medio (TRL 4-6)">Riesgo Medio (Desarrollo & Prototipado — TRL 4 al 6)</option>
+                                <option value="Riesgo Bajo (TRL 7-9)">Riesgo Bajo (Madurez & Escalamiento — TRL 7 al 9)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom: 14px;">
+                        <label style="font-size: 12px; font-weight: 600; display: block; margin-bottom: 4px;">Título del Desafío:</label>
+                        <input type="text" id="des-titulo" placeholder="Ej: Optimización energética en procesos productivos" required>
+                    </div>
+
+                    <div style="background: #f8fafc; padding: 16px; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 20px;">
+                        <div style="margin-bottom: 12px;">
+                            <label style="font-size: 12px; font-weight: 600; color: var(--cidere-blue); display: block; margin-bottom: 4px;">1. Contexto:</label>
+                            <textarea id="des-contexto" required style="height: 60px;" placeholder="¿Cuál es el problema o proceso actual?"></textarea>
+                        </div>
+                        <div style="margin-bottom: 12px;">
+                            <label style="font-size: 12px; font-weight: 600; color: var(--cidere-blue); display: block; margin-bottom: 4px;">2. Impacto:</label>
+                            <textarea id="des-impacto" required style="height: 50px;" placeholder="¿Qué beneficio cuantitativo o cualitativo esperan?"></textarea>
+                        </div>
+                        <div>
+                            <label style="font-size: 12px; font-weight: 600; color: var(--cidere-blue); display: block; margin-bottom: 4px;">3. Restricciones:</label>
+                            <textarea id="des-restricciones" required style="height: 50px;" placeholder="Presupuesto, normativas, tiempos o condiciones operativas"></textarea>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; justify-content: flex-end; gap: 10px; align-items: center;">
+                        <span id="loader-desafio" class="loader-text">Registrando y buscando matches...</span>
+                        <button type="button" class="btn-outline close-modal" data-modal="modal-publicar-desafio">Cancelar</button>
+                        <button type="submit" class="btn-primary" style="background-color: var(--cidere-blue); padding: 10px 18px;">
+                            <i data-lucide="sparkles" size="14"></i> Publicar Desafío y Buscar Matches
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- FASE 2: PANTALLA DE MATCHES ENCONTRADOS -->
+            <div id="desafio-paso-matches" style="display: none;">
+                <div style="background: #f0fdf4; border: 1px solid var(--cidere-green-bright); border-radius: 10px; padding: 18px; margin-bottom: 20px; display: flex; align-items: flex-start; gap: 14px;">
+                    <div style="background: #dcfce7; color: #166534; width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <i data-lucide="check" size="24"></i>
                     </div>
                     <div>
-                        <label style="font-size: 12px; font-weight: 600; display: block; margin-bottom: 4px;">Email / Contacto del Solicitante:</label>
-                        <input type="email" id="des-contacto" placeholder="innovacion@empresa.cl" required>
+                        <h3 style="font-size: 16px; font-weight: 700; color: #166534; margin-bottom: 4px;">¡Desafío Registrado Exitosamente!</h3>
+                        <p style="font-size: 12.5px; color: #14532d; line-height: 1.5;" id="match-resumen-desafio">
+                            Tu problemática ya fue ingresada a la Mesa de Innovación de CIDERE Biobío.
+                        </p>
                     </div>
                 </div>
 
-                <!-- RUBRO Y NIVEL DE RIESGO TECNOLÓGICO EMPAREJADOS -->
-                <div class="grid-2" style="gap: 16px; margin-bottom: 14px;">
-                    <div>
-                        <label style="font-size: 12px; font-weight: 600; display: block; margin-bottom: 4px;">Rubro / Sector:</label>
-                        <select id="des-rubro" required>
-                            <option value="">-- Seleccionar rubro --</option>
-                            <option value="Agroindustria">Agroindustria</option>
-                            <option value="Manufactura">Manufactura</option>
-                            <option value="Energía">Energía</option>
-                            <option value="Logística">Logística</option>
-                            <option value="Agua y Sanitario">Agua y Sanitario</option>
-                            <option value="Alimentos">Alimentos</option>
-                            <option value="Salud">Salud</option>
-                            <option value="Forestal">Forestal</option>
-                            <option value="Pesca y Acuicultura">Pesca y Acuicultura</option>
-                            <option value="Minería">Minería</option>
-                            <option value="Tecnología / Software">Tecnología / Software</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label style="font-size: 12px; font-weight: 600; display: block; margin-bottom: 4px;">Nivel de Riesgo (Tolerancia TRL):</label>
-                        <select id="des-riesgo" required>
-                            <option value="">-- Seleccionar tolerancia al riesgo --</option>
-                            <option value="Riesgo Alto (TRL 1-3)">Riesgo Alto (I+D Inicial / Exploratoria — TRL 1 al 3)</option>
-                            <option value="Riesgo Medio (TRL 4-6)">Riesgo Medio (Desarrollo & Prototipado — TRL 4 al 6)</option>
-                            <option value="Riesgo Bajo (TRL 7-9)">Riesgo Bajo (Madurez & Escalamiento — TRL 7 al 9)</option>
-                        </select>
-                    </div>
+                <div style="margin-bottom: 16px;">
+                    <h4 style="font-size: 14px; font-weight: 700; color: var(--cidere-blue); margin-bottom: 4px;">
+                        Capacidades y Startups compatibles en la Región del Biobío:
+                    </h4>
+                    <p style="font-size: 12px; color: var(--text-muted);">
+                        Puedes solicitar contacto directo con los proyectos identificados para iniciar reuniones técnicas de articulación.
+                    </p>
                 </div>
 
-                <div style="margin-bottom: 14px;">
-                    <label style="font-size: 12px; font-weight: 600; display: block; margin-bottom: 4px;">Título del Desafío:</label>
-                    <input type="text" id="des-titulo" placeholder="Ej: Optimización energética en procesos productivos" required>
+                <div id="lista-matches-encontrados" style="display: flex; flex-direction: column; gap: 12px; max-height: 360px; overflow-y: auto; padding-right: 4px; margin-bottom: 20px;">
+                    <!-- Se inyectan las tarjetas de matches aquí dinámicamente -->
                 </div>
 
-                <div style="background: #f8fafc; padding: 16px; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 20px;">
-                    <div style="margin-bottom: 12px;">
-                        <label style="font-size: 12px; font-weight: 600; color: var(--cidere-blue); display: block; margin-bottom: 4px;">1. Contexto:</label>
-                        <textarea id="des-contexto" required style="height: 60px;" placeholder="¿Cuál es el problema o proceso actual?"></textarea>
-                    </div>
-                    <div style="margin-bottom: 12px;">
-                        <label style="font-size: 12px; font-weight: 600; color: var(--cidere-blue); display: block; margin-bottom: 4px;">2. Impacto:</label>
-                        <textarea id="des-impacto" required style="height: 50px;" placeholder="¿Qué beneficio cuantitativo o cualitativo esperan?"></textarea>
-                    </div>
-                    <div>
-                        <label style="font-size: 12px; font-weight: 600; color: var(--cidere-blue); display: block; margin-bottom: 4px;">3. Restricciones:</label>
-                        <textarea id="des-restricciones" required style="height: 50px;" placeholder="Presupuesto, normativas, tiempos o condiciones operativas"></textarea>
-                    </div>
+                <div style="display: flex; justify-content: flex-end; gap: 10px; border-top: 1px solid var(--border-color); padding-top: 14px;">
+                    <button type="button" class="btn-primary" style="background-color: var(--cidere-blue); padding: 9px 20px;" id="btn-cerrar-matches">
+                        Finalizar y Volver
+                    </button>
                 </div>
+            </div>
 
-                <div style="display: flex; justify-content: flex-end; gap: 10px; align-items: center;">
-                    <span id="loader-desafio" class="loader-text">Enviando a la Mesa...</span>
-                    <button type="button" class="btn-outline close-modal" data-modal="modal-publicar-desafio">Cancelar</button>
-                    <button type="submit" class="btn-primary">Enviar a Mesa</button>
-                </div>
-            </form>
         </div>
     </div>
 
