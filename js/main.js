@@ -80,9 +80,9 @@ function initNavegacion() {
     });
 
     // Botones para abrir el modal de publicación de desafíos
-    document.getElementById('btn-sidebar-publicar')?.addEventListener('click', () => openModal('modal-publicar-desafio'));
-    document.getElementById('btn-mesa-publicar')?.addEventListener('click', () => openModal('modal-publicar-desafio'));
-    document.getElementById('btn-desafios-publicar')?.addEventListener('click', () => openModal('modal-publicar-desafio'));
+    document.getElementById('btn-sidebar-publicar')?.addEventListener('click', () => abrirModalDesafio());
+    document.getElementById('btn-mesa-publicar')?.addEventListener('click', () => abrirModalDesafio());
+    document.getElementById('btn-desafios-publicar')?.addEventListener('click', () => abrirModalDesafio());
 
     document.getElementById('btn-subir-startup')?.addEventListener('click', () => abrirModalCapacidad('Startup'));
     document.getElementById('btn-subir-ies')?.addEventListener('click', () => abrirModalCapacidad('IES'));
@@ -118,7 +118,6 @@ async function cargarDatos() {
         const [startups, desafios] = await Promise.all([fetchStartups(), fetchDesafios()]);
         startupsRegistry = startups;
 
-        // Fuente única de conteo en vivo para Panel y Pie Institucional
         const conteoCapacidades = startupsRegistry.length;
         document.getElementById('kpi-proyectos').innerText = conteoCapacidades;
         document.getElementById('footer-metric-proyectos').innerText = conteoCapacidades;
@@ -296,16 +295,19 @@ function abrirFichaTecnica(item) {
     openModal('modal-ficha-tecnica');
 }
 
-async function solicitarContacto(email, nombre) {
+async function solicitarContacto(email, nombre, solicitanteEmpresa = "Empresa Socia", solicitanteEmail = "No especificado", origen = "Ficha Técnica") {
     if (!email || email === 'No disponible' || !email.trim()) {
         alert("Esta entidad no posee un correo público registrado.");
         return;
     }
-    alert(`Solicitando vinculación con ${nombre}...`);
+    
     const fd = new FormData();
     fd.append('tipoFormulario', 'Contacto');
     fd.append('correoDestino', email);
     fd.append('nombreStartup', nombre);
+    fd.append('solicitanteEmpresa', solicitanteEmpresa);
+    fd.append('solicitanteEmail', solicitanteEmail);
+    fd.append('origen', origen);
 
     try {
         await postToAppsScript(fd);
@@ -516,10 +518,17 @@ function initModalesFormularios() {
         }
     });
 
+    // FLUJO: PUBLICAR DESAFÍO + MATCHMAKING INMEDIATO
     document.getElementById('form-publicar-desafio').addEventListener('submit', async (e) => {
         e.preventDefault();
         const loader = document.getElementById('loader-desafio');
         loader.style.display = 'inline';
+
+        const empresa = document.getElementById('des-empresa').value.trim();
+        const contactoEmail = document.getElementById('des-contacto').value.trim();
+        const rubro = document.getElementById('des-rubro').value.trim();
+        const nivelRiesgo = document.getElementById('des-riesgo').value.trim();
+        const titulo = document.getElementById('des-titulo').value.trim();
 
         const desc = "1. CONTEXTO:\n" + document.getElementById('des-contexto').value + 
                      "\n\n2. IMPACTO ESPERADO:\n" + document.getElementById('des-impacto').value + 
@@ -527,24 +536,138 @@ function initModalesFormularios() {
 
         const fd = new FormData();
         fd.append('tipoFormulario', 'Desafio');
-        fd.append('empresa', document.getElementById('des-empresa').value);
-        fd.append('contactoEmail', document.getElementById('des-contacto').value);
-        fd.append('rubro', document.getElementById('des-rubro').value);
-        fd.append('nivelRiesgo', document.getElementById('des-riesgo').value); // NUEVO CAMPO CAPTURADO
-        fd.append('titulo', document.getElementById('des-titulo').value);
+        fd.append('empresa', empresa);
+        fd.append('contactoEmail', contactoEmail);
+        fd.append('rubro', rubro);
+        fd.append('nivelRiesgo', nivelRiesgo);
+        fd.append('titulo', titulo);
         fd.append('descripcion', desc);
 
         try {
             await postToAppsScript(fd);
-            alert("¡Desafío enviado con éxito! El equipo de CIDERE Biobío lo revisará.");
-            closeModal('modal-publicar-desafio');
-            e.target.reset();
         } catch (err) {
-            alert("Error al enviar el desafío.");
+            console.warn("Continuando al análisis de matches locales tras registrar desafío...", err);
         } finally {
             loader.style.display = 'none';
         }
+
+        // Ejecutar algoritmo de Matchmaking y mostrar resultados
+        mostrarPantallaMatches(empresa, contactoEmail, rubro, nivelRiesgo, titulo);
     });
+}
+
+function abrirModalDesafio() {
+    const form = document.getElementById('form-publicar-desafio');
+    const matchesView = document.getElementById('desafio-matches-container');
+    const title = document.getElementById('modal-desafio-title');
+
+    form.reset();
+    form.style.display = 'block';
+    matchesView.style.display = 'none';
+    title.innerText = 'Estructurador de Desafíos';
+    openModal('modal-publicar-desafio');
+}
+
+function mostrarPantallaMatches(empresa, contactoEmail, rubro, nivelRiesgo, tituloDesafio) {
+    const form = document.getElementById('form-publicar-desafio');
+    const matchesView = document.getElementById('desafio-matches-container');
+    const title = document.getElementById('modal-desafio-title');
+    const contenedorLista = document.getElementById('desafio-matches-lista');
+
+    form.style.display = 'none';
+    matchesView.style.display = 'block';
+    title.innerText = 'Matches & Soluciones del Ecosistema';
+
+    // Rango TRL según nivel de riesgo seleccionado
+    let minTrl = 1, maxTrl = 9;
+    if (nivelRiesgo.includes('1-3')) { minTrl = 1; maxTrl = 3; }
+    else if (nivelRiesgo.includes('4-6')) { minTrl = 4; maxTrl = 6; }
+    else if (nivelRiesgo.includes('7-9')) { minTrl = 7; maxTrl = 9; }
+
+    // Filtrar entidades que coincidan con la industria
+    const matchesMismaIndustria = startupsRegistry.filter(s => normalizar(s.industria) === normalizar(rubro));
+
+    // Ordenar: primero los que además caen dentro del rango TRL preferido
+    matchesMismaIndustria.sort((a, b) => {
+        const trlA = parseInt(a.trlMax) || 0;
+        const trlB = parseInt(b.trlMax) || 0;
+        const enRangoA = trlA >= minTrl && trlA <= maxTrl ? 1 : 0;
+        const enRangoB = trlB >= minTrl && trlB <= maxTrl ? 1 : 0;
+        return enRangoB - enRangoA;
+    });
+
+    contenedorLista.innerHTML = '';
+
+    if (matchesMismaIndustria.length === 0) {
+        contenedorLista.innerHTML = `
+            <div style="text-align: center; padding: 28px 16px; background: #f8fafc; border: 1px solid var(--border-color); border-radius: 10px;">
+                <i data-lucide="search-x" size="36" style="color: var(--cidere-blue); opacity: 0.5; margin-bottom: 8px;"></i>
+                <h4 style="font-size: 15px; color: var(--cidere-blue); font-weight: 700;">No hay matches públicos inmediatos en ${rubro}</h4>
+                <p style="font-size: 12.5px; color: var(--text-muted); max-width: 500px; margin: 4px auto 0; line-height: 1.5;">
+                    Tu desafío ha quedado guardado en la base de datos de la Mesa de Innovación. El equipo de articulación de CIDERE Biobío buscará capacidades complementarias con universidades y centros de I+D fuera del catálogo público y se pondrá en contacto contigo.
+                </p>
+            </div>
+        `;
+    } else {
+        matchesMismaIndustria.slice(0, 6).forEach(item => {
+            const trlVal = parseInt(item.trlMax) || 0;
+            const compatibleTrl = trlVal >= minTrl && trlVal <= maxTrl;
+            const badgeTipo = item.tipo === 'Startup' ? 'badge-green' : 'badge-blue';
+            const etiquetaTipo = item.tipo === 'Startup' ? 'STARTUP' : 'CAPACIDAD REGIONAL';
+
+            const card = document.createElement('div');
+            card.className = 'match-card-item';
+            card.innerHTML = `
+                <div style="flex: 1; min-width: 0;">
+                    <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 6px;">
+                        <span class="badge ${badgeTipo}">${etiquetaTipo}</span>
+                        <span class="badge badge-gray">TRL ${item.trlMax}</span>
+                        ${compatibleTrl ? '<span class="badge badge-green" style="background: #ecfdf5; color: #047857;">ALINEADO AL RIESGO</span>' : ''}
+                    </div>
+                    <div class="match-info-title">${item.nombre}</div>
+                    <div class="match-info-meta">
+                        ${item.institucion ? `<b>Institución:</b> ${item.institucion} &bull; ` : ''}
+                        <b>Industria:</b> ${item.industria}
+                    </div>
+                    <div class="match-info-desc">${item.queHace}</div>
+                </div>
+                <div style="flex-shrink: 0;">
+                    <button class="btn-primary btn-match-contacto" style="background-color: var(--cidere-green-bright); padding: 8px 16px; font-weight: 700; white-space: nowrap;">
+                        Solicitar Contacto
+                    </button>
+                </div>
+            `;
+
+            const btnContacto = card.querySelector('.btn-match-contacto');
+            btnContacto.addEventListener('click', async () => {
+                btnContacto.disabled = true;
+                btnContacto.innerText = 'Registrando...';
+
+                const fdContacto = new FormData();
+                fdContacto.append('tipoFormulario', 'Contacto');
+                fdContacto.append('solicitanteEmpresa', empresa);
+                fdContacto.append('solicitanteEmail', contactoEmail);
+                fdContacto.append('nombreStartup', item.nombre);
+                fdContacto.append('correoDestino', item.contacto || 'No disponible');
+                fdContacto.append('origen', `Match desde Desafío: ${tituloDesafio}`);
+
+                try {
+                    await postToAppsScript(fdContacto);
+                    btnContacto.style.backgroundColor = '#10b981';
+                    btnContacto.innerHTML = '<i data-lucide="check" size="14"></i> Contacto Solicitado';
+                    refreshIcons();
+                } catch (e) {
+                    btnContacto.disabled = false;
+                    btnContacto.innerText = 'Solicitar Contacto';
+                    alert("Error al registrar solicitud de contacto.");
+                }
+            });
+
+            contenedorLista.appendChild(card);
+        });
+    }
+
+    refreshIcons();
 }
 
 function abrirModalCapacidad(tipo) {
