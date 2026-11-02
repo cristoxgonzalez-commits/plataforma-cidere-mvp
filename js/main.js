@@ -159,7 +159,7 @@ function renderDesafios(desafios) {
                 <div>
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
                         <span class="badge badge-green" style="background: rgba(255,255,255,0.18); color: #ffffff;">INDUSTRIA</span>
-                        <span style="font-size: 11px; font-family: var(--font-mono); color: #01DCFF; letter-spacing: 0.5px; font-weight: 600;">CONVOCATORIA ACTIVA</span>
+                        <span style="font-size: 11px; font-family: var(--font-title); color: #01DCFF; letter-spacing: 0.6px; font-weight: 700;">CONVOCATORIA ACTIVA</span>
                     </div>
                     <h4 style="font-size: 16px; font-weight: 700; color: #01DCFF; margin-bottom: 12px; line-height: 1.35;">${d.titulo}</h4>
                     <p style="font-size: 13px; line-height: 1.6; opacity: 0.92; color: #ffffff; margin-bottom: 16px;">
@@ -167,7 +167,7 @@ function renderDesafios(desafios) {
                     </p>
                 </div>
                 <div style="border-top: 1px solid rgba(255,255,255,0.12); padding-top: 14px; display: flex; justify-content: flex-end;">
-                    <button class="btn-primary" style="background-color: var(--cidere-green-bright); padding: 6px 12px; font-size: 11.5px;" onclick="alert('Para postular una solución a este desafío, utiliza el canal de mensajería o solicita contacto directo con CIDERE Biobío.')">
+                    <button class="btn-primary" style="background-color: var(--cidere-green-bright); padding: 6px 12px; font-size: 11.5px;" onclick="alert('Para postular una solución a este desafío, utiliza la sección de Mensajería para contactar a CIDERE Biobío.')">
                         Postular Solución
                     </button>
                 </div>
@@ -222,7 +222,7 @@ function aplicarFiltrosCombine() {
     renderGrid('lista-startups', startups, 'STARTUP');
     document.getElementById('contador-startups').innerText = `Mostrando ${startups.length} de ${totalS} desarrollos en esta categoría`;
 
-    // IES
+    // Capacidades Regionales
     let ies = startupsRegistry.filter(s => s.tipo.toUpperCase() === 'IES');
     const totalI = ies.length;
     if (filtroIndustriaIESActual !== 'Todos') {
@@ -231,8 +231,8 @@ function aplicarFiltrosCombine() {
     if (q) {
         ies = ies.filter(s => normalizar(s.nombre).includes(q) || normalizar(s.queHace).includes(q) || normalizar(s.institucion).includes(q) || normalizar(s.industria).includes(q));
     }
-    renderGrid('lista-ies', ies, 'IES');
-    document.getElementById('contador-ies').innerText = `Mostrando ${ies.length} de ${totalI} capacidades académicas`;
+    renderGrid('lista-ies', ies, 'CAPACIDAD');
+    document.getElementById('contador-ies').innerText = `Mostrando ${ies.length} de ${totalI} capacidades regionales`;
 
     refreshIcons();
 }
@@ -280,7 +280,7 @@ function renderGrid(containerId, list, tipo) {
 
 function abrirFichaTecnica(item) {
     document.getElementById('ficha-nombre').innerText = item.nombre;
-    document.getElementById('ficha-tipo-badge').innerText = item.tipo.toUpperCase();
+    document.getElementById('ficha-tipo-badge').innerText = item.tipo === 'Startup' ? 'STARTUP' : 'CAPACIDAD REGIONAL';
     document.getElementById('ficha-institucion').innerText = item.institucion || (item.tipo === 'Startup' ? 'Emprendimiento Independiente' : 'No especificada');
     document.getElementById('ficha-que-hace').innerText = item.queHace || 'Sin información disponible';
     document.getElementById('ficha-como-hace').innerText = item.comoHace || 'Tecnología base en evaluación';
@@ -348,7 +348,7 @@ function initBuscadorSpotlight() {
 
             let html = '';
             if (resIES.length > 0) {
-                html += `<div class="search-group-title">Capacidades IES / Academias</div>`;
+                html += `<div class="search-group-title">Capacidades Regionales</div>`;
                 resIES.forEach(item => {
                     html += `
                         <div class="search-item" data-name="${item.nombre}" data-view="view-ies">
@@ -356,7 +356,7 @@ function initBuscadorSpotlight() {
                                 <div class="search-item-title">${item.nombre}</div>
                                 <div class="search-item-sub">${item.institucion ? item.institucion + ' • ' : ''}${item.queHace}</div>
                             </div>
-                            <span class="badge badge-blue">IES</span>
+                            <span class="badge badge-blue">CAPACIDAD</span>
                         </div>
                     `;
                 });
@@ -550,7 +550,7 @@ function abrirModalCapacidad(tipo) {
     const form = document.getElementById('form-registro-capacidad');
     form.reset();
     document.getElementById('reg-tipo').value = tipo;
-    document.getElementById('modal-form-titulo').innerText = tipo === 'IES' ? 'Registrar Capacidad IES / Academia' : 'Registrar Nueva Startup';
+    document.getElementById('modal-form-titulo').innerText = tipo === 'IES' ? 'Registrar Capacidad Regional' : 'Registrar Nueva Startup';
     document.getElementById('campo-institucion-container').style.display = tipo === 'IES' ? 'block' : 'none';
     openModal('modal-subir-capacidad');
 }
