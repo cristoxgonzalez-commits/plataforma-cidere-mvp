@@ -554,7 +554,7 @@ function initModalesFormularios() {
             loader.style.display = 'none';
         }
 
-        // Ejecutar algoritmo de Matchmaking y mostrar resultados
+        // Ejecutar algoritmo de Matchmaking acumulativo y mostrar resultados
         mostrarPantallaMatches(empresa, contactoEmail, rubro, nivelRiesgo, titulo, solicitanteNombre);
     });
 }
@@ -571,6 +571,7 @@ function abrirModalDesafio() {
     openModal('modal-publicar-desafio');
 }
 
+// ALGORITMO DE MATCHMAKING CON UMBRAL DE MADUREZ ACUMULATIVO
 function mostrarPantallaMatches(empresa, contactoEmail, rubro, nivelRiesgo, tituloDesafio, solicitanteNombre) {
     const form = document.getElementById('form-publicar-desafio');
     const matchesView = document.getElementById('desafio-matches-container');
@@ -581,51 +582,83 @@ function mostrarPantallaMatches(empresa, contactoEmail, rubro, nivelRiesgo, titu
     matchesView.style.display = 'block';
     title.innerText = 'Matches & Soluciones del Ecosistema';
 
-    // Rango TRL según nivel de riesgo seleccionado
-    let minTrl = 1, maxTrl = 9;
-    if (nivelRiesgo.includes('1-3')) { minTrl = 1; maxTrl = 3; }
-    else if (nivelRiesgo.includes('4-6')) { minTrl = 4; maxTrl = 6; }
-    else if (nivelRiesgo.includes('7-9')) { minTrl = 7; maxTrl = 9; }
+    // Regla de umbral mínimo permitido y rango objetivo preferente
+    let minTrlPermitido = 1;
+    let targetMin = 1, targetMax = 3;
 
-    // Filtrar entidades que coincidan con la industria
-    const matchesMismaIndustria = startupsRegistry.filter(s => normalizar(s.industria) === normalizar(rubro));
+    if (nivelRiesgo.includes('1-3')) {
+        // Riesgo Alto: Máxima tolerancia. Acepta todo el ecosistema (TRL 1 al 9).
+        minTrlPermitido = 1;
+        targetMin = 1;
+        targetMax = 3;
+    } else if (nivelRiesgo.includes('4-6')) {
+        // Riesgo Medio: Acepta TRL 4 al 9 (descarta I+D básica TRL 1-3).
+        minTrlPermitido = 4;
+        targetMin = 4;
+        targetMax = 6;
+    } else if (nivelRiesgo.includes('7-9')) {
+        // Riesgo Bajo: Solo acepta TRL 7 al 9 (descarta TRL 1-6).
+        minTrlPermitido = 7;
+        targetMin = 7;
+        targetMax = 9;
+    }
 
-    // Ordenar: primero los que caen dentro del rango TRL preferido
-    matchesMismaIndustria.sort((a, b) => {
-        const trlA = parseInt(a.trlMax) || 0;
-        const trlB = parseInt(b.trlMax) || 0;
-        const enRangoA = trlA >= minTrl && trlA <= maxTrl ? 1 : 0;
-        const enRangoB = trlB >= minTrl && trlB <= maxTrl ? 1 : 0;
-        return enRangoB - enRangoA;
+    // 1. Filtrar por coincidencia de rubro Y por umbral mínimo de madurez
+    const matchesValidos = startupsRegistry.filter(s => {
+        const coincideRubro = normalizar(s.industria) === normalizar(rubro);
+        const trlVal = parseInt(s.trlMax) || 1;
+        const cumpleUmbral = trlVal >= minTrlPermitido;
+        return coincideRubro && cumpleUmbral;
+    });
+
+    // 2. Ordenar: Primero los que calzan exactamente en el rango objetivo, luego por mayor madurez
+    matchesValidos.sort((a, b) => {
+        const trlA = parseInt(a.trlMax) || 1;
+        const trlB = parseInt(b.trlMax) || 1;
+        const exactoA = (trlA >= targetMin && trlA <= targetMax) ? 1 : 0;
+        const exactoB = (trlB >= targetMin && trlB <= targetMax) ? 1 : 0;
+
+        if (exactoA !== exactoB) {
+            return exactoB - exactoA;
+        }
+        return trlB - trlA; // A igual condición, mostrar primero las más maduras
     });
 
     contenedorLista.innerHTML = '';
 
-    if (matchesMismaIndustria.length === 0) {
+    if (matchesValidos.length === 0) {
         contenedorLista.innerHTML = `
             <div style="text-align: center; padding: 28px 16px; background: #f8fafc; border: 1px solid var(--border-color); border-radius: 10px;">
                 <i data-lucide="search-x" size="36" style="color: var(--cidere-blue); opacity: 0.5; margin-bottom: 8px;"></i>
-                <h4 style="font-size: 15px; color: var(--cidere-blue); font-weight: 700;">No hay matches públicos inmediatos en ${rubro}</h4>
+                <h4 style="font-size: 15px; color: var(--cidere-blue); font-weight: 700;">No hay matches inmediatos en ${rubro} con el nivel de madurez solicitado</h4>
                 <p style="font-size: 12.5px; color: var(--text-muted); max-width: 500px; margin: 4px auto 0; line-height: 1.5;">
-                    Tu desafío ha quedado guardado en la hoja Desafios_Postulados de la Mesa de Innovación. El equipo de CIDERE Biobío buscará capacidades complementarias con universidades y centros de I+D fuera del catálogo público y se pondrá en contacto contigo.
+                    Tu desafío ha quedado guardado en la hoja Desafios_Postulados de la Mesa de Innovación. El equipo de CIDERE Biobío iniciará la búsqueda de capacidades complementarias que cumplan con la tolerancia de riesgo requerida.
                 </p>
             </div>
         `;
     } else {
-        matchesMismaIndustria.slice(0, 6).forEach(item => {
-            const trlVal = parseInt(item.trlMax) || 0;
-            const compatibleTrl = trlVal >= minTrl && trlVal <= maxTrl;
+        matchesValidos.slice(0, 6).forEach(item => {
+            const trlVal = parseInt(item.trlMax) || 1;
+            const esExacto = trlVal >= targetMin && trlVal <= targetMax;
+            const esMayorMadurez = trlVal > targetMax;
             const badgeTipo = item.tipo === 'Startup' ? 'badge-green' : 'badge-blue';
             const etiquetaTipo = item.tipo === 'Startup' ? 'STARTUP' : 'CAPACIDAD REGIONAL';
+
+            let badgeRiesgoHtml = '';
+            if (esExacto) {
+                badgeRiesgoHtml = '<span class="badge badge-green" style="background: #ecfdf5; color: #047857;">ALINEADO AL RIESGO</span>';
+            } else if (esMayorMadurez) {
+                badgeRiesgoHtml = '<span class="badge badge-blue" style="background: #eff6ff; color: #1d4ed8;">MADUREZ SUPERIOR COMPATIBLE</span>';
+            }
 
             const card = document.createElement('div');
             card.className = 'match-card-item';
             card.innerHTML = `
                 <div style="flex: 1; min-width: 0;">
-                    <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 6px;">
+                    <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 6px; flex-wrap: wrap;">
                         <span class="badge ${badgeTipo}">${etiquetaTipo}</span>
                         <span class="badge badge-gray">TRL ${item.trlMax}</span>
-                        ${compatibleTrl ? '<span class="badge badge-green" style="background: #ecfdf5; color: #047857;">ALINEADO AL RIESGO</span>' : ''}
+                        ${badgeRiesgoHtml}
                     </div>
                     <div class="match-info-title">${item.nombre}</div>
                     <div class="match-info-meta">
