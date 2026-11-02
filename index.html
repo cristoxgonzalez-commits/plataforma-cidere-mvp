@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Plataforma CIDERE Biobío - MVP Interactivo</title>
     <!-- Fuentes Oficiales CIDERE Biobío -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Montserrat:wght@400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Montserrat:wght@400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Librerías CDN estándar -->
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -96,7 +96,7 @@
                     </div>
 
                     <div style="margin-top: 28px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.15);">
-                        <h4 style="font-size: 12px; font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 1px; color: #01DCFF; margin-bottom: 20px; text-align: center;">
+                        <h4 style="font-size: 12px; font-family: var(--font-title); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #01DCFF; margin-bottom: 20px; text-align: center;">
                             Directiva & Comité Ejecutivo de la Mesa
                         </h4>
                         
@@ -173,7 +173,7 @@
                             </a>
                         </div>
 
-                        <!-- Columna derecha: Grilla de Cifras 3x2 -->
+                        <!-- Columna derecha: Grilla de Cifras 3x2 Centradas -->
                         <div class="hero-stats-wrapper">
                             <div class="hero-stats-grid">
                                 <div class="hero-stat-card">
@@ -240,24 +240,20 @@
                     
                     <div class="card carrusel-card" style="padding: 20px; position: relative; height: 320px; display: flex; flex-direction: column; justify-content: space-between;">
                         <div id="carrusel-fotos" style="position: relative; width: 100%; height: 230px;">
-                            <!-- Diapositiva 1: Foto 1 y 2 -->
                             <div class="slide" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; gap: 14px; opacity: 1; transition: opacity 1.5s ease-in-out;">
                                 <img src="assets/foto1.jpg" alt="Actividad CIDERE" style="width: calc(50% - 7px); height: 100%; object-fit: cover; border-radius: 8px;">
                                 <img src="assets/foto2.jpg" alt="Actividad CIDERE" style="width: calc(50% - 7px); height: 100%; object-fit: cover; border-radius: 8px;">
                             </div>
-                            <!-- Diapositiva 2: Foto 3 y 4 -->
                             <div class="slide" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; gap: 14px; opacity: 0; transition: opacity 1.5s ease-in-out;">
                                 <img src="assets/foto3.jpg" alt="Actividad CIDERE" style="width: calc(50% - 7px); height: 100%; object-fit: cover; border-radius: 8px;">
                                 <img src="assets/foto4.jpg" alt="Actividad CIDERE" style="width: calc(50% - 7px); height: 100%; object-fit: cover; border-radius: 8px;">
                             </div>
-                            <!-- Diapositiva 3: Foto 5 y 6 -->
                             <div class="slide" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; gap: 14px; opacity: 0; transition: opacity 1.5s ease-in-out;">
                                 <img src="assets/foto5.jpg" alt="Actividad CIDERE" style="width: calc(50% - 7px); height: 100%; object-fit: cover; border-radius: 8px;">
                                 <img src="assets/foto6.png" alt="Actividad CIDERE" style="width: calc(50% - 7px); height: 100%; object-fit: cover; border-radius: 8px;">
                             </div>
                         </div>
                         
-                        <!-- Indicadores de 3 puntos -->
                         <div style="display: flex; justify-content: center; gap: 6px; margin-top: 16px;">
                             <div class="dot active" style="width: 8px; height: 8px; border-radius: 50%; background: var(--cidere-blue); transition: background 0.5s;"></div>
                             <div class="dot" style="width: 8px; height: 8px; border-radius: 50%; background: var(--border-color); transition: background 0.5s;"></div>
@@ -307,10 +303,10 @@
                     </div>
                     <div>
                         <div class="trl-gauge-card">
-                            <div style="font-size: 11px; font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 1px;">TRL Lineal Validado</div>
+                            <div style="font-size: 11px; font-family: var(--font-title); font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">TRL Lineal Validado</div>
                             <div class="trl-circle">
-                                <span id="trl-score-num" style="font-size: 38px; font-weight: 800;">1</span>
-                                <span id="trl-score-label" style="font-size: 9px; text-transform: uppercase; opacity: 0.8; text-align: center; padding: 0 4px;">INVESTIGACIÓN INICIAL</span>
+                                <span id="trl-score-num" style="font-size: 38px; font-weight: 800; font-family: var(--font-title);">1</span>
+                                <span id="trl-score-label" style="font-size: 9px; font-family: var(--font-title); font-weight: 700; text-transform: uppercase; opacity: 0.8; text-align: center; padding: 0 4px;">INVESTIGACIÓN INICIAL</span>
                             </div>
                         </div>
                     </div>
@@ -474,31 +470,31 @@
 
             <div style="background: #f8fafc; padding: 18px; border-radius: 10px; border: 1px solid var(--border-color); margin-bottom: 20px;">
                 <div style="margin-bottom: 14px;">
-                    <label style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; font-family: var(--font-mono);">¿Qué hacemos? / Capacidad:</label>
+                    <label style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; font-family: var(--font-title);">¿Qué hacemos? / Capacidad:</label>
                     <p id="ficha-que-hace" style="font-size: 13px; color: var(--text-main); margin-top: 3px; line-height: 1.5;">-</p>
                 </div>
                 <div style="margin-bottom: 14px;">
-                    <label style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; font-family: var(--font-mono);">Tecnología Base (¿Cómo lo hacemos?):</label>
+                    <label style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; font-family: var(--font-title);">Tecnología Base (¿Cómo lo hacemos?):</label>
                     <p id="ficha-como-hace" style="font-size: 13px; color: var(--text-main); margin-top: 3px; line-height: 1.5;">-</p>
                 </div>
                 <div style="display: flex; gap: 24px; flex-wrap: wrap; margin-top: 14px; padding-top: 12px; border-top: 1px solid #edf2f7;">
                     <div>
-                        <label style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; font-family: var(--font-mono);">Institución / Origen:</label>
+                        <label style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; font-family: var(--font-title);">Institución / Origen:</label>
                         <p id="ficha-institucion" style="font-size: 13px; font-weight: 600; color: var(--cidere-blue);">-</p>
                     </div>
                     <div>
-                        <label style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; font-family: var(--font-mono);">Industria:</label>
+                        <label style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; font-family: var(--font-title);">Industria:</label>
                         <p id="ficha-industria" style="font-size: 13px; font-weight: 600; color: var(--cidere-blue);">-</p>
                     </div>
                     <div>
-                        <label style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; font-family: var(--font-mono);">Contacto / OTL:</label>
+                        <label style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; font-family: var(--font-title);">Contacto / OTL:</label>
                         <p id="ficha-contacto" style="font-size: 13px; font-weight: 600;">-</p>
                     </div>
                 </div>
             </div>
 
             <div style="border: 1px solid var(--border-color); border-radius: 10px; padding: 16px; margin-bottom: 24px; text-align: center; background: white;">
-                <label style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; font-family: var(--font-mono);">Estado de Madurez Validado</label>
+                <label style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; font-family: var(--font-title);">Estado de Madurez Validado</label>
                 <div style="font-size: 22px; font-weight: 800; color: var(--cidere-blue); margin-top: 4px;" id="ficha-trl-val">TRL 1</div>
             </div>
 
