@@ -144,7 +144,7 @@ header { background-color: #ffffff; height: 64px; border-bottom: 1px solid var(-
 }
 
 /* ========================================================
-   BLOQUE INTRODUCTORIO HERO (AJUSTE DE ESCALA VISUAL)
+   BLOQUE INTRODUCTORIO HERO (INICIO)
    ======================================================== */
 .hero-intro-card {
     background: linear-gradient(135deg, #17386d 0%, #1d4f8f 48%, #0f766e 100%);
@@ -253,6 +253,29 @@ header { background-color: #ffffff; height: 64px; border-bottom: 1px solid var(-
     opacity: 0.92;
 }
 
+/* ========================================================
+   TARJETAS DE DESAFÍOS VIGENTES (DESAFÍOS INDUSTRIA)
+   ======================================================== */
+.desafio-card-dark {
+    background: linear-gradient(135deg, var(--cidere-blue-dark) 0%, #1a3b70 100%);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 12px;
+    padding: 24px;
+    color: #ffffff;
+    box-shadow: 0 4px 14px rgba(17, 40, 82, 0.08);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 220px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.desafio-card-dark:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 22px rgba(17, 40, 82, 0.16);
+    border-color: rgba(1, 220, 255, 0.45);
+}
+
 /* COMPONENTES REUTILIZABLES */
 .badge { font-family: var(--font-mono); font-size: 10px; padding: 3px 8px; border-radius: 4px; font-weight: 600; text-transform: uppercase; display: inline-block; }
 .badge-green { background: #d1fae5; color: #065f46; }
@@ -265,7 +288,7 @@ header { background-color: #ffffff; height: 64px; border-bottom: 1px solid var(-
 .btn-outline:hover { border-color: var(--cidere-blue); color: var(--cidere-blue); background: var(--cidere-blue-light); }
 
 .card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 24px; margin-bottom: 20px; }
-.grid-2 { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; }
+.grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
 .grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; align-items: stretch; }
 
 /* TARJETAS ESTANDARIZADAS COMPACTAS (330px) */
@@ -335,13 +358,6 @@ header { background-color: #ffffff; height: 64px; border-bottom: 1px solid var(-
 .trl-gauge-card { background: var(--cidere-blue-dark); color: white; border-radius: 12px; padding: 24px; text-align: center; position: sticky; top: 80px; }
 .trl-circle { width: 120px; height: 120px; border-radius: 50%; border: 8px solid var(--cidere-green-bright); display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 20px auto; }
 
-.rubro-card { border: 1px solid var(--border-color); border-radius: 8px; padding: 20px; text-align: center; cursor: pointer; transition: all 0.2s; background: white; }
-.rubro-card:hover, .rubro-card.selected { border-color: var(--cidere-blue); background-color: #f8fafc; box-shadow: 0 2px 8px rgba(60, 99, 173, 0.1); }
-.rubro-card.selected { border-width: 2px; }
-
-textarea, input[type="text"], input[type="email"], select { width: 100%; border: 1px solid var(--border-color); border-radius: 8px; padding: 10px 12px; font-family: inherit; font-size: 12.5px; outline: none; background: #fff; }
-textarea:focus, input:focus, select:focus { border-color: var(--cidere-blue); }
-
 /* FOOTER BANNER */
 .footer-banner { background-color: var(--cidere-blue-dark); color: white; border-radius: 12px; padding: 24px 32px; display: flex; align-items: center; justify-content: space-between; margin-top: 30px; }
 .metric-group { display: flex; gap: 40px; }
@@ -403,7 +419,7 @@ textarea:focus, input:focus, select:focus { border-color: var(--cidere-blue); }
 
 /* REGLAS RESPONSIVE */
 @media (max-width: 992px) {
-    .grid-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid-2, .grid-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .hero-intro-grid { grid-template-columns: 1fr; gap: 28px; }
 }
 
