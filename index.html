@@ -18,7 +18,7 @@
 
     <div id="sidebar-overlay" class="sidebar-overlay"></div>
 
-    <!-- BARRA LATERAL -->
+    <!-- BARRA LATERAL (ORDEN DE NAVEGACIÓN ACTUALIZADO) -->
     <aside id="main-sidebar">
         <div>
             <div class="brand">
@@ -32,14 +32,14 @@
                 <li class="nav-item" data-view="view-repositorio">
                     <i data-lucide="rocket"></i> Startups Regionales
                 </li>
-                <li class="nav-item" data-view="view-ficha">
-                    <i data-lucide="file-text"></i> Diagnóstico TRL
+                <li class="nav-item" data-view="view-ies">
+                    <i data-lucide="graduation-cap"></i> Capacidades Regionales
                 </li>
                 <li class="nav-item" data-view="view-desafio">
                     <i data-lucide="factory"></i> Desafíos Industria
                 </li>
-                <li class="nav-item" data-view="view-ies">
-                    <i data-lucide="graduation-cap"></i> IES / Academias
+                <li class="nav-item" data-view="view-ficha">
+                    <i data-lucide="file-text"></i> Diagnóstico TRL
                 </li>
                 <li class="nav-item" data-view="view-mensajeria">
                     <i data-lucide="message-square"></i> Mensajería
@@ -60,7 +60,7 @@
                 </button>
                 <div class="search-bar">
                     <i data-lucide="search" size="16" style="color: var(--text-muted)"></i>
-                    <input type="text" id="buscador-global" placeholder="Buscar startups, IES, desafíos, tecnologías..." autocomplete="off">
+                    <input type="text" id="buscador-global" placeholder="Buscar startups, capacidades, desafíos, tecnologías..." autocomplete="off">
                     <div id="search-dropdown-results" class="search-dropdown"></div>
                 </div>
             </div>
@@ -152,7 +152,7 @@
                 </div>
             </section>
 
-            <!-- VISTA: DASHBOARD -->
+            <!-- 1. VISTA: INICIO / DASHBOARD -->
             <section id="view-dashboard" class="view-section active">
                 
                 <!-- BLOQUE DE INTRODUCCIÓN HERO -->
@@ -173,7 +173,7 @@
                             </a>
                         </div>
 
-                        <!-- Columna derecha: Grilla de Cifras 3x2 Centradas -->
+                        <!-- Columna derecha: Grilla de Cifras 3x2 -->
                         <div class="hero-stats-wrapper">
                             <div class="hero-stats-grid">
                                 <div class="hero-stat-card">
@@ -231,7 +231,7 @@
                     </div>
                 </div>
 
-                <!-- GALERÍA CIDERE BIOBÍO (6 FOTOS ROTATIVAS EN 3 DIAPOSITIVAS) -->
+                <!-- GALERÍA CIDERE BIOBÍO -->
                 <div>
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
                         <h3 style="font-size: 16px; color: var(--cidere-blue);">Galería CIDERE Biobío</h3>
@@ -263,11 +263,11 @@
                 </div>
             </section>
 
-            <!-- VISTA: REPOSITORIO STARTUPS -->
+            <!-- 2. VISTA: STARTUPS REGIONALES -->
             <section id="view-repositorio" class="view-section">
                 <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px;">
                     <div>
-                        <h1 style="font-size: 24px; font-weight: 800; color: var(--cidere-blue);">Startups y Desarrollos Regionales</h1>
+                        <h1 style="font-size: 24px; font-weight: 800; color: var(--cidere-blue);">Startups Regionales</h1>
                         <p style="color: var(--text-muted); font-size: 13px; margin-top: 4px;">Plataforma centralizada gestionada por CIDERE Biobío para proyectos de I+D y Startups.</p>
                     </div>
                     <button class="btn-primary" style="background-color: var(--cidere-green-bright);" id="btn-subir-startup">
@@ -280,40 +280,25 @@
                 <div id="lista-startups" class="grid-3"></div>
             </section>
 
-            <!-- VISTA: DIAGNÓSTICO TRL -->
-            <section id="view-ficha" class="view-section">
-                <div style="margin-bottom: 16px;">
-                    <span class="badge badge-green">MEDICIÓN Y EVIDENCIAS DE MADUREZ</span>
-                    <h1 style="font-size: 24px; font-weight: 800; color: var(--cidere-blue); margin-top: 4px;">Evaluación Lineal TRL (Nivel 1 al 9)</h1>
+            <!-- 3. VISTA: CAPACIDADES REGIONALES -->
+            <section id="view-ies" class="view-section">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px;">
+                    <div>
+                        <span class="badge badge-blue" style="margin-bottom: 6px;">OFERTA TECNOLÓGICA REGIONAL</span>
+                        <h1 style="font-size: 24px; font-weight: 800; color: var(--cidere-blue);">Capacidades Regionales</h1>
+                        <p style="color: var(--text-muted); font-size: 13px; margin-top: 4px;">Instituciones de educación superior, centros tecnológicos y de I+D presentes en la región del Biobío.</p>
+                    </div>
+                    <button class="btn-primary" style="background-color: var(--cidere-blue);" id="btn-subir-ies">
+                        <i data-lucide="plus-circle" size="16"></i> Registrar Capacidad
+                    </button>
                 </div>
 
-                <div class="card" style="margin-bottom: 24px;">
-                    <label style="font-size: 13px; font-weight: 600; display: block; margin-bottom: 8px; font-family: var(--font-title);">Seleccionar Startup/IES (Aprobada) para Evaluación:</label>
-                    <select id="select-empresa-trl">
-                        <option value="">-- Seleccione un proyecto registrado --</option>
-                    </select>
-                </div>
-
-                <div class="grid-2">
-                    <div>
-                        <div class="card">
-                            <h3 id="trl-empresa-titulo-lineal" style="font-size: 16px; margin-bottom: 4px; color: var(--cidere-blue);">Seleccione un Proyecto</h3>
-                            <div id="cuestionario-lineal-container"></div>
-                        </div>
-                    </div>
-                    <div>
-                        <div class="trl-gauge-card">
-                            <div style="font-size: 11px; font-family: var(--font-title); font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">TRL Lineal Validado</div>
-                            <div class="trl-circle">
-                                <span id="trl-score-num" style="font-size: 38px; font-weight: 800; font-family: var(--font-title);">1</span>
-                                <span id="trl-score-label" style="font-size: 9px; font-family: var(--font-title); font-weight: 700; text-transform: uppercase; opacity: 0.8; text-align: center; padding: 0 4px;">INVESTIGACIÓN INICIAL</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <div id="filtros-ies" style="display: flex; gap: 10px; margin-bottom: 16px; overflow-x: auto; padding-bottom: 8px;"></div>
+                <div id="contador-ies" class="results-counter">Cargando capacidades regionales...</div>
+                <div id="lista-ies" class="grid-3"></div>
             </section>
 
-            <!-- VISTA: DESAFÍOS INDUSTRIA -->
+            <!-- 4. VISTA: DESAFÍOS INDUSTRIA -->
             <section id="view-desafio" class="view-section">
                 <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px;">
                     <div>
@@ -326,7 +311,7 @@
                     </button>
                 </div>
 
-                <!-- SUBSECCIÓN 1: DESAFÍOS VIGENTES DE LA MESA -->
+                <!-- SUBSECCIÓN 1: DESAFÍOS VIGENTES -->
                 <div style="margin-bottom: 36px;">
                     <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 16px;">
                         <i data-lucide="factory" size="20" style="color: var(--cidere-blue);"></i>
@@ -366,21 +351,73 @@
                 </div>
             </section>
 
-            <!-- VISTA: IES / ACADEMIAS -->
-            <section id="view-ies" class="view-section">
-                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px;">
-                    <div>
-                        <span class="badge badge-blue" style="margin-bottom: 6px;">OFERTA TECNOLÓGICA ACADÉMICA</span>
-                        <h1 style="font-size: 24px; font-weight: 800; color: var(--cidere-blue);">Instituciones de Educación Superior (IES / Academias)</h1>
-                    </div>
-                    <button class="btn-primary" style="background-color: var(--cidere-blue);" id="btn-subir-ies">
-                        <i data-lucide="plus-circle" size="16"></i> Registrar Capacidad IES
-                    </button>
+            <!-- 5. VISTA: DIAGNÓSTICO TRL (REUBICADA AL FINAL) -->
+            <section id="view-ficha" class="view-section">
+                <div style="margin-bottom: 16px;">
+                    <span class="badge badge-green">MEDICIÓN Y EVIDENCIAS DE MADUREZ</span>
+                    <h1 style="font-size: 24px; font-weight: 800; color: var(--cidere-blue); margin-top: 4px;">Evaluación Lineal TRL (Nivel 1 al 9)</h1>
                 </div>
 
-                <div id="filtros-ies" style="display: flex; gap: 10px; margin-bottom: 16px; overflow-x: auto; padding-bottom: 8px;"></div>
-                <div id="contador-ies" class="results-counter">Cargando capacidades académicas...</div>
-                <div id="lista-ies" class="grid-3"></div>
+                <div class="card" style="margin-bottom: 24px;">
+                    <label style="font-size: 13px; font-weight: 600; display: block; margin-bottom: 8px; font-family: var(--font-title);">Seleccionar Startup / Capacidad (Aprobada) para Evaluación:</label>
+                    <select id="select-empresa-trl">
+                        <option value="">-- Seleccione un proyecto registrado --</option>
+                    </select>
+                </div>
+
+                <div class="grid-2">
+                    <div>
+                        <div class="card">
+                            <h3 id="trl-empresa-titulo-lineal" style="font-size: 16px; margin-bottom: 4px; color: var(--cidere-blue);">Seleccione un Proyecto</h3>
+                            <div id="cuestionario-lineal-container"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="trl-gauge-card">
+                            <div style="font-size: 11px; font-family: var(--font-title); font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">TRL Lineal Validado</div>
+                            <div class="trl-circle">
+                                <span id="trl-score-num" style="font-size: 38px; font-weight: 800; font-family: var(--font-title);">1</span>
+                                <span id="trl-score-label" style="font-size: 9px; font-family: var(--font-title); font-weight: 700; text-transform: uppercase; opacity: 0.8; text-align: center; padding: 0 4px;">INVESTIGACIÓN INICIAL</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 6. VISTA: MENSAJERÍA (CON OPCIÓN DE CONTACTO DIRECTO) -->
+            <section id="view-mensajeria" class="view-section">
+                <div style="margin-bottom: 24px;">
+                    <span class="badge badge-blue" style="margin-bottom: 6px;">VINCULACIÓN REGIONAL</span>
+                    <h1 style="font-size: 24px; font-weight: 800; color: var(--cidere-blue);">Mensajería y Contacto</h1>
+                    <p style="color: var(--text-muted); font-size: 13px; margin-top: 4px;">Canal de comunicación entre Empresas, Startups, Centros de I+D y el equipo facilitador de CIDERE Biobío.</p>
+                </div>
+
+                <!-- BLOQUE DESTACADO: CONTÁCTATE CON NOSOTROS -->
+                <div class="card" style="text-align: center; padding: 42px 28px; margin-bottom: 24px; border: 1px solid var(--border-color); background: #ffffff;">
+                    <div style="width: 58px; height: 58px; border-radius: 50%; background: var(--cidere-blue-light); color: var(--cidere-blue); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;">
+                        <i data-lucide="mail" size="28"></i>
+                    </div>
+                    <h2 style="font-size: 20px; font-weight: 800; color: var(--cidere-blue); margin-bottom: 8px;">¿Tienes alguna consulta o requerimiento específico?</h2>
+                    <p style="font-size: 13.5px; color: var(--text-muted); max-width: 620px; margin: 0 auto 24px; line-height: 1.6;">
+                        El equipo de CIDERE Biobío está a tu disposición para orientarte en la postulación de desafíos, conectarte con capacidades tecnológicas de la región o responder dudas operativas.
+                    </p>
+                    <div>
+                        <a href="mailto:innovacion@ciderebiobio.cl?subject=Consulta%20Plataforma%20de%20Capacidades%20Regionales%20CIDERE" class="btn-primary" style="background-color: var(--cidere-green-bright); padding: 12px 26px; font-size: 13px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; font-weight: 700;">
+                            <i data-lucide="send" size="16"></i> Contáctate con nosotros
+                        </a>
+                    </div>
+                    <div style="margin-top: 14px; font-size: 12.5px; color: var(--text-muted);">
+                        Correo oficial: <a href="mailto:innovacion@ciderebiobio.cl" style="color: var(--cidere-blue); font-weight: 700; text-decoration: none;">innovacion@ciderebiobio.cl</a>
+                    </div>
+                </div>
+
+                <div class="card" style="text-align: center; padding: 28px; background: #f8fafc;">
+                    <i data-lucide="message-square" size="32" style="color: var(--cidere-blue); opacity: 0.45; margin-bottom: 8px;"></i>
+                    <h3 style="font-size: 15px; font-weight: 700; color: var(--cidere-blue);">Historial de Solicitudes Conectado</h3>
+                    <p style="font-size: 12.5px; color: var(--text-muted); margin-top: 4px; max-width: 600px; margin-left: auto; margin-right: auto;">
+                        Las solicitudes de vinculación realizadas desde las fichas técnicas son notificadas automáticamente al equipo de articulación y a los responsables de cada tecnología.
+                    </p>
+                </div>
             </section>
 
             <!-- VISTA: RECURSOS -->
@@ -418,17 +455,6 @@
                     <p style="font-size: 12px; color: var(--text-muted); margin-top: 4px; max-width: 500px; margin-left: auto; margin-right: auto;">
                         Las próximas sesiones de profundización de desafíos, webinars y reuniones se publicarán en este espacio.
                     </p>
-                </div>
-            </section>
-
-            <!-- VISTA: MENSAJERÍA -->
-            <section id="view-mensajeria" class="view-section">
-                <h1 style="font-size: 24px; font-weight: 800; color: var(--cidere-blue); margin-bottom: 8px;">Mensajería y Enlaces</h1>
-                <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 24px;">Bandeja de comunicación directa entre Empresas, Startups e IES.</p>
-                <div class="card" style="text-align: center; padding: 40px;">
-                    <i data-lucide="message-square" size="48" style="color: var(--cidere-blue); opacity: 0.4; margin-bottom: 12px;"></i>
-                    <h3 style="font-size: 16px;">Historial de Solicitudes Conectado</h3>
-                    <p style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">Los correos enviados a través de "Contacto" son notificados a la OTL y a CIDERE automáticamente.</p>
                 </div>
             </section>
             
@@ -518,7 +544,7 @@
                     <label style="font-size: 12px; font-weight: 600; display: block; margin-bottom: 4px;">Tipo de Entidad:</label>
                     <select id="reg-tipo" required>
                         <option value="Startup">Startup / Empresa de Base Tecnológica</option>
-                        <option value="IES">IES / Institución de Educación Superior</option>
+                        <option value="IES">Capacidad Regional (IES / Centro de I+D)</option>
                     </select>
                 </div>
 
@@ -656,11 +682,11 @@
                     </div>
                     <div style="margin-bottom: 12px;">
                         <label style="font-size: 12px; font-weight: 600; color: var(--cidere-blue); display: block; margin-bottom: 4px;">2. Impacto:</label>
-                        <textarea id="des-impacto" required style="height: 60px;" placeholder="¿Qué beneficio cuantitativo o cualitativo esperan?"></textarea>
+                        <textarea id="des-impacto" required style="height: 50px;" placeholder="¿Qué beneficio cuantitativo o cualitativo esperan?"></textarea>
                     </div>
                     <div>
                         <label style="font-size: 12px; font-weight: 600; color: var(--cidere-blue); display: block; margin-bottom: 4px;">3. Restricciones:</label>
-                        <textarea id="des-restricciones" required style="height: 60px;" placeholder="Presupuesto, normativas, tiempos o condiciones operativas"></textarea>
+                        <textarea id="des-restricciones" required style="height: 50px;" placeholder="Presupuesto, normativas, tiempos o condiciones operativas"></textarea>
                     </div>
                 </div>
 
