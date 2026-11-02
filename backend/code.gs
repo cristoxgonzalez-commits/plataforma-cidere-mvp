@@ -41,9 +41,11 @@ function doPost(e) {
       return ContentService.createTextOutput("Capacidad registrada exitosamente").setMimeType(ContentService.MimeType.TEXT);
     }
     
-    // 2. REGISTRO DE DESAFÍOS
+    // 2. REGISTRO DE DESAFÍOS (CON NIVEL DE RIESGO)
     if (tipoFormulario === 'Desafio') {
       var sheetDesafios = doc.getSheetByName('Desafios Mesa Innovacion') || doc.getSheetByName('Desafios_Postulados') || doc.insertSheet('Desafios_Postulados');
+      var nivelRiesgo = e.parameter.nivelRiesgo ? e.parameter.nivelRiesgo.trim() : "No especificado";
+      
       sheetDesafios.appendRow([
         new Date(),
         e.parameter.empresa ? e.parameter.empresa.trim() : "",
@@ -52,6 +54,7 @@ function doPost(e) {
         e.parameter.rubro ? e.parameter.rubro.trim() : "",
         e.parameter.titulo ? e.parameter.titulo.trim() : "",
         e.parameter.descripcion ? e.parameter.descripcion.trim() : "",
+        nivelRiesgo,
         "Pendiente"
       ]);
       
