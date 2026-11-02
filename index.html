@@ -173,7 +173,7 @@
                             </a>
                         </div>
 
-                        <!-- Columna derecha: Grilla de Cifras 3x2 con Mayúsculas Formales -->
+                        <!-- Columna derecha: Grilla de Cifras 3x2 -->
                         <div class="hero-stats-wrapper">
                             <div class="hero-stats-grid">
                                 <div class="hero-stat-card">
@@ -231,38 +231,28 @@
                     </div>
                 </div>
 
-                <div class="grid-2">
-                    <div>
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                            <h3 style="font-size: 16px; color: var(--cidere-blue);">Galería CIDERE Biobío</h3>
-                            <span style="color: var(--text-muted); font-size: 12px; font-weight: 500;">Actividades de la Mesa</span>
+                <!-- GALERÍA CIDERE BIOBÍO (ANCHO COMPLETO EN INICIO) -->
+                <div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                        <h3 style="font-size: 16px; color: var(--cidere-blue);">Galería CIDERE Biobío</h3>
+                        <span style="color: var(--text-muted); font-size: 12px; font-weight: 500;">Actividades de la Mesa de Innovación</span>
+                    </div>
+                    
+                    <div class="card carrusel-card" style="padding: 20px; position: relative; height: 320px; display: flex; flex-direction: column; justify-content: space-between;">
+                        <div id="carrusel-fotos" style="position: relative; width: 100%; height: 230px;">
+                            <div class="slide" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; gap: 14px; opacity: 1; transition: opacity 1.5s ease-in-out;">
+                                <img src="assets/foto1.jpg" alt="Actividad CIDERE" style="width: calc(50% - 7px); height: 100%; object-fit: cover; border-radius: 8px;">
+                                <img src="assets/foto2.jpg" alt="Actividad CIDERE" style="width: calc(50% - 7px); height: 100%; object-fit: cover; border-radius: 8px;">
+                            </div>
+                            <div class="slide" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; gap: 14px; opacity: 0; transition: opacity 1.5s ease-in-out;">
+                                <img src="assets/foto3.jpg" alt="Actividad CIDERE" style="width: calc(50% - 7px); height: 100%; object-fit: cover; border-radius: 8px;">
+                                <img src="assets/foto4.jpg" alt="Actividad CIDERE" style="width: calc(50% - 7px); height: 100%; object-fit: cover; border-radius: 8px;">
+                            </div>
                         </div>
                         
-                        <div class="card carrusel-card" style="padding: 20px; position: relative; height: 310px; display: flex; flex-direction: column; justify-content: space-between;">
-                            <div id="carrusel-fotos" style="position: relative; width: 100%; height: 220px;">
-                                <div class="slide" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; gap: 12px; opacity: 1; transition: opacity 1.5s ease-in-out;">
-                                    <img src="assets/foto1.jpg" alt="Actividad CIDERE" style="width: calc(50% - 6px); height: 100%; object-fit: cover; border-radius: 8px;">
-                                    <img src="assets/foto2.jpg" alt="Actividad CIDERE" style="width: calc(50% - 6px); height: 100%; object-fit: cover; border-radius: 8px;">
-                                </div>
-                                <div class="slide" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; gap: 12px; opacity: 0; transition: opacity 1.5s ease-in-out;">
-                                    <img src="assets/foto3.jpg" alt="Actividad CIDERE" style="width: calc(50% - 6px); height: 100%; object-fit: cover; border-radius: 8px;">
-                                    <img src="assets/foto4.jpg" alt="Actividad CIDERE" style="width: calc(50% - 6px); height: 100%; object-fit: cover; border-radius: 8px;">
-                                </div>
-                            </div>
-                            
-                            <div style="display: flex; justify-content: center; gap: 6px; margin-top: 16px;">
-                                <div class="dot active" style="width: 8px; height: 8px; border-radius: 50%; background: var(--cidere-blue); transition: background 0.5s;"></div>
-                                <div class="dot" style="width: 8px; height: 8px; border-radius: 50%; background: var(--border-color); transition: background 0.5s;"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div>
-                        <div class="card" style="background: var(--cidere-blue-dark); color: white;">
-                            <h3 style="font-size: 15px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; font-family: var(--font-title);">
-                                <i data-lucide="factory" size="18" style="color: #01DCFF;"></i> Desafíos de la Región
-                            </h3>
-                            <div id="lista-desafios-dashboard"></div>
+                        <div style="display: flex; justify-content: center; gap: 6px; margin-top: 16px;">
+                            <div class="dot active" style="width: 8px; height: 8px; border-radius: 50%; background: var(--cidere-blue); transition: background 0.5s;"></div>
+                            <div class="dot" style="width: 8px; height: 8px; border-radius: 50%; background: var(--border-color); transition: background 0.5s;"></div>
                         </div>
                     </div>
                 </div>
@@ -318,41 +308,56 @@
                 </div>
             </section>
 
-            <!-- VISTA: DESAFÍOS INDUSTRIA -->
+            <!-- VISTA: DESAFÍOS INDUSTRIA (REESTRUCTURADA CON DESAFÍOS VIGENTES Y RESUELTOS) -->
             <section id="view-desafio" class="view-section">
-                <div style="margin-bottom: 20px;">
-                    <span class="badge badge-green" style="margin-bottom: 6px;">DESAFÍOS REGIONALES</span>
-                    <h1 style="font-size: 24px; font-weight: 800; color: var(--cidere-blue);">Planteamiento de Desafío Biobío</h1>
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px;">
+                    <div>
+                        <span class="badge badge-green" style="margin-bottom: 6px;">ECOSISTEMA DE INNOVACIÓN ABIERTA</span>
+                        <h1 style="font-size: 24px; font-weight: 800; color: var(--cidere-blue);">Desafíos de Innovación de la Industria</h1>
+                        <p style="color: var(--text-muted); font-size: 13px; margin-top: 4px;">Problemáticas reales de empresas socias de CIDERE Biobío canalizadas para su resolución conjunta con el ecosistema de I+D y startups.</p>
+                    </div>
+                    <button class="btn-primary" id="btn-desafios-publicar">
+                        <i data-lucide="plus"></i> Publicar Nuevo Desafío
+                    </button>
                 </div>
 
-                <div class="card">
-                    <h3 style="font-size: 14px; margin-bottom: 12px; color: var(--cidere-blue);">Rubro de la Empresa</h3>
-                    
-                    <div id="rubros-desafio-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px;">
-                        <div class="rubro-card selected" data-rubro="Agroindustria"><div style="font-size: 13px; font-weight: 600;">Agroindustria</div></div>
-                        <div class="rubro-card" data-rubro="Manufactura"><div style="font-size: 13px; font-weight: 600;">Manufactura</div></div>
-                        <div class="rubro-card" data-rubro="Energía"><div style="font-size: 13px; font-weight: 600;">Energía</div></div>
-                        <div class="rubro-card" data-rubro="Logística"><div style="font-size: 13px; font-weight: 600;">Logística</div></div>
-                        <div class="rubro-card" data-rubro="Agua y Sanitario"><div style="font-size: 13px; font-weight: 600;">Agua y Sanitario</div></div>
-                        <div class="rubro-card" data-rubro="Alimentos"><div style="font-size: 13px; font-weight: 600;">Alimentos</div></div>
-                        <div class="rubro-card" data-rubro="Salud"><div style="font-size: 13px; font-weight: 600;">Salud</div></div>
-                        <div class="rubro-card" data-rubro="Forestal"><div style="font-size: 13px; font-weight: 600;">Forestal</div></div>
-                        <div class="rubro-card" data-rubro="Minería"><div style="font-size: 13px; font-weight: 600;">Minería</div></div>
+                <!-- SUBSECCIÓN 1: DESAFÍOS VIGENTES DE LA MESA -->
+                <div style="margin-bottom: 36px;">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 16px;">
+                        <i data-lucide="factory" size="20" style="color: var(--cidere-blue);"></i>
+                        <h2 style="font-size: 18px; font-weight: 700; color: var(--cidere-blue);">Desafíos de la Mesa de Innovación (Vigentes)</h2>
+                        <span class="badge badge-blue">EN CONVOCATORIA</span>
                     </div>
 
-                    <h3 style="font-size: 14px; margin-bottom: 8px; color: var(--cidere-blue);">Descripción del Desafío</h3>
-                    <textarea id="input-descripcion-desafio" placeholder="Describe tu necesidad aquí..."></textarea>
-
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border-color);">
-                        <button class="btn-primary" style="background-color: var(--cidere-blue); padding: 12px 24px;" id="btn-encontrar-soluciones">
-                            Encontrar Soluciones
-                        </button>
+                    <div id="lista-desafios-vigentes" class="grid-2">
+                        <p style="font-size: 13px; color: var(--text-muted);">Cargando desafíos activos...</p>
                     </div>
                 </div>
 
-                <div id="resultado-soluciones-ejemplo" class="card" style="display: none; background: #f0fdf4; border-color: var(--cidere-green-bright);">
-                    <h3 style="font-size: 15px; color: var(--cidere-green-bright); margin-bottom: 8px;">Soluciones Identificadas en el Ecosistema</h3>
-                    <p style="font-size: 13px; color: var(--text-main);" id="texto-solucion-generada">Cargando sugerencia...</p>
+                <!-- SUBSECCIÓN 2: DESAFÍOS RESUELTOS -->
+                <div>
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 16px;">
+                        <i data-lucide="check-circle-2" size="20" style="color: var(--cidere-green-bright);"></i>
+                        <h2 style="font-size: 18px; font-weight: 700; color: var(--cidere-blue);">Desafíos Resueltos & Casos de Éxito</h2>
+                        <span class="badge badge-green">SOLUCIONES IMPLEMENTADAS</span>
+                    </div>
+
+                    <div class="card" style="border: 2px dashed #cbd5e1; background: #ffffff; padding: 36px 28px; text-align: center; border-radius: 12px;">
+                        <div style="width: 56px; height: 56px; border-radius: 50%; background: var(--cidere-blue-light); color: var(--cidere-blue); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;">
+                            <i data-lucide="sparkles" size="28"></i>
+                        </div>
+                        <h3 style="font-size: 17px; font-weight: 700; color: var(--cidere-blue); margin-bottom: 8px;">Espacio de Síntesis y Casos de Éxito en Preparación</h3>
+                        <p style="font-size: 13px; color: var(--text-muted); max-width: 680px; margin: 0 auto 20px; line-height: 1.6;">
+                            En este espacio se publicará la memoria y síntesis de los desafíos resueltos por las empresas socias junto a startups y universidades regionales: qué problemática productiva se abordó, cuál fue la solución tecnológica implementada y el impacto obtenido en la operación.
+                        </p>
+                        <div style="display: inline-flex; gap: 12px; font-size: 12px; font-weight: 600; color: var(--cidere-blue); background: #f8fafc; padding: 10px 18px; border-radius: 20px; border: 1px solid var(--border-color); flex-wrap: wrap; justify-content: center;">
+                            <span><i data-lucide="building" size="14" style="vertical-align: middle;"></i> Empresa Solicitante</span>
+                            <span>&bull;</span>
+                            <span><i data-lucide="cpu" size="14" style="vertical-align: middle;"></i> Tecnología Transferida</span>
+                            <span>&bull;</span>
+                            <span><i data-lucide="trending-up" size="14" style="vertical-align: middle;"></i> Impacto Regional</span>
+                        </div>
+                    </div>
                 </div>
             </section>
 
@@ -368,7 +373,7 @@
                     </button>
                 </div>
 
-                <div id="filtros-ies" style="display: gap: 10px; margin-bottom: 16px; overflow-x: auto; padding-bottom: 8px;"></div>
+                <div id="filtros-ies" style="display: flex; gap: 10px; margin-bottom: 16px; overflow-x: auto; padding-bottom: 8px;"></div>
                 <div id="contador-ies" class="results-counter">Cargando capacidades académicas...</div>
                 <div id="lista-ies" class="grid-3"></div>
             </section>
