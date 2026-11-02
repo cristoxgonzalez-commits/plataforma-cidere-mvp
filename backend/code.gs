@@ -41,29 +41,32 @@ function doPost(e) {
       return ContentService.createTextOutput("Capacidad registrada exitosamente").setMimeType(ContentService.MimeType.TEXT);
     }
     
-    // 2. REGISTRO DE DESAFÍOS (CON NIVEL DE RIESGO)
+    // 2. REGISTRO EXCLUSIVO EN LA HOJA 'Desafios_Postulados'
     if (tipoFormulario === 'Desafio') {
-      var sheetDesafios = doc.getSheetByName('Desafios Mesa Innovacion') || doc.getSheetByName('Desafios_Postulados') || doc.insertSheet('Desafios_Postulados');
+      var sheetDesafios = doc.getSheetByName('Desafios_Postulados') || doc.insertSheet('Desafios_Postulados');
       var nivelRiesgo = e.parameter.nivelRiesgo ? e.parameter.nivelRiesgo.trim() : "No especificado";
+      var solicitanteNombre = e.parameter.solicitanteNombre ? e.parameter.solicitanteNombre.trim() : "No especificado";
       
       sheetDesafios.appendRow([
         new Date(),
+        solicitanteNombre,
         e.parameter.empresa ? e.parameter.empresa.trim() : "",
         e.parameter.contactoEmail ? e.parameter.contactoEmail.trim() : "",
         "Empresa",
         e.parameter.rubro ? e.parameter.rubro.trim() : "",
+        nivelRiesgo,
         e.parameter.titulo ? e.parameter.titulo.trim() : "",
         e.parameter.descripcion ? e.parameter.descripcion.trim() : "",
-        nivelRiesgo,
         "Pendiente"
       ]);
       
       return ContentService.createTextOutput("Desafío registrado exitosamente").setMimeType(ContentService.MimeType.TEXT);
     }
 
-    // 3. REGISTRO DE CONTACTO / CRM (CON ASOCIACIÓN DE EMPRESA Y ORIGEN)
+    // 3. REGISTRO EN 'Historial_Contactos'
     if (tipoFormulario === 'Contacto') {
       var sheetContacto = doc.getSheetByName('Historial_Contactos') || doc.insertSheet('Historial_Contactos');
+      var solicitanteNombre = e.parameter.solicitanteNombre ? e.parameter.solicitanteNombre.trim() : "No especificado";
       var solicitanteEmpresa = e.parameter.solicitanteEmpresa ? e.parameter.solicitanteEmpresa.trim() : "Empresa o Usuario Web";
       var solicitanteEmail = e.parameter.solicitanteEmail ? e.parameter.solicitanteEmail.trim() : "No especificado";
       var nombreStartup = e.parameter.nombreStartup ? e.parameter.nombreStartup.trim() : "No especificado";
@@ -72,6 +75,7 @@ function doPost(e) {
 
       sheetContacto.appendRow([
         new Date(),
+        solicitanteNombre,
         solicitanteEmpresa,
         solicitanteEmail,
         nombreStartup,
