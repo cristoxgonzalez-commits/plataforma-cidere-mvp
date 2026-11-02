@@ -231,7 +231,7 @@
                     </div>
                 </div>
 
-                <!-- GALERÍA CIDERE BIOBÍO (ANCHO COMPLETO EN INICIO) -->
+                <!-- GALERÍA CIDERE BIOBÍO (6 FOTOS ROTATIVAS EN 3 DIAPOSITIVAS) -->
                 <div>
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
                         <h3 style="font-size: 16px; color: var(--cidere-blue);">Galería CIDERE Biobío</h3>
@@ -240,18 +240,27 @@
                     
                     <div class="card carrusel-card" style="padding: 20px; position: relative; height: 320px; display: flex; flex-direction: column; justify-content: space-between;">
                         <div id="carrusel-fotos" style="position: relative; width: 100%; height: 230px;">
+                            <!-- Diapositiva 1: Foto 1 y 2 -->
                             <div class="slide" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; gap: 14px; opacity: 1; transition: opacity 1.5s ease-in-out;">
                                 <img src="assets/foto1.jpg" alt="Actividad CIDERE" style="width: calc(50% - 7px); height: 100%; object-fit: cover; border-radius: 8px;">
                                 <img src="assets/foto2.jpg" alt="Actividad CIDERE" style="width: calc(50% - 7px); height: 100%; object-fit: cover; border-radius: 8px;">
                             </div>
+                            <!-- Diapositiva 2: Foto 3 y 4 -->
                             <div class="slide" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; gap: 14px; opacity: 0; transition: opacity 1.5s ease-in-out;">
                                 <img src="assets/foto3.jpg" alt="Actividad CIDERE" style="width: calc(50% - 7px); height: 100%; object-fit: cover; border-radius: 8px;">
                                 <img src="assets/foto4.jpg" alt="Actividad CIDERE" style="width: calc(50% - 7px); height: 100%; object-fit: cover; border-radius: 8px;">
                             </div>
+                            <!-- Diapositiva 3: Foto 5 y 6 -->
+                            <div class="slide" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; gap: 14px; opacity: 0; transition: opacity 1.5s ease-in-out;">
+                                <img src="assets/foto5.jpg" alt="Actividad CIDERE" style="width: calc(50% - 7px); height: 100%; object-fit: cover; border-radius: 8px;">
+                                <img src="assets/foto6.png" alt="Actividad CIDERE" style="width: calc(50% - 7px); height: 100%; object-fit: cover; border-radius: 8px;">
+                            </div>
                         </div>
                         
+                        <!-- Indicadores de 3 puntos -->
                         <div style="display: flex; justify-content: center; gap: 6px; margin-top: 16px;">
                             <div class="dot active" style="width: 8px; height: 8px; border-radius: 50%; background: var(--cidere-blue); transition: background 0.5s;"></div>
+                            <div class="dot" style="width: 8px; height: 8px; border-radius: 50%; background: var(--border-color); transition: background 0.5s;"></div>
                             <div class="dot" style="width: 8px; height: 8px; border-radius: 50%; background: var(--border-color); transition: background 0.5s;"></div>
                         </div>
                     </div>
