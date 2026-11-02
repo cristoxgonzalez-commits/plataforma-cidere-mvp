@@ -530,6 +530,7 @@ function initModalesFormularios() {
         fd.append('empresa', document.getElementById('des-empresa').value);
         fd.append('contactoEmail', document.getElementById('des-contacto').value);
         fd.append('rubro', document.getElementById('des-rubro').value);
+        fd.append('nivelRiesgo', document.getElementById('des-riesgo').value); // NUEVO CAMPO CAPTURADO
         fd.append('titulo', document.getElementById('des-titulo').value);
         fd.append('descripcion', desc);
 
