@@ -61,20 +61,14 @@ function doPost(e) {
       return ContentService.createTextOutput("Desafío registrado exitosamente").setMimeType(ContentService.MimeType.TEXT);
     }
 
-    // 3. REGISTRO DE CONTACTO / CRM (CON TRAZABILIDAD DE MATCHMAKING)
+    // 3. REGISTRO DE CONTACTO / CRM (CON ASOCIACIÓN DE EMPRESA Y ORIGEN)
     if (tipoFormulario === 'Contacto') {
       var sheetContacto = doc.getSheetByName('Historial_Contactos') || doc.insertSheet('Historial_Contactos');
-      
-      // Si la hoja está recién creada, añadimos los encabezados
-      if (sheetContacto.getLastRow() === 0) {
-        sheetContacto.appendRow(["Fecha", "Empresa Solicitante", "Email Solicitante", "Capacidad / Startup", "Email Contacto", "Origen", "Estado"]);
-      }
-      
-      var solicitanteEmpresa = e.parameter.solicitanteEmpresa ? e.parameter.solicitanteEmpresa.trim() : "Empresa Socia";
+      var solicitanteEmpresa = e.parameter.solicitanteEmpresa ? e.parameter.solicitanteEmpresa.trim() : "Empresa o Usuario Web";
       var solicitanteEmail = e.parameter.solicitanteEmail ? e.parameter.solicitanteEmail.trim() : "No especificado";
-      var nombreStartup = e.parameter.nombreStartup ? e.parameter.nombreStartup.trim() : "";
-      var correoDestino = e.parameter.correoDestino ? e.parameter.correoDestino.trim() : "";
-      var origenContacto = e.parameter.origenContacto ? e.parameter.origenContacto.trim() : "Contacto Ficha Técnica";
+      var nombreStartup = e.parameter.nombreStartup ? e.parameter.nombreStartup.trim() : "No especificado";
+      var correoDestino = e.parameter.correoDestino ? e.parameter.correoDestino.trim() : "No especificado";
+      var origen = e.parameter.origen ? e.parameter.origen.trim() : "Ficha Técnica";
 
       sheetContacto.appendRow([
         new Date(),
@@ -82,10 +76,9 @@ function doPost(e) {
         solicitanteEmail,
         nombreStartup,
         correoDestino,
-        origenContacto,
-        "Pendiente de articulación"
+        origen,
+        "Pendiente de contacto"
       ]);
-      
       return ContentService.createTextOutput("Contacto registrado").setMimeType(ContentService.MimeType.TEXT);
     }
   } catch (error) {
