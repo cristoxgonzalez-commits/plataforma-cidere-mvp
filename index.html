@@ -642,18 +642,24 @@
             
             <!-- VISTA 1: FORMULARIO DE POSTULACIÓN -->
             <form id="form-publicar-desafio">
+                <!-- FILA 1: SOLICITANTE Y EMPRESA -->
                 <div class="grid-2" style="gap: 16px; margin-bottom: 14px;">
+                    <div>
+                        <label style="font-size: 12px; font-weight: 600; display: block; margin-bottom: 4px;">Nombre y Apellido del Solicitante:</label>
+                        <input type="text" id="des-solicitante" placeholder="Ej: Carlos Muñoz Valenzuela" required>
+                    </div>
                     <div>
                         <label style="font-size: 12px; font-weight: 600; display: block; margin-bottom: 4px;">Empresa Solicitante:</label>
                         <input type="text" id="des-empresa" placeholder="Ej: Inchalam, Arauco, Camanchaca..." required>
                     </div>
+                </div>
+
+                <!-- FILA 2: CONTACTO Y RUBRO -->
+                <div class="grid-2" style="gap: 16px; margin-bottom: 14px;">
                     <div>
                         <label style="font-size: 12px; font-weight: 600; display: block; margin-bottom: 4px;">Email / Contacto del Solicitante:</label>
                         <input type="email" id="des-contacto" placeholder="innovacion@empresa.cl" required>
                     </div>
-                </div>
-
-                <div class="grid-2" style="gap: 16px; margin-bottom: 14px;">
                     <div>
                         <label style="font-size: 12px; font-weight: 600; display: block; margin-bottom: 4px;">Rubro / Sector:</label>
                         <select id="des-rubro" required>
@@ -671,6 +677,10 @@
                             <option value="Tecnología / Software">Tecnología / Software</option>
                         </select>
                     </div>
+                </div>
+
+                <!-- FILA 3: RIESGO Y TÍTULO -->
+                <div class="grid-2" style="gap: 16px; margin-bottom: 14px;">
                     <div>
                         <label style="font-size: 12px; font-weight: 600; display: block; margin-bottom: 4px;">Nivel de Riesgo (Tolerancia TRL):</label>
                         <select id="des-riesgo" required>
@@ -680,11 +690,10 @@
                             <option value="Riesgo Bajo (TRL 7-9)">Riesgo Bajo (Madurez & Escalamiento — TRL 7 al 9)</option>
                         </select>
                     </div>
-                </div>
-
-                <div style="margin-bottom: 14px;">
-                    <label style="font-size: 12px; font-weight: 600; display: block; margin-bottom: 4px;">Título del Desafío:</label>
-                    <input type="text" id="des-titulo" placeholder="Ej: Optimización energética en procesos productivos" required>
+                    <div>
+                        <label style="font-size: 12px; font-weight: 600; display: block; margin-bottom: 4px;">Título del Desafío:</label>
+                        <input type="text" id="des-titulo" placeholder="Ej: Optimización energética en procesos..." required>
+                    </div>
                 </div>
 
                 <div style="background: #f8fafc; padding: 16px; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 20px;">
