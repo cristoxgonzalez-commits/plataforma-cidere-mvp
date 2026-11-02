@@ -292,48 +292,42 @@ header { background-color: #ffffff; height: 64px; border-bottom: 1px solid var(-
 }
 
 /* ========================================================
-   MATCHMAKING CARDS (RESULTADOS DENTRO DEL MODAL)
+   TARJETAS DE MATCH (EN MODAL DE DESAFÍO)
    ======================================================== */
-.match-result-card {
+.match-card-item {
     background: #ffffff;
     border: 1px solid var(--border-color);
     border-radius: 10px;
-    padding: 16px 18px;
+    padding: 16px;
     display: flex;
-    align-items: center;
     justify-content: space-between;
+    align-items: center;
     gap: 16px;
-    transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.match-result-card:hover {
+.match-card-item:hover {
     border-color: var(--cidere-blue);
-    box-shadow: 0 4px 14px rgba(60, 99, 173, 0.08);
-    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(60, 99, 173, 0.08);
 }
 
-.match-info-col {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    max-width: 72%;
-}
-
-.match-title {
-    font-size: 14px;
+.match-info-title {
+    font-size: 14.5px;
     font-weight: 700;
-    color: var(--cidere-blue-dark);
-    line-height: 1.3;
+    color: var(--cidere-blue);
+    margin-bottom: 4px;
+    font-family: var(--font-title);
 }
 
-.match-meta {
+.match-info-meta {
     font-size: 11.5px;
     color: var(--text-muted);
+    margin-bottom: 6px;
 }
 
-.match-desc {
+.match-info-desc {
     font-size: 12px;
-    color: #475569;
+    color: var(--text-main);
     line-height: 1.45;
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -341,9 +335,7 @@ header { background-color: #ffffff; height: 64px; border-bottom: 1px solid var(-
     overflow: hidden;
 }
 
-/* ========================================================
-   INSIGNIAS (BADGES) CORPORATIVAS
-   ======================================================== */
+/* COMPONENTES REUTILIZABLES */
 .badge { 
     font-family: var(--font-title);
     font-size: 10px; 
@@ -525,4 +517,69 @@ select {
     transition: transform 0.2s, box-shadow 0.2s; 
 }
 .profile-card:hover { transform: translateY(-4px); box-shadow: 0 8px 22px rgba(17, 40, 82, 0.12); }
-.profile-img { width: 78px; height: 78px;
+.profile-img { width: 78px; height: 78px; border-radius: 50%; object-fit: cover; border: 2px solid transparent; }
+.profile-name { font-size: 14.5px; font-weight: 700; color: var(--cidere-blue); margin-bottom: 4px; font-family: var(--font-title); }
+.profile-role { 
+    font-size: 10px; 
+    font-family: var(--font-title); 
+    text-transform: uppercase; 
+    color: var(--text-muted); 
+    letter-spacing: 0.5px; 
+    margin-bottom: 12px; 
+    flex-grow: 1; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    min-height: 32px;
+    line-height: 1.35;
+    font-weight: 600;
+}
+.profile-logo-container { 
+    border-top: 1px solid #edf2f7; 
+    padding-top: 12px; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    height: 52px; 
+    overflow: visible;
+}
+.profile-logo { max-height: 100%; max-width: 88%; object-fit: contain; }
+.resource-item-card { border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; background: white; display: flex; flex-direction: column; justify-content: space-between; height: 100%; }
+
+/* OVERLAY MÓVIL */
+.sidebar-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 90; }
+.sidebar-overlay.active { display: block; }
+
+/* REGLAS RESPONSIVE */
+@media (max-width: 992px) {
+    .grid-2, .grid-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .hero-intro-grid { grid-template-columns: 1fr; gap: 28px; }
+}
+
+@media (max-width: 768px) {
+    .mobile-menu-btn { display: block; }
+    aside { position: fixed; left: -260px; top: 0; bottom: 0; z-index: 100; height: 100vh; }
+    aside.open { left: 0; box-shadow: 4px 0 24px rgba(0,0,0,0.2); }
+    header { padding: 0 16px; }
+    .top-nav-links { display: none; }
+    .search-bar { flex-grow: 1; width: auto; margin-left: 12px; }
+    .search-dropdown { min-width: calc(100vw - 32px); left: -60px; }
+    .user-profile { display: none; }
+    .content-container { padding: 16px; }
+    .grid-2, .grid-3, .kpi-container { grid-template-columns: 1fr; gap: 16px; }
+    .carrusel-card { height: auto !important; padding: 16px !important; }
+    #carrusel-fotos { height: 320px !important; }
+    .slide { flex-direction: column; }
+    .slide img { width: 100% !important; height: 150px !important; }
+    .footer-banner { flex-direction: column; text-align: center; gap: 24px; padding: 24px 16px; }
+    .metric-group { flex-direction: column; width: 100%; gap: 16px; }
+    .metric-item { border-left: none; border-top: 1px solid rgba(255,255,255,0.2); padding-left: 0; padding-top: 16px; }
+    .modal-content { width: 95%; padding: 20px; }
+
+    /* Adaptación del Bloque Hero en móviles */
+    .hero-intro-card { padding: 22px 18px; }
+    .hero-title { font-size: 23px; }
+    .hero-stats-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .hero-stat-card { min-height: 94px; padding: 12px 10px; }
+    .hero-stat-num { font-size: 19px; }
+}
