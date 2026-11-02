@@ -1,4 +1,5 @@
 :root {
+    /* PALETA OFICIAL MANUAL DE MARCA CIDERE BIOBÍO */
     --cidere-blue-dark: #112852;    
     --cidere-blue: #3C63AD;         
     --cidere-blue-light: #e8f0fe;   
@@ -290,6 +291,70 @@ header { background-color: #ffffff; height: 64px; border-bottom: 1px solid var(-
 .card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 24px; margin-bottom: 20px; }
 .grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
 .grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; align-items: stretch; }
+
+/* ========================================================
+   ESTILOS DE FORMULARIOS, INPUTS Y SELECTS (RESTAURADOS)
+   ======================================================== */
+label {
+    font-family: var(--font-title);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-main);
+    display: block;
+    margin-bottom: 6px;
+    letter-spacing: 0.2px;
+}
+
+input[type="text"],
+input[type="email"],
+select,
+textarea {
+    width: 100%;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-family: var(--font-sans);
+    font-size: 13px;
+    color: var(--text-main);
+    background-color: #ffffff;
+    box-sizing: border-box;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+input[type="text"]::placeholder,
+input[type="email"]::placeholder,
+textarea::placeholder {
+    color: #94a3b8;
+    font-family: var(--font-sans);
+    font-size: 12.5px;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+select:focus,
+textarea:focus {
+    border-color: var(--cidere-blue);
+    box-shadow: 0 0 0 3px rgba(60, 99, 173, 0.14);
+    background-color: #ffffff;
+}
+
+textarea {
+    resize: vertical;
+    line-height: 1.55;
+    min-height: 64px;
+}
+
+select {
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    background-size: 16px;
+    padding-right: 38px;
+    appearance: none;
+    -webkit-appearance: none;
+}
 
 /* TARJETAS ESTANDARIZADAS COMPACTAS (330px) */
 .uniform-card {
