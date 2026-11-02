@@ -295,7 +295,7 @@ function abrirFichaTecnica(item) {
     openModal('modal-ficha-tecnica');
 }
 
-async function solicitarContacto(email, nombre, solicitanteEmpresa = "Empresa Socia", solicitanteEmail = "No especificado", origen = "Ficha Técnica") {
+async function solicitarContacto(email, nombre, solicitanteEmpresa = "Empresa Socia", solicitanteEmail = "No especificado", origen = "Ficha Técnica", solicitanteNombre = "No especificado") {
     if (!email || email === 'No disponible' || !email.trim()) {
         alert("Esta entidad no posee un correo público registrado.");
         return;
@@ -305,6 +305,7 @@ async function solicitarContacto(email, nombre, solicitanteEmpresa = "Empresa So
     fd.append('tipoFormulario', 'Contacto');
     fd.append('correoDestino', email);
     fd.append('nombreStartup', nombre);
+    fd.append('solicitanteNombre', solicitanteNombre);
     fd.append('solicitanteEmpresa', solicitanteEmpresa);
     fd.append('solicitanteEmail', solicitanteEmail);
     fd.append('origen', origen);
@@ -524,6 +525,7 @@ function initModalesFormularios() {
         const loader = document.getElementById('loader-desafio');
         loader.style.display = 'inline';
 
+        const solicitanteNombre = document.getElementById('des-solicitante').value.trim();
         const empresa = document.getElementById('des-empresa').value.trim();
         const contactoEmail = document.getElementById('des-contacto').value.trim();
         const rubro = document.getElementById('des-rubro').value.trim();
@@ -536,6 +538,7 @@ function initModalesFormularios() {
 
         const fd = new FormData();
         fd.append('tipoFormulario', 'Desafio');
+        fd.append('solicitanteNombre', solicitanteNombre);
         fd.append('empresa', empresa);
         fd.append('contactoEmail', contactoEmail);
         fd.append('rubro', rubro);
@@ -552,7 +555,7 @@ function initModalesFormularios() {
         }
 
         // Ejecutar algoritmo de Matchmaking y mostrar resultados
-        mostrarPantallaMatches(empresa, contactoEmail, rubro, nivelRiesgo, titulo);
+        mostrarPantallaMatches(empresa, contactoEmail, rubro, nivelRiesgo, titulo, solicitanteNombre);
     });
 }
 
@@ -568,7 +571,7 @@ function abrirModalDesafio() {
     openModal('modal-publicar-desafio');
 }
 
-function mostrarPantallaMatches(empresa, contactoEmail, rubro, nivelRiesgo, tituloDesafio) {
+function mostrarPantallaMatches(empresa, contactoEmail, rubro, nivelRiesgo, tituloDesafio, solicitanteNombre) {
     const form = document.getElementById('form-publicar-desafio');
     const matchesView = document.getElementById('desafio-matches-container');
     const title = document.getElementById('modal-desafio-title');
@@ -587,7 +590,7 @@ function mostrarPantallaMatches(empresa, contactoEmail, rubro, nivelRiesgo, titu
     // Filtrar entidades que coincidan con la industria
     const matchesMismaIndustria = startupsRegistry.filter(s => normalizar(s.industria) === normalizar(rubro));
 
-    // Ordenar: primero los que además caen dentro del rango TRL preferido
+    // Ordenar: primero los que caen dentro del rango TRL preferido
     matchesMismaIndustria.sort((a, b) => {
         const trlA = parseInt(a.trlMax) || 0;
         const trlB = parseInt(b.trlMax) || 0;
@@ -604,7 +607,7 @@ function mostrarPantallaMatches(empresa, contactoEmail, rubro, nivelRiesgo, titu
                 <i data-lucide="search-x" size="36" style="color: var(--cidere-blue); opacity: 0.5; margin-bottom: 8px;"></i>
                 <h4 style="font-size: 15px; color: var(--cidere-blue); font-weight: 700;">No hay matches públicos inmediatos en ${rubro}</h4>
                 <p style="font-size: 12.5px; color: var(--text-muted); max-width: 500px; margin: 4px auto 0; line-height: 1.5;">
-                    Tu desafío ha quedado guardado en la base de datos de la Mesa de Innovación. El equipo de articulación de CIDERE Biobío buscará capacidades complementarias con universidades y centros de I+D fuera del catálogo público y se pondrá en contacto contigo.
+                    Tu desafío ha quedado guardado en la hoja Desafios_Postulados de la Mesa de Innovación. El equipo de CIDERE Biobío buscará capacidades complementarias con universidades y centros de I+D fuera del catálogo público y se pondrá en contacto contigo.
                 </p>
             </div>
         `;
@@ -645,6 +648,7 @@ function mostrarPantallaMatches(empresa, contactoEmail, rubro, nivelRiesgo, titu
 
                 const fdContacto = new FormData();
                 fdContacto.append('tipoFormulario', 'Contacto');
+                fdContacto.append('solicitanteNombre', solicitanteNombre);
                 fdContacto.append('solicitanteEmpresa', empresa);
                 fdContacto.append('solicitanteEmail', contactoEmail);
                 fdContacto.append('nombreStartup', item.nombre);
