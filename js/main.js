@@ -519,11 +519,9 @@ function initModalesFormularios() {
         }
     });
 
-    // FLUJO: PUBLICAR DESAFÍO + MATCHMAKING INMEDIATO
-    document.getElementById('form-publicar-desafio').addEventListener('submit', async (e) => {
+    // FLUJO: PUBLICAR DESAFÍO + ESCÁNER CIRCULAR TECNOLÓGICO DE 5.5s
+    document.getElementById('form-publicar-desafio').addEventListener('submit', (e) => {
         e.preventDefault();
-        const loader = document.getElementById('loader-desafio');
-        loader.style.display = 'inline';
 
         const solicitanteNombre = document.getElementById('des-solicitante').value.trim();
         const empresa = document.getElementById('des-empresa').value.trim();
@@ -546,40 +544,118 @@ function initModalesFormularios() {
         fd.append('titulo', titulo);
         fd.append('descripcion', desc);
 
-        try {
-            await postToAppsScript(fd);
-        } catch (err) {
-            console.warn("Continuando al análisis de matches locales tras registrar desafío...", err);
-        } finally {
-            loader.style.display = 'none';
-        }
+        // Envío asíncrono a Google Sheets en segundo plano mientras el usuario visualiza el escáner
+        postToAppsScript(fd).catch(err => {
+            console.warn("Desafío procesándose en segundo plano...", err);
+        });
 
-        // Ejecutar algoritmo de Matchmaking acumulativo y mostrar resultados
-        mostrarPantallaMatches(empresa, contactoEmail, rubro, nivelRiesgo, titulo, solicitanteNombre);
+        // Iniciar experiencia visual de 5.5 segundos
+        iniciarSecuenciaEscaneo(empresa, contactoEmail, rubro, nivelRiesgo, titulo, solicitanteNombre);
     });
 }
 
 function abrirModalDesafio() {
     const form = document.getElementById('form-publicar-desafio');
+    const scanningView = document.getElementById('desafio-scanning-container');
     const matchesView = document.getElementById('desafio-matches-container');
     const title = document.getElementById('modal-desafio-title');
 
     form.reset();
     form.style.display = 'block';
+    scanningView.style.display = 'none';
     matchesView.style.display = 'none';
     title.innerText = 'Estructurador de Desafíos';
     openModal('modal-publicar-desafio');
 }
 
+// SECUENCIA DE ESCÁNER CIRCULAR TEMPORIZADA (0.0s A 5.5s)
+function iniciarSecuenciaEscaneo(empresa, contactoEmail, rubro, nivelRiesgo, tituloDesafio, solicitanteNombre) {
+    const form = document.getElementById('form-publicar-desafio');
+    const scanningView = document.getElementById('desafio-scanning-container');
+    const title = document.getElementById('modal-desafio-title');
+    const progressBar = document.getElementById('scanner-progress-bar');
+    const percentNum = document.getElementById('scanner-percentage-num');
+    const stepMsg = document.getElementById('scanner-step-msg');
+
+    form.style.display = 'none';
+    scanningView.style.display = 'block';
+    title.innerText = 'Procesando Requerimiento Industrial...';
+
+    const circumference = 534; // 2 * Math.PI * 85
+    const totalDuration = 5500; // 5.5 segundos
+    const startTime = performance.now();
+
+    // Textos cronometrados según la pauta
+    const textoEtapas = [
+        { time: 0, text: "Registrando desafío en la base de datos de la Mesa..." },
+        { time: 1300, text: `Mapeando capacidades y startups en el sector ${rubro}...` },
+        { time: 2800, text: `Filtrando por tolerancia al riesgo tecnológico (${nivelRiesgo})...` },
+        { time: 4300, text: "Estructurando opciones de vinculación y contacto directo..." }
+    ];
+
+    let currentStepIndex = -1;
+
+    function frame(now) {
+        const elapsed = now - startTime;
+        const progress = Math.min(elapsed / totalDuration, 1);
+
+        // Curva suave de aceleración (easeOutCubic)
+        const eased = 1 - Math.pow(1 - progress, 3);
+        const percent = Math.floor(eased * 100);
+
+        // Actualizar porcentaje y offset circular
+        if (percentNum) percentNum.innerText = `${percent}%`;
+        if (progressBar) {
+            const offset = circumference - (eased * circumference);
+            progressBar.style.strokeDashoffset = offset;
+        }
+
+        // Actualizar textos cronometrados
+        for (let i = textoEtapas.length - 1; i >= 0; i--) {
+            if (elapsed >= textoEtapas[i].time) {
+                if (currentStepIndex !== i) {
+                    currentStepIndex = i;
+                    if (stepMsg) {
+                        stepMsg.style.opacity = '0';
+                        stepMsg.style.transform = 'translateY(4px)';
+                        setTimeout(() => {
+                            stepMsg.innerText = textoEtapas[i].text;
+                            stepMsg.style.opacity = '1';
+                            stepMsg.style.transform = 'translateY(0)';
+                        }, 120);
+                    }
+                }
+                break;
+            }
+        }
+
+        if (progress < 1) {
+            requestAnimationFrame(frame);
+        } else {
+            // 5.5 segundos cumplidos: transición con fundido suave a los matches
+            setTimeout(() => {
+                scanningView.style.opacity = '0';
+                scanningView.style.transition = 'opacity 0.35s ease';
+                setTimeout(() => {
+                    scanningView.style.display = 'none';
+                    scanningView.style.opacity = '1';
+                    mostrarPantallaMatches(empresa, contactoEmail, rubro, nivelRiesgo, tituloDesafio, solicitanteNombre);
+                }, 350);
+            }, 200);
+        }
+    }
+
+    requestAnimationFrame(frame);
+}
+
 // ALGORITMO DE MATCHMAKING CON UMBRAL DE MADUREZ ACUMULATIVO
 function mostrarPantallaMatches(empresa, contactoEmail, rubro, nivelRiesgo, tituloDesafio, solicitanteNombre) {
-    const form = document.getElementById('form-publicar-desafio');
     const matchesView = document.getElementById('desafio-matches-container');
     const title = document.getElementById('modal-desafio-title');
     const contenedorLista = document.getElementById('desafio-matches-lista');
 
-    form.style.display = 'none';
     matchesView.style.display = 'block';
+    matchesView.style.animation = 'smoothSectionFade 0.4s ease-out forwards';
     title.innerText = 'Matches & Soluciones del Ecosistema';
 
     // Regla de umbral mínimo permitido y rango objetivo preferente
@@ -621,7 +697,7 @@ function mostrarPantallaMatches(empresa, contactoEmail, rubro, nivelRiesgo, titu
         if (exactoA !== exactoB) {
             return exactoB - exactoA;
         }
-        return trlB - trlA; // A igual condición, mostrar primero las más maduras
+        return trlB - trlA;
     });
 
     contenedorLista.innerHTML = '';
