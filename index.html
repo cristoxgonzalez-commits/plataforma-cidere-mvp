@@ -642,7 +642,6 @@
             
             <!-- VISTA 1: FORMULARIO DE POSTULACIÓN -->
             <form id="form-publicar-desafio">
-                <!-- FILA 1: SOLICITANTE Y EMPRESA -->
                 <div class="grid-2" style="gap: 16px; margin-bottom: 14px;">
                     <div>
                         <label style="font-size: 12px; font-weight: 600; display: block; margin-bottom: 4px;">Nombre y Apellido del Solicitante:</label>
@@ -654,7 +653,6 @@
                     </div>
                 </div>
 
-                <!-- FILA 2: CONTACTO Y RUBRO -->
                 <div class="grid-2" style="gap: 16px; margin-bottom: 14px;">
                     <div>
                         <label style="font-size: 12px; font-weight: 600; display: block; margin-bottom: 4px;">Email / Contacto del Solicitante:</label>
@@ -679,7 +677,6 @@
                     </div>
                 </div>
 
-                <!-- FILA 3: RIESGO Y TÍTULO -->
                 <div class="grid-2" style="gap: 16px; margin-bottom: 14px;">
                     <div>
                         <label style="font-size: 12px; font-weight: 600; display: block; margin-bottom: 4px;">Nivel de Riesgo (Tolerancia TRL):</label>
@@ -712,15 +709,54 @@
                 </div>
 
                 <div style="display: flex; justify-content: flex-end; gap: 10px; align-items: center;">
-                    <span id="loader-desafio" class="loader-text">Enviando y analizando matches...</span>
                     <button type="button" class="btn-outline close-modal" data-modal="modal-publicar-desafio">Cancelar</button>
-                    <button type="submit" class="btn-primary" style="background-color: var(--cidere-blue); padding: 10px 18px;">
+                    <button type="submit" class="btn-primary" style="background-color: var(--cidere-blue); padding: 10px 20px; font-weight: 700;">
                         Publicar Desafío y Buscar Soluciones
                     </button>
                 </div>
             </form>
 
-            <!-- VISTA 2: RESULTADOS DE MATCHMAKING EN TIEMPO REAL -->
+            <!-- VISTA 2: ESCÁNER CIRCULAR DE PROCESAMIENTO (5.5s) -->
+            <div id="desafio-scanning-container" class="scanner-modal-view" style="display: none;">
+                <div class="scanner-circle-wrap">
+                    <!-- Fondo radial segmentado tipo visor industrial -->
+                    <div class="scanner-radial-backdrop"></div>
+                    
+                    <svg class="scanner-svg" viewBox="0 0 200 200">
+                        <defs>
+                            <!-- Gradiente Corporativo CIDERE Biobío: Azul -> Cyan -> Verde -> Naranja -->
+                            <linearGradient id="cidereScannerGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#3C63AD" />
+                                <stop offset="35%" stop-color="#01DCFF" />
+                                <stop offset="75%" stop-color="#31AD72" />
+                                <stop offset="100%" stop-color="#EE731B" />
+                            </linearGradient>
+                        </defs>
+                        <!-- Pista circular base -->
+                        <circle class="scanner-track-circle" cx="100" cy="100" r="85"></circle>
+                        <!-- Arco de progreso -->
+                        <circle id="scanner-progress-bar" class="scanner-progress-circle" cx="100" cy="100" r="85"></circle>
+                        <!-- Máscara de ticks segmentados radiales -->
+                        <circle class="scanner-tick-mask" cx="100" cy="100" r="85"></circle>
+                    </svg>
+
+                    <!-- Núcleo central numérico -->
+                    <div class="scanner-center-content">
+                        <div id="scanner-percentage-num" class="scanner-percentage-text">0%</div>
+                        <div class="scanner-center-sub">Matching IA</div>
+                    </div>
+                </div>
+
+                <!-- Caja dinámica de etapas progresivas -->
+                <div class="scanner-step-box">
+                    <span class="scanner-pulse-dot"></span>
+                    <div id="scanner-step-msg" class="scanner-step-text">
+                        Iniciando conexión con la Mesa de Innovación...
+                    </div>
+                </div>
+            </div>
+
+            <!-- VISTA 3: RESULTADOS DE MATCHMAKING EN TIEMPO REAL -->
             <div id="desafio-matches-container" style="display: none;">
                 <div style="background: #f0fdf4; border: 1px solid var(--cidere-green-bright); border-radius: 10px; padding: 16px; margin-bottom: 20px; display: flex; align-items: center; gap: 14px;">
                     <div style="width: 40px; height: 40px; border-radius: 50%; background: #d1fae5; color: #065f46; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
