@@ -292,6 +292,147 @@ header { background-color: #ffffff; height: 64px; border-bottom: 1px solid var(-
 }
 
 /* ========================================================
+   ESCÁNER CIRCULAR TECNOLÓGICO (INSPIRACIÓN SEGMENTADA)
+   ======================================================== */
+.scanner-modal-view {
+    background: radial-gradient(circle at center, #1b3563 0%, var(--cidere-blue-dark) 100%);
+    border-radius: 14px;
+    padding: 44px 28px;
+    text-align: center;
+    color: #ffffff;
+    box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.35);
+    animation: smoothSectionFade 0.35s ease-out forwards;
+}
+
+.scanner-circle-wrap {
+    position: relative;
+    width: 210px;
+    height: 210px;
+    margin: 0 auto 26px auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Fondo circular con sectores segmentados radiales */
+.scanner-radial-backdrop {
+    position: absolute;
+    width: 210px;
+    height: 210px;
+    border-radius: 50%;
+    background: repeating-conic-gradient(
+        from 0deg,
+        rgba(255, 255, 255, 0.05) 0deg 18deg,
+        rgba(17, 40, 82, 0.95) 18deg 20deg
+    );
+    box-shadow: 0 0 24px rgba(1, 220, 255, 0.12);
+}
+
+.scanner-svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 210px;
+    height: 210px;
+    transform: rotate(-90deg); /* Inicio arriba a las 12 */
+}
+
+.scanner-track-circle {
+    fill: none;
+    stroke: rgba(255, 255, 255, 0.08);
+    stroke-width: 14;
+}
+
+/* Barra circular de progreso multicolor */
+.scanner-progress-circle {
+    fill: none;
+    stroke: url(#cidereScannerGradient);
+    stroke-width: 15;
+    stroke-linecap: butt;
+    stroke-dasharray: 534; /* 2 * PI * r(85) ≈ 534 */
+    stroke-dashoffset: 534;
+    transition: stroke-dashoffset 0.15s linear;
+    filter: drop-shadow(0 0 8px rgba(1, 220, 255, 0.45));
+}
+
+/* Separadores radiales en la barra */
+.scanner-tick-mask {
+    fill: none;
+    stroke: var(--cidere-blue-dark);
+    stroke-width: 16;
+    stroke-dasharray: 2 16.7;
+}
+
+.scanner-center-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.scanner-percentage-text {
+    font-family: var(--font-title);
+    font-size: 34px;
+    font-weight: 800;
+    color: #ffffff;
+    line-height: 1;
+    letter-spacing: -0.5px;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+.scanner-center-sub {
+    font-family: var(--font-title);
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #01DCFF;
+    letter-spacing: 1px;
+    margin-top: 6px;
+    opacity: 0.9;
+}
+
+.scanner-step-box {
+    max-width: 520px;
+    margin: 0 auto;
+    min-height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 18px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 30px;
+    backdrop-filter: blur(6px);
+}
+
+.scanner-step-text {
+    font-family: var(--font-inter);
+    font-size: 13.5px;
+    font-weight: 500;
+    color: #e2e8f0;
+    line-height: 1.45;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.scanner-pulse-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--cidere-green-bright);
+    box-shadow: 0 0 10px var(--cidere-green-bright);
+    margin-right: 10px;
+    display: inline-block;
+    animation: scannerPulseDot 1.2s infinite ease-in-out;
+}
+
+@keyframes scannerPulseDot {
+    0%, 100% { transform: scale(0.9); opacity: 0.7; }
+    50% { transform: scale(1.3); opacity: 1; }
+}
+
+/* ========================================================
    TARJETAS DE MATCH (EN MODAL DE DESAFÍO)
    ======================================================== */
 .match-card-item {
@@ -576,7 +717,6 @@ select {
     .metric-item { border-left: none; border-top: 1px solid rgba(255,255,255,0.2); padding-left: 0; padding-top: 16px; }
     .modal-content { width: 95%; padding: 20px; }
 
-    /* Adaptación del Bloque Hero en móviles */
     .hero-intro-card { padding: 22px 18px; }
     .hero-title { font-size: 23px; }
     .hero-stats-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
