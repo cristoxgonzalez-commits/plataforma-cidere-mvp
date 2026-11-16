@@ -2,12 +2,56 @@ function doGet(e) {
   return ContentService.createTextOutput("Servidor CIDERE Biobío operativo.").setMimeType(ContentService.MimeType.TEXT);
 }
 
+/**
+ * Neutraliza inyección de fórmulas en Google Sheets/Excel y limita longitud de campos.
+ */
+function sanitizarTexto(valor, maxLen) {
+  if (valor === null || valor === undefined) return "";
+  var limpio = valor.toString().trim();
+  if (maxLen && limpio.length > maxLen) {
+    limpio = limpio.substring(0, maxLen);
+  }
+  if (/^[=+\-@\t\r]/.test(limpio)) {
+    limpio = "'" + limpio;
+  }
+  return limpio;
+}
+
 function doPost(e) {
   try {
+    if (!e || !e.parameter) {
+      return ContentService.createTextOutput(JSON.stringify({ status: "error", message: "Solicitud vacía" })).setMimeType(ContentService.MimeType.JSON);
+    }
+
+    // 1. FILTRO HONEYPOT ANTI-BOTS (si el campo oculto viene con texto, se descarta en silencio)
+    if (e.parameter.hp_website && e.parameter.hp_website.toString().trim() !== "") {
+      return ContentService.createTextOutput(JSON.stringify({
+        status: "ok",
+        mode: "local",
+        matches: []
+      })).setMimeType(ContentService.MimeType.JSON);
+    }
+
     var doc = SpreadsheetApp.getActiveSpreadsheet();
-    var tipoFormulario = e.parameter.tipoFormulario;
+    var tipoFormulario = sanitizarTexto(e.parameter.tipoFormulario, 40);
+    var cache = CacheService.getScriptCache();
+
+    // 2. LIMITADOR DE FRECUENCIA ANTI-SPAM (45 segundos entre envíos del mismo correo y formulario)
+    var emailControl = (e.parameter.contactoEmail || e.parameter.solicitanteEmail || "").toString().toLowerCase().trim();
+    if (emailControl) {
+      var rlKey = "rl_" + tipoFormulario + "_" + emailControl.replace(/[^a-z0-9]/g, "");
+      if (cache.get(rlKey)) {
+        return ContentService.createTextOutput(JSON.stringify({
+          status: "rate_limited",
+          mode: "local",
+          matches: [],
+          message: "Solicitud reciente detectada. Espera unos segundos antes de volver a enviar."
+        })).setMimeType(ContentService.MimeType.JSON);
+      }
+      cache.put(rlKey, "1", 45);
+    }
     
-    // 1. REGISTRO DE CAPACIDADES (STARTUPS E IES)
+    // 3. REGISTRO DE CAPACIDADES (STARTUPS E IES)
     if (tipoFormulario === 'Capacidad' || tipoFormulario === 'Startup') {
       var sheet = doc.getSheetByName('Ecosistema Regional') || doc.insertSheet('Ecosistema Regional');
       var lastRow = sheet.getLastRow();
@@ -21,45 +65,47 @@ function doPost(e) {
       var nuevoId = "PRY-" + ("000" + nextNum).slice(-3);
       if (nextNum >= 1000) nuevoId = "PRY-" + nextNum;
       
-      var tipoEntidad = (e.parameter.tipoEntidad || "Startup").trim();
-      var institucion = (tipoEntidad.toUpperCase() === "IES") ? (e.parameter.institucion || "No especificada").trim() : ""; 
-      var trl = e.parameter.trlActual ? e.parameter.trlActual.trim() : "Por validar";
+      var tipoEntidad = sanitizarTexto(e.parameter.tipoEntidad || "Startup", 30);
+      var institucion = (tipoEntidad.toUpperCase() === "IES")
+        ? sanitizarTexto(e.parameter.institucion || "No especificada", 150)
+        : "";
+      var trl = sanitizarTexto(e.parameter.trlActual || "Por validar", 40);
       
       sheet.appendRow([
         nuevoId,
-        e.parameter.nombreProyecto ? e.parameter.nombreProyecto.trim() : "",
+        sanitizarTexto(e.parameter.nombreProyecto, 150),
         tipoEntidad,
         institucion,
-        e.parameter.industria ? e.parameter.industria.trim() : "",
-        e.parameter.queHace ? e.parameter.queHace.trim() : "",
-        e.parameter.comoHace ? e.parameter.comoHace.trim() : "",
+        sanitizarTexto(e.parameter.industria, 80),
+        sanitizarTexto(e.parameter.queHace, 1200),
+        sanitizarTexto(e.parameter.comoHace, 1200),
         trl,
-        e.parameter.contactoEmail ? e.parameter.contactoEmail.trim() : "",
+        sanitizarTexto(e.parameter.contactoEmail, 120),
         "Pendiente"
       ]);
       
       return ContentService.createTextOutput("Capacidad registrada exitosamente").setMimeType(ContentService.MimeType.TEXT);
     }
     
-    // 2. REGISTRO DE DESAFÍOS EN 'Desafios_Postulados' + RAZONAMIENTO EN COLUMNA K
+    // 4. REGISTRO DE DESAFÍOS EN 'Desafios_Postulados' + RAZONAMIENTO EN COLUMNA K
     if (tipoFormulario === 'Desafio') {
       var sheetDesafios = doc.getSheetByName('Desafios_Postulados') || doc.insertSheet('Desafios_Postulados');
       var fechaChile = Utilities.formatDate(new Date(), "America/Santiago", "dd/MM/yyyy HH:mm:ss");
-      var solicitanteNombre = e.parameter.solicitanteNombre ? e.parameter.solicitanteNombre.trim() : "No especificado";
-      var empresa = e.parameter.empresa ? e.parameter.empresa.trim() : "";
-      var contactoEmail = e.parameter.contactoEmail ? e.parameter.contactoEmail.trim() : "";
-      var rubro = e.parameter.rubro ? e.parameter.rubro.trim() : "";
-      var nivelRiesgo = e.parameter.nivelRiesgo ? e.parameter.nivelRiesgo.trim() : "No especificado";
-      var titulo = e.parameter.titulo ? e.parameter.titulo.trim() : "";
-      var descripcion = e.parameter.descripcion ? e.parameter.descripcion.trim() : "";
+
+      var solicitanteRaw = (e.parameter.solicitanteNombre || "No especificado").toString().trim().substring(0, 120);
+      var empresaRaw = (e.parameter.empresa || "").toString().trim().substring(0, 150);
+      var contactoRaw = (e.parameter.contactoEmail || "").toString().trim().substring(0, 120);
+      var rubroRaw = (e.parameter.rubro || "").toString().trim().substring(0, 80);
+      var riesgoRaw = (e.parameter.nivelRiesgo || "No especificado").toString().trim().substring(0, 60);
+      var tituloRaw = (e.parameter.titulo || "").toString().trim().substring(0, 200);
+      var descripcionRaw = (e.parameter.descripcion || "").toString().trim().substring(0, 2000);
       var minTrl = parseInt(e.parameter.minTrlPermitido, 10) || 1;
 
-      // Ejecutar razonamiento semántico antes de guardar la fila para incluir el resultado en Columna K
       var resultadoAgente = ejecutarMatchSemantico(doc, {
-        empresa: empresa,
-        rubro: rubro,
-        titulo: titulo,
-        descripcion: descripcion,
+        empresa: empresaRaw,
+        rubro: rubroRaw,
+        titulo: tituloRaw,
+        descripcion: descripcionRaw,
         minTrlPermitido: minTrl
       });
 
@@ -75,71 +121,69 @@ function doPost(e) {
       
       sheetDesafios.appendRow([
         fechaChile,
-        solicitanteNombre,
-        empresa,
-        contactoEmail,
+        sanitizarTexto(solicitanteRaw, 120),
+        sanitizarTexto(empresaRaw, 150),
+        sanitizarTexto(contactoRaw, 120),
         "Empresa",
-        rubro,
-        nivelRiesgo,
-        titulo,
-        descripcion,
+        sanitizarTexto(rubroRaw, 80),
+        sanitizarTexto(riesgoRaw, 60),
+        sanitizarTexto(tituloRaw, 200),
+        sanitizarTexto(descripcionRaw, 2000),
         "Pendiente",
-        resumenAgente
+        sanitizarTexto(resumenAgente, 2500)
       ]);
 
       var respuestaJson = JSON.stringify({
         status: "ok",
         mode: resultadoAgente.matches.length > 0 ? "semantic" : "local",
-        matches: resultadoAgente.matches,
-        auditoria: resultadoAgente.auditoria
+        matches: resultadoAgente.matches
       });
       
       return ContentService.createTextOutput(respuestaJson).setMimeType(ContentService.MimeType.JSON);
     }
 
-    // 3. REGISTRO DE CONTACTO EN 'Historial_Contactos'
+    // 5. REGISTRO DE CONTACTO EN 'Historial_Contactos'
     if (tipoFormulario === 'Contacto') {
       var sheetContacto = doc.getSheetByName('Historial_Contactos') || doc.insertSheet('Historial_Contactos');
       var fechaContactoChile = Utilities.formatDate(new Date(), "America/Santiago", "dd/MM/yyyy HH:mm:ss");
-      var solNombre = e.parameter.solicitanteNombre ? e.parameter.solicitanteNombre.trim() : "No especificado";
-      var solEmpresa = e.parameter.solicitanteEmpresa ? e.parameter.solicitanteEmpresa.trim() : "Empresa o Usuario Web";
-      var solEmail = e.parameter.solicitanteEmail ? e.parameter.solicitanteEmail.trim() : "No especificado";
-      var nombreStartup = e.parameter.nombreStartup ? e.parameter.nombreStartup.trim() : "No especificado";
-      var correoDestino = e.parameter.correoDestino ? e.parameter.correoDestino.trim() : "No especificado";
-      var origen = e.parameter.origen ? e.parameter.origen.trim() : "Ficha Técnica";
 
       sheetContacto.appendRow([
         fechaContactoChile,
-        solNombre,
-        solEmpresa,
-        solEmail,
-        nombreStartup,
-        correoDestino,
-        origen,
+        sanitizarTexto(e.parameter.solicitanteNombre || "No especificado", 120),
+        sanitizarTexto(e.parameter.solicitanteEmpresa || "Empresa o Usuario Web", 150),
+        sanitizarTexto(e.parameter.solicitanteEmail || "No especificado", 120),
+        sanitizarTexto(e.parameter.nombreStartup || "No especificado", 150),
+        sanitizarTexto(e.parameter.correoDestino || "No especificado", 120),
+        sanitizarTexto(e.parameter.origen || "Ficha Técnica", 200),
         "Pendiente de contacto"
       ]);
       return ContentService.createTextOutput("Contacto registrado").setMimeType(ContentService.MimeType.TEXT);
     }
   } catch (error) {
-    return ContentService.createTextOutput(JSON.stringify({ status: "error", message: error.message })).setMimeType(ContentService.MimeType.JSON);
+    return ContentService.createTextOutput(JSON.stringify({ status: "error", message: "Error interno del servidor" })).setMimeType(ContentService.MimeType.JSON);
   }
 }
 
 function ejecutarMatchSemantico(doc, datosDesafio) {
   var auditoria = {
-    apiKeyConfigurada: false,
-    capacidadesEvaluadas: 0,
-    codigoHttp: null,
     detalle: ""
   };
 
   try {
     var apiKey = PropertiesService.getScriptProperties().getProperty('GEMINI_API_KEY');
     if (!apiKey) {
-      auditoria.detalle = "Propiedad GEMINI_API_KEY no encontrada en ScriptProperties.";
+      auditoria.detalle = "Propiedad GEMINI_API_KEY no configurada.";
       return { matches: [], auditoria: auditoria };
     }
-    auditoria.apiKeyConfigurada = true;
+
+    // Control preventivo de cuota diaria (máximo 80 evaluaciones IA por día)
+    var cache = CacheService.getScriptCache();
+    var hoyKey = "gemini_quota_" + Utilities.formatDate(new Date(), "America/Santiago", "yyyyMMdd");
+    var conteoHoy = parseInt(cache.get(hoyKey) || "0", 10);
+    if (conteoHoy >= 80) {
+      auditoria.detalle = "Techo preventivo diario alcanzado (" + conteoHoy + "/80).";
+      return { matches: [], auditoria: auditoria };
+    }
 
     var sheet = doc.getSheetByName('Ecosistema Regional');
     if (!sheet) {
@@ -170,12 +214,12 @@ function ejecutarMatchSemantico(doc, datosDesafio) {
       }
     }
 
-    auditoria.capacidadesEvaluadas = catalogo.length;
-
     if (catalogo.length === 0) {
       auditoria.detalle = "Sin capacidades aprobadas sobre umbral TRL " + datosDesafio.minTrlPermitido + ".";
       return { matches: [], auditoria: auditoria };
     }
+
+    cache.put(hoyKey, String(conteoHoy + 1), 86400);
 
     var prompt = 
       "Eres el director de transferencia tecnológica de CIDERE Biobío.\n" +
@@ -207,15 +251,12 @@ function ejecutarMatchSemantico(doc, datosDesafio) {
     });
 
     var codigoHttp = response.getResponseCode();
-    var cuerpoRespuesta = response.getContentText();
-    auditoria.codigoHttp = codigoHttp;
-
     if (codigoHttp !== 200) {
       auditoria.detalle = "Error HTTP " + codigoHttp + " al consultar Gemini.";
       return { matches: [], auditoria: auditoria };
     }
 
-    var jsonResponse = JSON.parse(cuerpoRespuesta);
+    var jsonResponse = JSON.parse(response.getContentText());
     var textoSalida = jsonResponse.candidates[0].content.parts[0].text;
     var parsed = JSON.parse(textoSalida);
     var listaMatches = parsed.matches || [];
@@ -223,7 +264,7 @@ function ejecutarMatchSemantico(doc, datosDesafio) {
 
     return { matches: listaMatches, auditoria: auditoria };
   } catch (err) {
-    auditoria.detalle = "Excepción: " + err.message;
+    auditoria.detalle = "Excepción interna al evaluar.";
     return { matches: [], auditoria: auditoria };
   }
 }
