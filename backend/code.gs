@@ -17,13 +17,38 @@ function sanitizarTexto(valor, maxLen) {
   return limpio;
 }
 
+/**
+ * Busca el correo de contacto directamente en la hoja maestra 'Ecosistema Regional'
+ * para mantener la trazabilidad sin exponer correos en la interfaz pública.
+ */
+function obtenerCorreoDesdeCatalogo(doc, nombreProyecto) {
+  try {
+    if (!nombreProyecto) return "No registrado";
+    var sheet = doc.getSheetByName('Ecosistema Regional');
+    if (!sheet) return "No registrado";
+    var rows = sheet.getDataRange().getValues();
+    var objetivo = nombreProyecto.toString().toLowerCase().trim();
+
+    for (var i = 1; i < rows.length; i++) {
+      var nombreFila = (rows[i][1] || "").toString().toLowerCase().trim();
+      if (nombreFila === objetivo) {
+        var correo = (rows[i][8] || "").toString().trim();
+        return correo || "Privado (Sin correo registrado)";
+      }
+    }
+    return "No encontrado en catálogo";
+  } catch (e) {
+    return "Error al consultar correo";
+  }
+}
+
 function doPost(e) {
   try {
     if (!e || !e.parameter) {
       return ContentService.createTextOutput(JSON.stringify({ status: "error", message: "Solicitud vacía" })).setMimeType(ContentService.MimeType.JSON);
     }
 
-    // 1. FILTRO HONEYPOT ANTI-BOTS (si el campo oculto viene con texto, se descarta en silencio)
+    // 1. FILTRO HONEYPOT ANTI-BOTS
     if (e.parameter.hp_website && e.parameter.hp_website.toString().trim() !== "") {
       return ContentService.createTextOutput(JSON.stringify({
         status: "ok",
@@ -142,19 +167,21 @@ function doPost(e) {
       return ContentService.createTextOutput(respuestaJson).setMimeType(ContentService.MimeType.JSON);
     }
 
-    // 5. REGISTRO DE CONTACTO EN 'Historial_Contactos'
+    // 5. REGISTRO DE CONTACTO EN 'Historial_Contactos' (CON RESOLUCIÓN INTERNA DE CORREO)
     if (tipoFormulario === 'Contacto') {
       var sheetContacto = doc.getSheetByName('Historial_Contactos') || doc.insertSheet('Historial_Contactos');
       var fechaContactoChile = Utilities.formatDate(new Date(), "America/Santiago", "dd/MM/yyyy HH:mm:ss");
+      var nombreStartupRaw = (e.parameter.nombreStartup || "No especificado").toString().trim();
+      var correoDestinoReal = obtenerCorreoDesdeCatalogo(doc, nombreStartupRaw);
 
       sheetContacto.appendRow([
         fechaContactoChile,
         sanitizarTexto(e.parameter.solicitanteNombre || "No especificado", 120),
-        sanitizarTexto(e.parameter.solicitanteEmpresa || "Empresa o Usuario Web", 150),
+        sanitizarTexto(e.parameter.solicitanteEmpresa || "No especificada", 150),
         sanitizarTexto(e.parameter.solicitanteEmail || "No especificado", 120),
-        sanitizarTexto(e.parameter.nombreStartup || "No especificado", 150),
-        sanitizarTexto(e.parameter.correoDestino || "No especificado", 120),
-        sanitizarTexto(e.parameter.origen || "Ficha Técnica", 200),
+        sanitizarTexto(nombreStartupRaw, 150),
+        sanitizarTexto(correoDestinoReal, 120),
+        sanitizarTexto(e.parameter.origen || "Catálogo Web", 300),
         "Pendiente de contacto"
       ]);
       return ContentService.createTextOutput("Contacto registrado").setMimeType(ContentService.MimeType.TEXT);
