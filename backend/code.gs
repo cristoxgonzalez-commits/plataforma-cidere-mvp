@@ -44,6 +44,7 @@ function doPost(e) {
     // 2. REGISTRO DE DESAFÍOS EN 'Desafios_Postulados' + RAZONAMIENTO SEMÁNTICO
     if (tipoFormulario === 'Desafio') {
       var sheetDesafios = doc.getSheetByName('Desafios_Postulados') || doc.insertSheet('Desafios_Postulados');
+      var fechaChile = Utilities.formatDate(new Date(), "America/Santiago", "dd/MM/yyyy HH:mm:ss");
       var solicitanteNombre = e.parameter.solicitanteNombre ? e.parameter.solicitanteNombre.trim() : "No especificado";
       var empresa = e.parameter.empresa ? e.parameter.empresa.trim() : "";
       var contactoEmail = e.parameter.contactoEmail ? e.parameter.contactoEmail.trim() : "";
@@ -54,7 +55,7 @@ function doPost(e) {
       var minTrl = parseInt(e.parameter.minTrlPermitido, 10) || 1;
       
       sheetDesafios.appendRow([
-        new Date(),
+        fechaChile,
         solicitanteNombre,
         empresa,
         contactoEmail,
@@ -87,6 +88,7 @@ function doPost(e) {
     // 3. REGISTRO DE CONTACTO EN 'Historial_Contactos'
     if (tipoFormulario === 'Contacto') {
       var sheetContacto = doc.getSheetByName('Historial_Contactos') || doc.insertSheet('Historial_Contactos');
+      var fechaContactoChile = Utilities.formatDate(new Date(), "America/Santiago", "dd/MM/yyyy HH:mm:ss");
       var solNombre = e.parameter.solicitanteNombre ? e.parameter.solicitanteNombre.trim() : "No especificado";
       var solEmpresa = e.parameter.solicitanteEmpresa ? e.parameter.solicitanteEmpresa.trim() : "Empresa o Usuario Web";
       var solEmail = e.parameter.solicitanteEmail ? e.parameter.solicitanteEmail.trim() : "No especificado";
@@ -95,7 +97,7 @@ function doPost(e) {
       var origen = e.parameter.origen ? e.parameter.origen.trim() : "Ficha Técnica";
 
       sheetContacto.appendRow([
-        new Date(),
+        fechaContactoChile,
         solNombre,
         solEmpresa,
         solEmail,
