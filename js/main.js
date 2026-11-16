@@ -767,7 +767,7 @@ function iniciarTransicionAnalisis(datosDesafio, promesaBackend) {
 }
 
 // ========================================================
-// RENDERIZADO DE MATCHES CON FICHA TÉCNICA PREVIA
+// RENDERIZADO DE MATCHES CON AUDITORÍA EN CONSOLA + FICHA PREVIA
 // ========================================================
 function mostrarPantallaMatches(datosDesafio, respuestaServidor) {
     const { empresa, contactoEmail, rubro, nivelRiesgo, titulo, descripcion, solicitanteNombre } = datosDesafio;
@@ -785,8 +785,10 @@ function mostrarPantallaMatches(datosDesafio, respuestaServidor) {
     }, 20);
 
     let listaFinal = [];
+    let motorUtilizado = "Motor Conceptual Local (Respaldo TF-IDF)";
 
     if (respuestaServidor && respuestaServidor.mode === 'semantic' && Array.isArray(respuestaServidor.matches) && respuestaServidor.matches.length > 0) {
+        motorUtilizado = "API Semántica Gemini (Servidor Apps Script)";
         respuestaServidor.matches.forEach(m => {
             const encontrado = startupsRegistry.find(s => normalizar(s.nombre) === normalizar(m.nombre));
             if (encontrado) {
@@ -807,6 +809,24 @@ function mostrarPantallaMatches(datosDesafio, respuestaServidor) {
             startupsRegistry
         );
     }
+
+    // Reporte estructurado en consola (F12 -> Consola) para auditar cómo trabajó el agente
+    console.groupCollapsed(`[CIDERE Matchmaking] Auditoría del Agente — ${titulo}`);
+    console.info("Motor activo:", motorUtilizado);
+    if (respuestaServidor && respuestaServidor.auditoria) {
+        console.info("Telemetría Servidor (Apps Script):", respuestaServidor.auditoria);
+    } else {
+        console.info("Telemetría Servidor:", "Sin respuesta semántica remota; ejecutado íntegramente en cliente.");
+    }
+    console.table(listaFinal.map(m => ({
+        Proyecto: m.item.nombre,
+        Tipo: m.item.tipo,
+        Industria: m.item.industria,
+        TRL: m.item.trlMax,
+        Afinidad: `${m.afinidad}%`,
+        Justificacion: m.justificacion
+    })));
+    console.groupEnd();
 
     contenedorLista.innerHTML = '';
 
