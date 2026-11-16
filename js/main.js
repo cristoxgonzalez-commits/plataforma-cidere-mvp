@@ -3,7 +3,8 @@ import {
     BUSQUEDAS_SUGERIDAS,
     evaluarBuscadorConceptual,
     analizarCalidadDesafio,
-    ejecutarMatchLocalConceptual
+    ejecutarMatchLocalConceptual,
+    extraerNumeroTRL
 } from './services/semanticEngine.js';
 
 // ESTADO GLOBAL
@@ -511,7 +512,7 @@ function actualizarSelectTRL() {
 function renderTRL() {
     const cont = document.getElementById('cuestionario-lineal-container');
     cont.innerHTML = '';
-    const currentVal = empresaSeleccionadaActual ? (parseInt(empresaSeleccionadaActual.trlMax) || 1) : 1;
+    const currentVal = empresaSeleccionadaActual ? (extraerNumeroTRL(empresaSeleccionadaActual.trlMax) || 1) : 1;
 
     trlDefinitions.forEach(step => {
         const isCompleted = step.level <= currentVal;
@@ -542,7 +543,7 @@ function renderTRL() {
 }
 
 // ========================================================
-// MODALES Y FORMULARIOS (CON AGENTE GUÍA DE DESAFÍOS)
+// MODALES Y FORMULARIOS (CON AGENTE GUÍA CONECTADO AL CATÁLOGO)
 // ========================================================
 function initModalesFormularios() {
     document.querySelectorAll('.close-modal').forEach(btn => {
@@ -594,11 +595,16 @@ function initModalesFormularios() {
         }
     });
 
-    // Agente Guía en tiempo real mientras se redacta la descripción del desafío
+    // Agente Guía en tiempo real al escribir descripción o cambiar rubro
     const txtDescripcion = document.getElementById('des-descripcion');
-    txtDescripcion?.addEventListener('input', () => {
-        actualizarPanelAgenteGuia(txtDescripcion.value);
-    });
+    const selRubro = document.getElementById('des-rubro');
+
+    const refrescarGuia = () => {
+        actualizarPanelAgenteGuia(txtDescripcion?.value || '', selRubro?.value || '');
+    };
+
+    txtDescripcion?.addEventListener('input', refrescarGuia);
+    selRubro?.addEventListener('change', refrescarGuia);
 
     // Envío del formulario de Desafío + Matchmaking Semántico
     document.getElementById('form-publicar-desafio').addEventListener('submit', (e) => {
@@ -627,7 +633,6 @@ function initModalesFormularios() {
         fd.append('descripcion', descripcion);
         fd.append('minTrlPermitido', minTrlPermitido);
 
-        // Promesa de backend (guarda en Sheets y consulta Gemini si está configurado)
         const promesaBackend = postToAppsScript(fd)
             .then(res => {
                 try { return JSON.parse(res); }
@@ -642,8 +647,8 @@ function initModalesFormularios() {
     });
 }
 
-function actualizarPanelAgenteGuia(texto) {
-    const analisis = analizarCalidadDesafio(texto);
+function actualizarPanelAgenteGuia(texto, rubro = '') {
+    const analisis = analizarCalidadDesafio(texto, rubro, startupsRegistry);
     const critProb = document.getElementById('crit-problema');
     const critEnt = document.getElementById('crit-entorno');
     const critImp = document.getElementById('crit-impacto');
@@ -662,7 +667,7 @@ function actualizarPanelAgenteGuia(texto) {
         critImp.innerText = `${analisis.criterios.impacto ? '✓' : '○'} Impacto Esperado`;
     }
     if (tipText) {
-        tipText.innerText = analisis.consejo;
+        tipText.innerHTML = `${analisis.consejo}${analisis.radarHtml || ''}`;
     }
 }
 
@@ -675,7 +680,7 @@ function abrirModalDesafio() {
     if (scannerAnimFrameId) cancelAnimationFrame(scannerAnimFrameId);
 
     form.reset();
-    actualizarPanelAgenteGuia('');
+    actualizarPanelAgenteGuia('', '');
     form.style.display = 'block';
     scanningView.style.display = 'none';
     matchesView.style.display = 'none';
@@ -695,20 +700,20 @@ function iniciarTransicionAnalisis(datosDesafio, promesaBackend) {
     const ring = document.getElementById('scanner-progress-ring');
     const pctText = document.getElementById('scanner-pct-text');
 
-    document.getElementById('step-label-2').innerText = `Mapeando capacidades en sector ${datosDesafio.rubro} y afines`;
-    document.getElementById('step-label-3').innerText = `Evaluando afinidad técnica y umbral ${datosDesafio.nivelRiesgo}`;
+    document.getElementById('step-label-2').innerText = `Contrastando problema con «¿Qué hace?» y «¿Cómo lo hace?» del ecosistema`;
+    document.getElementById('step-label-3').innerText = `Aplicando umbral de madurez ${datosDesafio.nivelRiesgo} y pertinencia sectorial`;
 
     form.style.display = 'none';
     matchesView.style.display = 'none';
     scanningView.style.display = 'block';
     title.innerText = 'Análisis de Compatibilidad Tecnológica';
 
-    const circumference = 427.26; // 2 * PI * 68
+    const circumference = 427.26;
     ring.style.strokeDasharray = circumference;
     ring.style.strokeDashoffset = circumference;
     pctText.innerText = '0%';
 
-    const totalDuration = 4800; // 4.8 segundos
+    const totalDuration = 4800;
     const startTime = performance.now();
 
     function actualizarEstadoPasos(pasoActivo) {
@@ -746,7 +751,7 @@ function iniciarTransicionAnalisis(datosDesafio, promesaBackend) {
         if (transcurrido < totalDuration) {
             scannerAnimFrameId = requestAnimationFrame(animar);
         } else {
-            actualizarEstadoPasos(5); // Todos completados
+            actualizarEstadoPasos(5);
             pctText.innerText = '100%';
             ring.style.strokeDashoffset = 0;
 
@@ -779,7 +784,6 @@ function mostrarPantallaMatches(datosDesafio, respuestaServidor) {
         matchesView.style.opacity = '1';
     }, 20);
 
-    // 1. Obtener matches desde razonamiento semántico de servidor (si existe) o motor conceptual local
     let listaFinal = [];
 
     if (respuestaServidor && respuestaServidor.mode === 'semantic' && Array.isArray(respuestaServidor.matches) && respuestaServidor.matches.length > 0) {
@@ -797,7 +801,6 @@ function mostrarPantallaMatches(datosDesafio, respuestaServidor) {
         });
     }
 
-    // Si no hubo respuesta semántica externa, ejecutar motor conceptual local
     if (listaFinal.length === 0) {
         listaFinal = ejecutarMatchLocalConceptual(
             { rubro, nivelRiesgo, titulo, descripcion },
@@ -811,9 +814,9 @@ function mostrarPantallaMatches(datosDesafio, respuestaServidor) {
         contenedorLista.innerHTML = `
             <div style="text-align: center; padding: 28px 16px; background: #f8fafc; border: 1px solid var(--border-color); border-radius: 10px;">
                 <i data-lucide="search-x" size="36" style="color: var(--cidere-blue); opacity: 0.5; margin-bottom: 8px;"></i>
-                <h4 style="font-size: 15px; color: var(--cidere-blue); font-weight: 700;">No hay coincidencias inmediatas dentro del umbral TRL solicitado</h4>
+                <h4 style="font-size: 15px; color: var(--cidere-blue); font-weight: 700;">No hay coincidencias técnicas inmediatas dentro del umbral TRL solicitado</h4>
                 <p style="font-size: 12.5px; color: var(--text-muted); max-width: 500px; margin: 4px auto 0; line-height: 1.5;">
-                    Tu desafío quedó registrado en la Mesa de Innovación. El equipo de transferencia tecnológica de CIDERE Biobío realizará una búsqueda dirigida en universidades y centros de I+D para presentarte alternativas.
+                    Tu desafío quedó registrado en la Mesa de Innovación. El equipo de transferencia tecnológica de CIDERE Biobío realizará una búsqueda dirigida en universidades y centros de I+D para presentarte alternativas acordes.
                 </p>
             </div>
         `;
@@ -870,7 +873,6 @@ function mostrarPantallaMatches(datosDesafio, respuestaServidor) {
                 refreshIcons();
             };
 
-            // Acción 1: Ver Ficha Técnica antes de solicitar contacto
             btnFicha.addEventListener('click', () => {
                 abrirFichaTecnica(item, {
                     empresa,
@@ -881,7 +883,6 @@ function mostrarPantallaMatches(datosDesafio, respuestaServidor) {
                 });
             });
 
-            // Acción 2: Solicitar Contacto directo
             btnContacto.addEventListener('click', async () => {
                 btnContacto.disabled = true;
                 btnContacto.innerText = 'Registrando...';
