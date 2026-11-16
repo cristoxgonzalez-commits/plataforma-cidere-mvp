@@ -37,6 +37,17 @@ function normalizar(texto) {
     return texto.toString().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
 }
 
+// Sanitización Anti-XSS para inserciones dinámicas en DOM
+function escaparHTML(texto) {
+    if (texto === null || texto === undefined) return '';
+    return texto.toString()
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
 function refreshIcons() {
     if (window.lucide) window.lucide.createIcons();
 }
@@ -137,8 +148,8 @@ async function cargarDatos() {
         renderDesafios(desafios);
         aplicarFiltrosCombine();
         actualizarSelectTRL();
-    } catch (err) {
-        console.error("Error al cargar datos desde Sheets", err);
+    } catch (_) {
+        // Silencioso en producción
     }
 }
 
@@ -163,6 +174,10 @@ function renderDesafios(desafios) {
         return;
     }
     desafios.forEach(d => {
+        const tituloSeguro = escaparHTML(d.titulo);
+        const empresaSegura = escaparHTML(d.empresa);
+        const descSegura = escaparHTML(d.descripcion);
+
         contenedor.innerHTML += `
             <div class="desafio-card-dark">
                 <div>
@@ -170,9 +185,9 @@ function renderDesafios(desafios) {
                         <span class="badge badge-green" style="background: rgba(255,255,255,0.18); color: #ffffff;">INDUSTRIA</span>
                         <span style="font-size: 11px; font-family: var(--font-title); color: #01DCFF; letter-spacing: 0.6px; font-weight: 700;">CONVOCATORIA ACTIVA</span>
                     </div>
-                    <h4 style="font-size: 16px; font-weight: 700; color: #01DCFF; margin-bottom: 12px; line-height: 1.35;">${d.titulo}</h4>
+                    <h4 style="font-size: 16px; font-weight: 700; color: #01DCFF; margin-bottom: 12px; line-height: 1.35;">${tituloSeguro}</h4>
                     <p style="font-size: 13px; line-height: 1.6; opacity: 0.92; color: #ffffff; margin-bottom: 16px;">
-                        <strong style="color: #ffffff;">${d.empresa}:</strong> ${d.descripcion}
+                        <strong style="color: #ffffff;">${empresaSegura}:</strong> ${descSegura}
                     </p>
                 </div>
                 <div style="border-top: 1px solid rgba(255,255,255,0.12); padding-top: 14px; display: flex; justify-content: flex-end;">
@@ -258,10 +273,13 @@ function renderGrid(containerId, list, tipo) {
 
     list.forEach(s => {
         const badgeColor = tipo === 'STARTUP' ? 'badge-green' : 'badge-blue';
+        const nombreSeguro = escaparHTML(s.nombre);
+        const queHaceSeguro = escaparHTML(s.queHace);
+        const industriaSegura = escaparHTML(s.industria);
         const metaField = tipo === 'STARTUP' 
-            ? `<b>Contacto:</b> ${s.contacto || 'Privado (Vía CIDERE)'}`
-            : `<b>Institución:</b> <span class="meta-highlight">${s.institucion || 'No especificada'}</span>`;
-        const trlText = s.trlMax === "Por validar" ? "Por validar" : `TRL ${s.trlMax}`;
+            ? `<b>Contacto:</b> ${escaparHTML(s.contacto || 'Privado (Vía CIDERE)')}`
+            : `<b>Institución:</b> <span class="meta-highlight">${escaparHTML(s.institucion || 'No especificada')}</span>`;
+        const trlText = escaparHTML(s.trlMax === "Por validar" ? "Por validar" : `TRL ${s.trlMax}`);
 
         const card = document.createElement('div');
         card.className = 'uniform-card';
@@ -271,11 +289,11 @@ function renderGrid(containerId, list, tipo) {
                     <span class="badge ${badgeColor}">${tipo}</span>
                     <span class="badge badge-gray" style="font-weight: 700;">${trlText}</span>
                 </div>
-                <h4 class="uniform-card-title" title="${s.nombre}">${s.nombre}</h4>
+                <h4 class="uniform-card-title" title="${nombreSeguro}">${nombreSeguro}</h4>
                 <div class="uniform-card-meta">${metaField}</div>
                 <div class="uniform-card-divider"></div>
-                <div class="uniform-card-desc" title="${s.queHace}">${s.queHace}</div>
-                <div class="uniform-card-industry"><b>Industria:</b> ${s.industria}</div>
+                <div class="uniform-card-desc" title="${queHaceSeguro}">${queHaceSeguro}</div>
+                <div class="uniform-card-industry"><b>Industria:</b> ${industriaSegura}</div>
             </div>
             <div class="uniform-card-footer">
                 <button class="btn-outline card-btn btn-ver-ficha">Ver Ficha Técnica</button>
@@ -289,7 +307,7 @@ function renderGrid(containerId, list, tipo) {
     });
 }
 
-// FICHA TÉCNICA CON SOPORTE DE CONTEXTO (DESDE CATÁLOGO O DESDE MATCH)
+// FICHA TÉCNICA CON SOPORTE DE CONTEXTO
 function abrirFichaTecnica(item, contextoMatch = null) {
     document.getElementById('ficha-nombre').innerText = item.nombre;
     document.getElementById('ficha-tipo-badge').innerText = item.tipo === 'Startup' ? 'STARTUP' : 'CAPACIDAD REGIONAL';
@@ -354,7 +372,7 @@ function initBuscadorSpotlight() {
 
     function mostrarGuiaInicial() {
         const chipsHtml = BUSQUEDAS_SUGERIDAS.map(s =>
-            `<button type="button" class="search-guide-chip" data-query="${s.query}">${s.label}</button>`
+            `<button type="button" class="search-guide-chip" data-query="${escaparHTML(s.query)}">${escaparHTML(s.label)}</button>`
         ).join('');
 
         dropdown.innerHTML = `
@@ -392,7 +410,7 @@ function initBuscadorSpotlight() {
         if (resultados.length === 0) {
             dropdown.innerHTML = `
                 <div class="search-no-results">
-                    No encontramos coincidencias directas para "<b>${input.value}</b>".<br>
+                    No encontramos coincidencias directas para "<b>${escaparHTML(input.value)}</b>".<br>
                     <span style="font-size: 11.5px;">Prueba describiendo el proceso o publica tu requerimiento en <b>Desafíos Industria</b>.</span>
                 </div>
             `;
@@ -408,7 +426,7 @@ function initBuscadorSpotlight() {
         if (intencionDetectada) {
             html += `
                 <div class="search-intent-pill">
-                    <i data-lucide="layers" size="14"></i> Enfoque detectado: <span>${intencionDetectada}</span>
+                    <i data-lucide="layers" size="14"></i> Enfoque detectado: <span>${escaparHTML(intencionDetectada)}</span>
                 </div>
             `;
         }
@@ -416,11 +434,13 @@ function initBuscadorSpotlight() {
         if (resIES.length > 0) {
             html += `<div class="search-group-title">Capacidades Regionales Compatibles</div>`;
             resIES.forEach(item => {
+                const nombreSeguro = escaparHTML(item.nombre);
+                const instSegura = item.institucion ? escaparHTML(item.institucion) + ' • ' : '';
                 html += `
-                    <div class="search-item" data-name="${item.nombre}" data-view="view-ies">
+                    <div class="search-item" data-name="${nombreSeguro}" data-view="view-ies">
                         <div class="search-item-info">
-                            <div class="search-item-title">${item.nombre}</div>
-                            <div class="search-item-sub">${item.institucion ? item.institucion + ' • ' : ''}${item.queHace}</div>
+                            <div class="search-item-title">${nombreSeguro}</div>
+                            <div class="search-item-sub">${instSegura}${escaparHTML(item.queHace)}</div>
                         </div>
                         <span class="badge badge-blue">CAPACIDAD</span>
                     </div>
@@ -431,11 +451,12 @@ function initBuscadorSpotlight() {
         if (resStartups.length > 0) {
             html += `<div class="search-group-title">Startups Regionales Compatibles</div>`;
             resStartups.forEach(item => {
+                const nombreSeguro = escaparHTML(item.nombre);
                 html += `
-                    <div class="search-item" data-name="${item.nombre}" data-view="view-repositorio">
+                    <div class="search-item" data-name="${nombreSeguro}" data-view="view-repositorio">
                         <div class="search-item-info">
-                            <div class="search-item-title">${item.nombre}</div>
-                            <div class="search-item-sub">${item.industria} • ${item.queHace}</div>
+                            <div class="search-item-title">${nombreSeguro}</div>
+                            <div class="search-item-sub">${escaparHTML(item.industria)} • ${escaparHTML(item.queHace)}</div>
                         </div>
                         <span class="badge badge-green">STARTUP</span>
                     </div>
@@ -505,7 +526,7 @@ function actualizarSelectTRL() {
     const select = document.getElementById('select-empresa-trl');
     select.innerHTML = `<option value="">-- Seleccione un proyecto registrado --</option>`;
     startupsRegistry.forEach(s => {
-        select.innerHTML += `<option value="${s.nombre}">${s.nombre} (${s.industria})</option>`;
+        select.innerHTML += `<option value="${escaparHTML(s.nombre)}">${escaparHTML(s.nombre)} (${escaparHTML(s.industria)})</option>`;
     });
 }
 
@@ -522,11 +543,11 @@ function renderTRL() {
             <div class="trl-step-header">
                 <div>
                     <span class="badge ${isCompleted ? 'badge-green' : 'badge-gray'}">NIVEL ${step.level}</span>
-                    <h4 style="font-size: 14px; margin-top: 4px;">${step.title}</h4>
+                    <h4 style="font-size: 14px; margin-top: 4px;">${escaparHTML(step.title)}</h4>
                 </div>
                 <input type="checkbox" style="width: 18px; height: 18px; cursor: pointer;" ${isCompleted ? 'checked' : ''}>
             </div>
-            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px;">${step.desc}</p>
+            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px;">${escaparHTML(step.desc)}</p>
         `;
 
         card.querySelector('input').addEventListener('change', (e) => {
@@ -543,14 +564,31 @@ function renderTRL() {
 }
 
 // ========================================================
-// MODALES Y FORMULARIOS (CON AGENTE GUÍA CONECTADO AL CATÁLOGO)
+// MODALES Y FORMULARIOS (CON PROTECCIÓN HONEYPOT Y AGENTE GUÍA)
 // ========================================================
+function inyectarHoneypot(formEl) {
+    if (!formEl || formEl.querySelector('input[name="hp_website"]')) return;
+    const hp = document.createElement('input');
+    hp.type = 'text';
+    hp.name = 'hp_website';
+    hp.tabIndex = -1;
+    hp.autocomplete = 'off';
+    hp.setAttribute('aria-hidden', 'true');
+    hp.style.cssText = 'position:absolute;left:-9999px;width:1px;height:1px;opacity:0;pointer-events:none;';
+    formEl.appendChild(hp);
+}
+
 function initModalesFormularios() {
     document.querySelectorAll('.close-modal').forEach(btn => {
         btn.addEventListener('click', () => {
             closeModal(btn.getAttribute('data-modal'));
         });
     });
+
+    const formCapacidad = document.getElementById('form-registro-capacidad');
+    const formDesafio = document.getElementById('form-publicar-desafio');
+    inyectarHoneypot(formCapacidad);
+    inyectarHoneypot(formDesafio);
 
     const regTipo = document.getElementById('reg-tipo');
     const instContainer = document.getElementById('campo-institucion-container');
@@ -567,13 +605,16 @@ function initModalesFormularios() {
         }
     });
 
-    document.getElementById('form-registro-capacidad').addEventListener('submit', async (e) => {
+    formCapacidad.addEventListener('submit', async (e) => {
         e.preventDefault();
         const loader = document.getElementById('loader-capacidad');
         loader.style.display = 'inline';
 
+        const hpVal = formCapacidad.querySelector('input[name="hp_website"]')?.value || '';
+
         const fd = new FormData();
         fd.append('tipoFormulario', 'Capacidad');
+        fd.append('hp_website', hpVal);
         fd.append('tipoEntidad', regTipo.value);
         fd.append('institucion', regInst.value);
         fd.append('nombreProyecto', document.getElementById('reg-nombre').value);
@@ -607,9 +648,10 @@ function initModalesFormularios() {
     selRubro?.addEventListener('change', refrescarGuia);
 
     // Envío del formulario de Desafío + Matchmaking Semántico
-    document.getElementById('form-publicar-desafio').addEventListener('submit', (e) => {
+    formDesafio.addEventListener('submit', (e) => {
         e.preventDefault();
 
+        const hpVal = formDesafio.querySelector('input[name="hp_website"]')?.value || '';
         const solicitanteNombre = document.getElementById('des-solicitante').value.trim();
         const empresa = document.getElementById('des-empresa').value.trim();
         const contactoEmail = document.getElementById('des-contacto').value.trim();
@@ -624,6 +666,7 @@ function initModalesFormularios() {
 
         const fd = new FormData();
         fd.append('tipoFormulario', 'Desafio');
+        fd.append('hp_website', hpVal);
         fd.append('solicitanteNombre', solicitanteNombre);
         fd.append('empresa', empresa);
         fd.append('contactoEmail', contactoEmail);
@@ -767,7 +810,7 @@ function iniciarTransicionAnalisis(datosDesafio, promesaBackend) {
 }
 
 // ========================================================
-// RENDERIZADO DE MATCHES CON AUDITORÍA EN CONSOLA + FICHA PREVIA
+// RENDERIZADO DE MATCHES CON PROTECCIÓN XSS Y FICHA PREVIA
 // ========================================================
 function mostrarPantallaMatches(datosDesafio, respuestaServidor) {
     const { empresa, contactoEmail, rubro, nivelRiesgo, titulo, descripcion, solicitanteNombre } = datosDesafio;
@@ -785,16 +828,14 @@ function mostrarPantallaMatches(datosDesafio, respuestaServidor) {
     }, 20);
 
     let listaFinal = [];
-    let motorUtilizado = "Motor Conceptual Local (Respaldo TF-IDF)";
 
     if (respuestaServidor && respuestaServidor.mode === 'semantic' && Array.isArray(respuestaServidor.matches) && respuestaServidor.matches.length > 0) {
-        motorUtilizado = "API Semántica Gemini (Servidor Apps Script)";
         respuestaServidor.matches.forEach(m => {
             const encontrado = startupsRegistry.find(s => normalizar(s.nombre) === normalizar(m.nombre));
             if (encontrado) {
                 listaFinal.push({
                     item: encontrado,
-                    afinidad: m.afinidad || 90,
+                    afinidad: parseInt(m.afinidad, 10) || 90,
                     justificacion: m.justificacion,
                     esExacto: true,
                     esMayorMadurez: false
@@ -809,24 +850,6 @@ function mostrarPantallaMatches(datosDesafio, respuestaServidor) {
             startupsRegistry
         );
     }
-
-    // Reporte estructurado en consola (F12 -> Consola) para auditar cómo trabajó el agente
-    console.groupCollapsed(`[CIDERE Matchmaking] Auditoría del Agente — ${titulo}`);
-    console.info("Motor activo:", motorUtilizado);
-    if (respuestaServidor && respuestaServidor.auditoria) {
-        console.info("Telemetría Servidor (Apps Script):", respuestaServidor.auditoria);
-    } else {
-        console.info("Telemetría Servidor:", "Sin respuesta semántica remota; ejecutado íntegramente en cliente.");
-    }
-    console.table(listaFinal.map(m => ({
-        Proyecto: m.item.nombre,
-        Tipo: m.item.tipo,
-        Industria: m.item.industria,
-        TRL: m.item.trlMax,
-        Afinidad: `${m.afinidad}%`,
-        Justificacion: m.justificacion
-    })));
-    console.groupEnd();
 
     contenedorLista.innerHTML = '';
 
@@ -859,18 +882,18 @@ function mostrarPantallaMatches(datosDesafio, respuestaServidor) {
                 <div style="flex: 1; min-width: 0;">
                     <div style="display: flex; gap: 6px; align-items: center; margin-bottom: 6px; flex-wrap: wrap;">
                         <span class="badge ${badgeTipo}">${etiquetaTipo}</span>
-                        <span class="badge badge-gray">TRL ${item.trlMax}</span>
-                        <span class="badge badge-blue" style="background: #f1f5f9; color: var(--cidere-blue-dark);">${afinidad}% AFINIDAD</span>
+                        <span class="badge badge-gray">TRL ${escaparHTML(item.trlMax)}</span>
+                        <span class="badge badge-blue" style="background: #f1f5f9; color: var(--cidere-blue-dark);">${escaparHTML(afinidad)}% AFINIDAD</span>
                         ${badgeRiesgoHtml}
                     </div>
-                    <div class="match-info-title">${item.nombre}</div>
+                    <div class="match-info-title">${escaparHTML(item.nombre)}</div>
                     <div class="match-info-meta">
-                        ${item.institucion ? `<b>Institución:</b> ${item.institucion} &bull; ` : ''}
-                        <b>Industria:</b> ${item.industria}
+                        ${item.institucion ? `<b>Institución:</b> ${escaparHTML(item.institucion)} &bull; ` : ''}
+                        <b>Industria:</b> ${escaparHTML(item.industria)}
                     </div>
-                    <div class="match-info-desc">${item.queHace}</div>
+                    <div class="match-info-desc">${escaparHTML(item.queHace)}</div>
                     <div class="match-rationale-box">
-                        <b>Pertinencia técnica:</b> ${justificacion}
+                        <b>Pertinencia técnica:</b> ${escaparHTML(justificacion)}
                     </div>
                 </div>
                 <div class="match-actions-col">
