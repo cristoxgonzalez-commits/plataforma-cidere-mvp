@@ -1,10 +1,17 @@
 import { fetchStartups, fetchDesafios, postToAppsScript } from './services/sheetsService.js';
+import {
+    BUSQUEDAS_SUGERIDAS,
+    evaluarBuscadorConceptual,
+    analizarCalidadDesafio,
+    ejecutarMatchLocalConceptual
+} from './services/semanticEngine.js';
 
 // ESTADO GLOBAL
 let startupsRegistry = [];
 let empresaSeleccionadaActual = null;
 let filtroIndustriaStartupActual = 'Todos';
 let filtroIndustriaIESActual = 'Todos';
+let scannerAnimFrameId = null;
 
 const trlDefinitions = [
     { level: 1, title: "TRL 1: Principios básicos observados", desc: "Investigación inicial" },
@@ -73,13 +80,11 @@ function initNavegacion() {
         });
     });
 
-    // Enlace del bloque Hero hacia la Mesa de Innovación
     document.getElementById('hero-link-mesa')?.addEventListener('click', (e) => {
         e.preventDefault();
         switchView('view-mesa-innovacion', document.getElementById('btn-top-mesa'));
     });
 
-    // Botones para abrir el modal de publicación de desafíos
     document.getElementById('btn-sidebar-publicar')?.addEventListener('click', () => abrirModalDesafio());
     document.getElementById('btn-mesa-publicar')?.addEventListener('click', () => abrirModalDesafio());
     document.getElementById('btn-desafios-publicar')?.addEventListener('click', () => abrirModalDesafio());
@@ -109,7 +114,12 @@ function switchView(viewId, element = null) {
 }
 
 function openModal(id) { document.getElementById(id)?.classList.add('active'); }
-function closeModal(id) { document.getElementById(id)?.classList.remove('active'); }
+function closeModal(id) {
+    if (id === 'modal-publicar-desafio' && scannerAnimFrameId) {
+        cancelAnimationFrame(scannerAnimFrameId);
+    }
+    document.getElementById(id)?.classList.remove('active');
+}
 
 // CARGA DE DATOS ASÍNCRONA
 async function cargarDatos() {
@@ -143,7 +153,6 @@ function mostrarSkeletons() {
     document.getElementById('lista-ies').innerHTML = sk;
 }
 
-// RENDERIZADO DE DESAFÍOS EN SU SECCIÓN DEDICADA
 function renderDesafios(desafios) {
     const contenedor = document.getElementById('lista-desafios-vigentes');
     if (!contenedor) return;
@@ -207,7 +216,9 @@ function initFiltrosPills() {
 }
 
 function aplicarFiltrosCombine() {
-    const q = normalizar(document.getElementById('buscador-global').value);
+    const q = document.getElementById('buscador-global').value.trim();
+    const evaluacion = q.length >= 2 ? evaluarBuscadorConceptual(q, startupsRegistry) : null;
+    const idsRelevantes = evaluacion ? new Set(evaluacion.resultados.map(r => r.nombre)) : null;
 
     // Startups
     let startups = startupsRegistry.filter(s => s.tipo.toUpperCase() === 'STARTUP');
@@ -215,8 +226,8 @@ function aplicarFiltrosCombine() {
     if (filtroIndustriaStartupActual !== 'Todos') {
         startups = startups.filter(s => s.industria === filtroIndustriaStartupActual);
     }
-    if (q) {
-        startups = startups.filter(s => normalizar(s.nombre).includes(q) || normalizar(s.queHace).includes(q) || normalizar(s.industria).includes(q));
+    if (idsRelevantes) {
+        startups = startups.filter(s => idsRelevantes.has(s.nombre));
     }
     renderGrid('lista-startups', startups, 'STARTUP');
     document.getElementById('contador-startups').innerText = `Mostrando ${startups.length} de ${totalS} desarrollos en esta categoría`;
@@ -227,8 +238,8 @@ function aplicarFiltrosCombine() {
     if (filtroIndustriaIESActual !== 'Todos') {
         ies = ies.filter(s => s.industria === filtroIndustriaIESActual);
     }
-    if (q) {
-        ies = ies.filter(s => normalizar(s.nombre).includes(q) || normalizar(s.queHace).includes(q) || normalizar(s.institucion).includes(q) || normalizar(s.industria).includes(q));
+    if (idsRelevantes) {
+        ies = ies.filter(s => idsRelevantes.has(s.nombre));
     }
     renderGrid('lista-ies', ies, 'CAPACIDAD');
     document.getElementById('contador-ies').innerText = `Mostrando ${ies.length} de ${totalI} capacidades regionales`;
@@ -277,7 +288,8 @@ function renderGrid(containerId, list, tipo) {
     });
 }
 
-function abrirFichaTecnica(item) {
+// FICHA TÉCNICA CON SOPORTE DE CONTEXTO (DESDE CATÁLOGO O DESDE MATCH)
+function abrirFichaTecnica(item, contextoMatch = null) {
     document.getElementById('ficha-nombre').innerText = item.nombre;
     document.getElementById('ficha-tipo-badge').innerText = item.tipo === 'Startup' ? 'STARTUP' : 'CAPACIDAD REGIONAL';
     document.getElementById('ficha-institucion').innerText = item.institucion || (item.tipo === 'Startup' ? 'Emprendimiento Independiente' : 'No especificada');
@@ -287,9 +299,22 @@ function abrirFichaTecnica(item) {
     document.getElementById('ficha-contacto').innerText = item.contacto || 'Privado (Vía CIDERE)';
     document.getElementById('ficha-trl-val').innerText = item.trlMax === "Por validar" ? "Por validar" : `Nivel TRL ${item.trlMax}`;
 
-    document.getElementById('ficha-btn-contacto').onclick = () => {
+    const btnContacto = document.getElementById('ficha-btn-contacto');
+    btnContacto.onclick = async () => {
         closeModal('modal-ficha-tecnica');
-        solicitarContacto(item.contacto, item.nombre);
+        if (contextoMatch) {
+            await solicitarContacto(
+                item.contacto,
+                item.nombre,
+                contextoMatch.empresa,
+                contextoMatch.contactoEmail,
+                `Match desde Desafío: ${contextoMatch.tituloDesafio}`,
+                contextoMatch.solicitanteNombre
+            );
+            if (contextoMatch.onSuccessCallback) contextoMatch.onSuccessCallback();
+        } else {
+            await solicitarContacto(item.contacto, item.nombre);
+        }
     };
 
     openModal('modal-ficha-tecnica');
@@ -318,92 +343,140 @@ async function solicitarContacto(email, nombre, solicitanteEmpresa = "Empresa So
     }
 }
 
-// SPOTLIGHT PREDICTIVO
+// ========================================================
+// BUSCADOR GENERAL CON AGENTE GUÍA Y COMPRENSIÓN CONCEPTUAL
+// ========================================================
 function initBuscadorSpotlight() {
     const input = document.getElementById('buscador-global');
     const dropdown = document.getElementById('search-dropdown-results');
     let timer;
 
+    function mostrarGuiaInicial() {
+        const chipsHtml = BUSQUEDAS_SUGERIDAS.map(s =>
+            `<button type="button" class="search-guide-chip" data-query="${s.query}">${s.label}</button>`
+        ).join('');
+
+        dropdown.innerHTML = `
+            <div class="search-guide-banner">
+                <div class="search-guide-title">
+                    <i data-lucide="compass" size="14"></i> Asistente de Búsqueda Conceptual
+                </div>
+                <p style="font-size: 11.5px; color: var(--text-muted); line-height: 1.4;">
+                    Puedes escribir el problema operativo con tus propias palabras o seleccionar una intención frecuente:
+                </p>
+                <div class="search-guide-chips">${chipsHtml}</div>
+            </div>
+        `;
+        dropdown.classList.add('active');
+        refreshIcons();
+
+        dropdown.querySelectorAll('.search-guide-chip').forEach(chip => {
+            chip.addEventListener('click', () => {
+                input.value = chip.getAttribute('data-query');
+                ejecutarBusquedaDropdown();
+            });
+        });
+    }
+
+    function ejecutarBusquedaDropdown() {
+        const q = input.value.trim();
+        if (q.length < 2) {
+            mostrarGuiaInicial();
+            aplicarFiltrosCombine();
+            return;
+        }
+
+        const { intencionDetectada, resultados } = evaluarBuscadorConceptual(q, startupsRegistry);
+
+        if (resultados.length === 0) {
+            dropdown.innerHTML = `
+                <div class="search-no-results">
+                    No encontramos coincidencias directas para "<b>${input.value}</b>".<br>
+                    <span style="font-size: 11.5px;">Prueba describiendo el proceso o publica tu requerimiento en <b>Desafíos Industria</b>.</span>
+                </div>
+            `;
+            dropdown.classList.add('active');
+            aplicarFiltrosCombine();
+            return;
+        }
+
+        const resIES = resultados.filter(s => s.tipo.toUpperCase() === 'IES').slice(0, 4);
+        const resStartups = resultados.filter(s => s.tipo.toUpperCase() === 'STARTUP').slice(0, 4);
+
+        let html = '';
+        if (intencionDetectada) {
+            html += `
+                <div class="search-intent-pill">
+                    <i data-lucide="layers" size="14"></i> Enfoque detectado: <span>${intencionDetectada}</span>
+                </div>
+            `;
+        }
+
+        if (resIES.length > 0) {
+            html += `<div class="search-group-title">Capacidades Regionales Compatibles</div>`;
+            resIES.forEach(item => {
+                html += `
+                    <div class="search-item" data-name="${item.nombre}" data-view="view-ies">
+                        <div class="search-item-info">
+                            <div class="search-item-title">${item.nombre}</div>
+                            <div class="search-item-sub">${item.institucion ? item.institucion + ' • ' : ''}${item.queHace}</div>
+                        </div>
+                        <span class="badge badge-blue">CAPACIDAD</span>
+                    </div>
+                `;
+            });
+        }
+
+        if (resStartups.length > 0) {
+            html += `<div class="search-group-title">Startups Regionales Compatibles</div>`;
+            resStartups.forEach(item => {
+                html += `
+                    <div class="search-item" data-name="${item.nombre}" data-view="view-repositorio">
+                        <div class="search-item-info">
+                            <div class="search-item-title">${item.nombre}</div>
+                            <div class="search-item-sub">${item.industria} • ${item.queHace}</div>
+                        </div>
+                        <span class="badge badge-green">STARTUP</span>
+                    </div>
+                `;
+            });
+        }
+
+        dropdown.innerHTML = html;
+        dropdown.classList.add('active');
+        refreshIcons();
+
+        dropdown.querySelectorAll('.search-item').forEach(el => {
+            el.addEventListener('click', () => {
+                dropdown.classList.remove('active');
+                switchView(el.getAttribute('data-view'));
+                const item = startupsRegistry.find(s => s.nombre === el.getAttribute('data-name'));
+                if (item) abrirFichaTecnica(item);
+            });
+        });
+
+        aplicarFiltrosCombine();
+    }
+
+    input.addEventListener('focus', () => {
+        if (input.value.trim().length < 2) mostrarGuiaInicial();
+        else ejecutarBusquedaDropdown();
+    });
+
     input.addEventListener('input', () => {
         clearTimeout(timer);
-        timer = setTimeout(() => {
-            const q = normalizar(input.value);
-            if (q.length < 2) {
-                dropdown.innerHTML = '';
-                dropdown.classList.remove('active');
-                aplicarFiltrosCombine();
-                return;
-            }
-
-            const resStartups = startupsRegistry.filter(s => s.tipo.toUpperCase() === 'STARTUP' && (
-                normalizar(s.nombre).includes(q) || normalizar(s.queHace).includes(q) || normalizar(s.industria).includes(q)
-            )).slice(0, 4);
-
-            const resIES = startupsRegistry.filter(s => s.tipo.toUpperCase() === 'IES' && (
-                normalizar(s.nombre).includes(q) || normalizar(s.queHace).includes(q) || normalizar(s.institucion).includes(q) || normalizar(s.industria).includes(q)
-            )).slice(0, 4);
-
-            if (resStartups.length === 0 && resIES.length === 0) {
-                dropdown.innerHTML = `<div class="search-no-results">No se encontraron resultados para "<b>${input.value}</b>"</div>`;
-                dropdown.classList.add('active');
-                return;
-            }
-
-            let html = '';
-            if (resIES.length > 0) {
-                html += `<div class="search-group-title">Capacidades Regionales</div>`;
-                resIES.forEach(item => {
-                    html += `
-                        <div class="search-item" data-name="${item.nombre}" data-view="view-ies">
-                            <div class="search-item-info">
-                                <div class="search-item-title">${item.nombre}</div>
-                                <div class="search-item-sub">${item.institucion ? item.institucion + ' • ' : ''}${item.queHace}</div>
-                            </div>
-                            <span class="badge badge-blue">CAPACIDAD</span>
-                        </div>
-                    `;
-                });
-            }
-            if (resStartups.length > 0) {
-                html += `<div class="search-group-title">Startups Regionales</div>`;
-                resStartups.forEach(item => {
-                    html += `
-                        <div class="search-item" data-name="${item.nombre}" data-view="view-repositorio">
-                            <div class="search-item-info">
-                                <div class="search-item-title">${item.nombre}</div>
-                                <div class="search-item-sub">${item.industria} • ${item.queHace}</div>
-                            </div>
-                            <span class="badge badge-green">STARTUP</span>
-                        </div>
-                    `;
-                });
-            }
-
-            dropdown.innerHTML = html;
-            dropdown.classList.add('active');
-            refreshIcons();
-
-            dropdown.querySelectorAll('.search-item').forEach(el => {
-                el.addEventListener('click', () => {
-                    dropdown.classList.remove('active');
-                    switchView(el.getAttribute('data-view'));
-                    const item = startupsRegistry.find(s => s.nombre === el.getAttribute('data-name'));
-                    if (item) abrirFichaTecnica(item);
-                });
-            });
-
-            aplicarFiltrosCombine();
-        }, 180);
+        timer = setTimeout(ejecutarBusquedaDropdown, 180);
     });
 
     input.addEventListener('keydown', (e) => {
         if (e.key === 'Enter') {
             e.preventDefault();
             dropdown.classList.remove('active');
-            const q = normalizar(input.value);
+            const q = input.value.trim();
             if (!q) return;
-            const matchIES = startupsRegistry.filter(s => s.tipo.toUpperCase() === 'IES' && normalizar(s.nombre).includes(q)).length;
-            const matchS = startupsRegistry.filter(s => s.tipo.toUpperCase() === 'STARTUP' && normalizar(s.nombre).includes(q)).length;
+            const { resultados } = evaluarBuscadorConceptual(q, startupsRegistry);
+            const matchIES = resultados.filter(s => s.tipo.toUpperCase() === 'IES').length;
+            const matchS = resultados.filter(s => s.tipo.toUpperCase() === 'STARTUP').length;
             switchView(matchIES > matchS ? 'view-ies' : 'view-repositorio');
             aplicarFiltrosCombine();
         }
@@ -468,7 +541,9 @@ function renderTRL() {
     refreshIcons();
 }
 
-// MODALES Y FORMULARIOS
+// ========================================================
+// MODALES Y FORMULARIOS (CON AGENTE GUÍA DE DESAFÍOS)
+// ========================================================
 function initModalesFormularios() {
     document.querySelectorAll('.close-modal').forEach(btn => {
         btn.addEventListener('click', () => {
@@ -519,7 +594,13 @@ function initModalesFormularios() {
         }
     });
 
-    // FLUJO: PUBLICAR DESAFÍO + ESCÁNER CIRCULAR TECNOLÓGICO DE 5.5s
+    // Agente Guía en tiempo real mientras se redacta la descripción del desafío
+    const txtDescripcion = document.getElementById('des-descripcion');
+    txtDescripcion?.addEventListener('input', () => {
+        actualizarPanelAgenteGuia(txtDescripcion.value);
+    });
+
+    // Envío del formulario de Desafío + Matchmaking Semántico
     document.getElementById('form-publicar-desafio').addEventListener('submit', (e) => {
         e.preventDefault();
 
@@ -529,10 +610,11 @@ function initModalesFormularios() {
         const rubro = document.getElementById('des-rubro').value.trim();
         const nivelRiesgo = document.getElementById('des-riesgo').value.trim();
         const titulo = document.getElementById('des-titulo').value.trim();
+        const descripcion = document.getElementById('des-descripcion').value.trim();
 
-        const desc = "1. CONTEXTO:\n" + document.getElementById('des-contexto').value + 
-                     "\n\n2. IMPACTO ESPERADO:\n" + document.getElementById('des-impacto').value + 
-                     "\n\n3. RESTRICCIONES:\n" + document.getElementById('des-restricciones').value;
+        let minTrlPermitido = 1;
+        if (nivelRiesgo.includes('4-6')) minTrlPermitido = 4;
+        else if (nivelRiesgo.includes('7-9')) minTrlPermitido = 7;
 
         const fd = new FormData();
         fd.append('tipoFormulario', 'Desafio');
@@ -542,16 +624,46 @@ function initModalesFormularios() {
         fd.append('rubro', rubro);
         fd.append('nivelRiesgo', nivelRiesgo);
         fd.append('titulo', titulo);
-        fd.append('descripcion', desc);
+        fd.append('descripcion', descripcion);
+        fd.append('minTrlPermitido', minTrlPermitido);
 
-        // Envío asíncrono a Google Sheets en segundo plano mientras el usuario visualiza el escáner
-        postToAppsScript(fd).catch(err => {
-            console.warn("Desafío procesándose en segundo plano...", err);
-        });
+        // Promesa de backend (guarda en Sheets y consulta Gemini si está configurado)
+        const promesaBackend = postToAppsScript(fd)
+            .then(res => {
+                try { return JSON.parse(res); }
+                catch (_) { return null; }
+            })
+            .catch(() => null);
 
-        // Iniciar experiencia visual de 5.5 segundos
-        iniciarSecuenciaEscaneo(empresa, contactoEmail, rubro, nivelRiesgo, titulo, solicitanteNombre);
+        iniciarTransicionAnalisis(
+            { empresa, contactoEmail, rubro, nivelRiesgo, titulo, descripcion, solicitanteNombre },
+            promesaBackend
+        );
     });
+}
+
+function actualizarPanelAgenteGuia(texto) {
+    const analisis = analizarCalidadDesafio(texto);
+    const critProb = document.getElementById('crit-problema');
+    const critEnt = document.getElementById('crit-entorno');
+    const critImp = document.getElementById('crit-impacto');
+    const tipText = document.getElementById('guide-tip-text');
+
+    if (critProb) {
+        critProb.classList.toggle('met', analisis.criterios.problema);
+        critProb.innerText = `${analisis.criterios.problema ? '✓' : '○'} Problema / Síntoma`;
+    }
+    if (critEnt) {
+        critEnt.classList.toggle('met', analisis.criterios.entorno);
+        critEnt.innerText = `${analisis.criterios.entorno ? '✓' : '○'} Entorno / Condiciones`;
+    }
+    if (critImp) {
+        critImp.classList.toggle('met', analisis.criterios.impacto);
+        critImp.innerText = `${analisis.criterios.impacto ? '✓' : '○'} Impacto Esperado`;
+    }
+    if (tipText) {
+        tipText.innerText = analisis.consejo;
+    }
 }
 
 function abrirModalDesafio() {
@@ -560,7 +672,10 @@ function abrirModalDesafio() {
     const matchesView = document.getElementById('desafio-matches-container');
     const title = document.getElementById('modal-desafio-title');
 
+    if (scannerAnimFrameId) cancelAnimationFrame(scannerAnimFrameId);
+
     form.reset();
+    actualizarPanelAgenteGuia('');
     form.style.display = 'block';
     scanningView.style.display = 'none';
     matchesView.style.display = 'none';
@@ -568,155 +683,143 @@ function abrirModalDesafio() {
     openModal('modal-publicar-desafio');
 }
 
-// SECUENCIA DE ESCÁNER CIRCULAR TEMPORIZADA (0.0s A 5.5s)
-function iniciarSecuenciaEscaneo(empresa, contactoEmail, rubro, nivelRiesgo, tituloDesafio, solicitanteNombre) {
+// ========================================================
+// TRANSICIÓN B2B CORPORATIVA LIMPIA (4.8 SEGUNDOS)
+// ========================================================
+function iniciarTransicionAnalisis(datosDesafio, promesaBackend) {
     const form = document.getElementById('form-publicar-desafio');
     const scanningView = document.getElementById('desafio-scanning-container');
+    const matchesView = document.getElementById('desafio-matches-container');
     const title = document.getElementById('modal-desafio-title');
-    const progressBar = document.getElementById('scanner-progress-bar');
-    const percentNum = document.getElementById('scanner-percentage-num');
-    const stepMsg = document.getElementById('scanner-step-msg');
+
+    const ring = document.getElementById('scanner-progress-ring');
+    const pctText = document.getElementById('scanner-pct-text');
+
+    document.getElementById('step-label-2').innerText = `Mapeando capacidades en sector ${datosDesafio.rubro} y afines`;
+    document.getElementById('step-label-3').innerText = `Evaluando afinidad técnica y umbral ${datosDesafio.nivelRiesgo}`;
 
     form.style.display = 'none';
+    matchesView.style.display = 'none';
     scanningView.style.display = 'block';
-    title.innerText = 'Procesando Requerimiento Industrial...';
+    title.innerText = 'Análisis de Compatibilidad Tecnológica';
 
-    const circumference = 534; // 2 * Math.PI * 85
-    const totalDuration = 5500; // 5.5 segundos
+    const circumference = 427.26; // 2 * PI * 68
+    ring.style.strokeDasharray = circumference;
+    ring.style.strokeDashoffset = circumference;
+    pctText.innerText = '0%';
+
+    const totalDuration = 4800; // 4.8 segundos
     const startTime = performance.now();
 
-    // Textos cronometrados según la pauta
-    const textoEtapas = [
-        { time: 0, text: "Registrando desafío en la base de datos de la Mesa..." },
-        { time: 1300, text: `Mapeando capacidades y startups en el sector ${rubro}...` },
-        { time: 2800, text: `Filtrando por tolerancia al riesgo tecnológico (${nivelRiesgo})...` },
-        { time: 4300, text: "Estructurando opciones de vinculación y contacto directo..." }
-    ];
+    function actualizarEstadoPasos(pasoActivo) {
+        for (let i = 1; i <= 4; i++) {
+            const el = document.getElementById(`step-item-${i}`);
+            const bullet = document.getElementById(`step-bullet-${i}`);
+            if (!el || !bullet) continue;
 
-    let currentStepIndex = -1;
-
-    function frame(now) {
-        const elapsed = now - startTime;
-        const progress = Math.min(elapsed / totalDuration, 1);
-
-        // Curva suave de aceleración (easeOutCubic)
-        const eased = 1 - Math.pow(1 - progress, 3);
-        const percent = Math.floor(eased * 100);
-
-        // Actualizar porcentaje y offset circular
-        if (percentNum) percentNum.innerText = `${percent}%`;
-        if (progressBar) {
-            const offset = circumference - (eased * circumference);
-            progressBar.style.strokeDashoffset = offset;
-        }
-
-        // Actualizar textos cronometrados
-        for (let i = textoEtapas.length - 1; i >= 0; i--) {
-            if (elapsed >= textoEtapas[i].time) {
-                if (currentStepIndex !== i) {
-                    currentStepIndex = i;
-                    if (stepMsg) {
-                        stepMsg.style.opacity = '0';
-                        stepMsg.style.transform = 'translateY(4px)';
-                        setTimeout(() => {
-                            stepMsg.innerText = textoEtapas[i].text;
-                            stepMsg.style.opacity = '1';
-                            stepMsg.style.transform = 'translateY(0)';
-                        }, 120);
-                    }
-                }
-                break;
+            el.classList.remove('active', 'done');
+            if (i < pasoActivo) {
+                el.classList.add('done');
+                bullet.innerText = '✓';
+            } else if (i === pasoActivo) {
+                el.classList.add('active');
+                bullet.innerText = i;
+            } else {
+                bullet.innerText = i;
             }
-        }
-
-        if (progress < 1) {
-            requestAnimationFrame(frame);
-        } else {
-            // 5.5 segundos cumplidos: transición con fundido suave a los matches
-            setTimeout(() => {
-                scanningView.style.opacity = '0';
-                scanningView.style.transition = 'opacity 0.35s ease';
-                setTimeout(() => {
-                    scanningView.style.display = 'none';
-                    scanningView.style.opacity = '1';
-                    mostrarPantallaMatches(empresa, contactoEmail, rubro, nivelRiesgo, tituloDesafio, solicitanteNombre);
-                }, 350);
-            }, 200);
         }
     }
 
-    requestAnimationFrame(frame);
+    function animar(ahora) {
+        const transcurrido = ahora - startTime;
+        const progreso = Math.min(transcurrido / totalDuration, 1);
+
+        const pct = Math.floor(progreso * 100);
+        pctText.innerText = `${pct}%`;
+        ring.style.strokeDashoffset = circumference - (progreso * circumference);
+
+        if (progreso < 0.25) actualizarEstadoPasos(1);
+        else if (progreso < 0.55) actualizarEstadoPasos(2);
+        else if (progreso < 0.85) actualizarEstadoPasos(3);
+        else actualizarEstadoPasos(4);
+
+        if (transcurrido < totalDuration) {
+            scannerAnimFrameId = requestAnimationFrame(animar);
+        } else {
+            actualizarEstadoPasos(5); // Todos completados
+            pctText.innerText = '100%';
+            ring.style.strokeDashoffset = 0;
+
+            setTimeout(async () => {
+                const respuestaServidor = await promesaBackend;
+                scanningView.style.display = 'none';
+                mostrarPantallaMatches(datosDesafio, respuestaServidor);
+            }, 250);
+        }
+    }
+
+    scannerAnimFrameId = requestAnimationFrame(animar);
 }
 
-// ALGORITMO DE MATCHMAKING CON UMBRAL DE MADUREZ ACUMULATIVO
-function mostrarPantallaMatches(empresa, contactoEmail, rubro, nivelRiesgo, tituloDesafio, solicitanteNombre) {
+// ========================================================
+// RENDERIZADO DE MATCHES CON FICHA TÉCNICA PREVIA
+// ========================================================
+function mostrarPantallaMatches(datosDesafio, respuestaServidor) {
+    const { empresa, contactoEmail, rubro, nivelRiesgo, titulo, descripcion, solicitanteNombre } = datosDesafio;
     const matchesView = document.getElementById('desafio-matches-container');
     const title = document.getElementById('modal-desafio-title');
     const contenedorLista = document.getElementById('desafio-matches-lista');
 
     matchesView.style.display = 'block';
-    matchesView.style.animation = 'smoothSectionFade 0.4s ease-out forwards';
-    title.innerText = 'Matches & Soluciones del Ecosistema';
+    matchesView.style.opacity = '0';
+    title.innerText = 'Soluciones Compatibles Identificadas';
 
-    // Regla de umbral mínimo permitido y rango objetivo preferente
-    let minTrlPermitido = 1;
-    let targetMin = 1, targetMax = 3;
+    setTimeout(() => {
+        matchesView.style.transition = 'opacity 0.35s ease';
+        matchesView.style.opacity = '1';
+    }, 20);
 
-    if (nivelRiesgo.includes('1-3')) {
-        // Riesgo Alto: Máxima tolerancia. Acepta todo el ecosistema (TRL 1 al 9).
-        minTrlPermitido = 1;
-        targetMin = 1;
-        targetMax = 3;
-    } else if (nivelRiesgo.includes('4-6')) {
-        // Riesgo Medio: Acepta TRL 4 al 9 (descarta I+D básica TRL 1-3).
-        minTrlPermitido = 4;
-        targetMin = 4;
-        targetMax = 6;
-    } else if (nivelRiesgo.includes('7-9')) {
-        // Riesgo Bajo: Solo acepta TRL 7 al 9 (descarta TRL 1-6).
-        minTrlPermitido = 7;
-        targetMin = 7;
-        targetMax = 9;
+    // 1. Obtener matches desde razonamiento semántico de servidor (si existe) o motor conceptual local
+    let listaFinal = [];
+
+    if (respuestaServidor && respuestaServidor.mode === 'semantic' && Array.isArray(respuestaServidor.matches) && respuestaServidor.matches.length > 0) {
+        respuestaServidor.matches.forEach(m => {
+            const encontrado = startupsRegistry.find(s => normalizar(s.nombre) === normalizar(m.nombre));
+            if (encontrado) {
+                listaFinal.push({
+                    item: encontrado,
+                    afinidad: m.afinidad || 90,
+                    justificacion: m.justificacion,
+                    esExacto: true,
+                    esMayorMadurez: false
+                });
+            }
+        });
     }
 
-    // 1. Filtrar por coincidencia de rubro Y por umbral mínimo de madurez
-    const matchesValidos = startupsRegistry.filter(s => {
-        const coincideRubro = normalizar(s.industria) === normalizar(rubro);
-        const trlVal = parseInt(s.trlMax) || 1;
-        const cumpleUmbral = trlVal >= minTrlPermitido;
-        return coincideRubro && cumpleUmbral;
-    });
-
-    // 2. Ordenar: Primero los que calzan exactamente en el rango objetivo, luego por mayor madurez
-    matchesValidos.sort((a, b) => {
-        const trlA = parseInt(a.trlMax) || 1;
-        const trlB = parseInt(b.trlMax) || 1;
-        const exactoA = (trlA >= targetMin && trlA <= targetMax) ? 1 : 0;
-        const exactoB = (trlB >= targetMin && trlB <= targetMax) ? 1 : 0;
-
-        if (exactoA !== exactoB) {
-            return exactoB - exactoA;
-        }
-        return trlB - trlA;
-    });
+    // Si no hubo respuesta semántica externa, ejecutar motor conceptual local
+    if (listaFinal.length === 0) {
+        listaFinal = ejecutarMatchLocalConceptual(
+            { rubro, nivelRiesgo, titulo, descripcion },
+            startupsRegistry
+        );
+    }
 
     contenedorLista.innerHTML = '';
 
-    if (matchesValidos.length === 0) {
+    if (listaFinal.length === 0) {
         contenedorLista.innerHTML = `
             <div style="text-align: center; padding: 28px 16px; background: #f8fafc; border: 1px solid var(--border-color); border-radius: 10px;">
                 <i data-lucide="search-x" size="36" style="color: var(--cidere-blue); opacity: 0.5; margin-bottom: 8px;"></i>
-                <h4 style="font-size: 15px; color: var(--cidere-blue); font-weight: 700;">No hay matches inmediatos en ${rubro} con el nivel de madurez solicitado</h4>
+                <h4 style="font-size: 15px; color: var(--cidere-blue); font-weight: 700;">No hay coincidencias inmediatas dentro del umbral TRL solicitado</h4>
                 <p style="font-size: 12.5px; color: var(--text-muted); max-width: 500px; margin: 4px auto 0; line-height: 1.5;">
-                    Tu desafío ha quedado guardado en la hoja Desafios_Postulados de la Mesa de Innovación. El equipo de CIDERE Biobío iniciará la búsqueda de capacidades complementarias que cumplan con la tolerancia de riesgo requerida.
+                    Tu desafío quedó registrado en la Mesa de Innovación. El equipo de transferencia tecnológica de CIDERE Biobío realizará una búsqueda dirigida en universidades y centros de I+D para presentarte alternativas.
                 </p>
             </div>
         `;
     } else {
-        matchesValidos.slice(0, 6).forEach(item => {
-            const trlVal = parseInt(item.trlMax) || 1;
-            const esExacto = trlVal >= targetMin && trlVal <= targetMax;
-            const esMayorMadurez = trlVal > targetMax;
+        listaFinal.forEach(matchObj => {
+            const { item, afinidad, justificacion, esExacto, esMayorMadurez } = matchObj;
             const badgeTipo = item.tipo === 'Startup' ? 'badge-green' : 'badge-blue';
             const etiquetaTipo = item.tipo === 'Startup' ? 'STARTUP' : 'CAPACIDAD REGIONAL';
 
@@ -724,16 +827,17 @@ function mostrarPantallaMatches(empresa, contactoEmail, rubro, nivelRiesgo, titu
             if (esExacto) {
                 badgeRiesgoHtml = '<span class="badge badge-green" style="background: #ecfdf5; color: #047857;">ALINEADO AL RIESGO</span>';
             } else if (esMayorMadurez) {
-                badgeRiesgoHtml = '<span class="badge badge-blue" style="background: #eff6ff; color: #1d4ed8;">MADUREZ SUPERIOR COMPATIBLE</span>';
+                badgeRiesgoHtml = '<span class="badge badge-blue" style="background: #eff6ff; color: #1d4ed8;">MADUREZ SUPERIOR</span>';
             }
 
             const card = document.createElement('div');
             card.className = 'match-card-item';
             card.innerHTML = `
                 <div style="flex: 1; min-width: 0;">
-                    <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 6px; flex-wrap: wrap;">
+                    <div style="display: flex; gap: 6px; align-items: center; margin-bottom: 6px; flex-wrap: wrap;">
                         <span class="badge ${badgeTipo}">${etiquetaTipo}</span>
                         <span class="badge badge-gray">TRL ${item.trlMax}</span>
+                        <span class="badge badge-blue" style="background: #f1f5f9; color: var(--cidere-blue-dark);">${afinidad}% AFINIDAD</span>
                         ${badgeRiesgoHtml}
                     </div>
                     <div class="match-info-title">${item.nombre}</div>
@@ -742,15 +846,42 @@ function mostrarPantallaMatches(empresa, contactoEmail, rubro, nivelRiesgo, titu
                         <b>Industria:</b> ${item.industria}
                     </div>
                     <div class="match-info-desc">${item.queHace}</div>
+                    <div class="match-rationale-box">
+                        <b>Pertinencia técnica:</b> ${justificacion}
+                    </div>
                 </div>
-                <div style="flex-shrink: 0;">
-                    <button class="btn-primary btn-match-contacto" style="background-color: var(--cidere-green-bright); padding: 8px 16px; font-weight: 700; white-space: nowrap;">
+                <div class="match-actions-col">
+                    <button type="button" class="btn-outline btn-match-ficha" style="width: 100%;">
+                        <i data-lucide="file-text" size="14"></i> Ver Ficha Técnica
+                    </button>
+                    <button type="button" class="btn-primary btn-match-contacto" style="background-color: var(--cidere-green-bright); width: 100%;">
                         Solicitar Contacto
                     </button>
                 </div>
             `;
 
+            const btnFicha = card.querySelector('.btn-match-ficha');
             const btnContacto = card.querySelector('.btn-match-contacto');
+
+            const marcarComoSolicitado = () => {
+                btnContacto.disabled = true;
+                btnContacto.style.backgroundColor = '#10b981';
+                btnContacto.innerHTML = '<i data-lucide="check" size="14"></i> Contacto Solicitado';
+                refreshIcons();
+            };
+
+            // Acción 1: Ver Ficha Técnica antes de solicitar contacto
+            btnFicha.addEventListener('click', () => {
+                abrirFichaTecnica(item, {
+                    empresa,
+                    contactoEmail,
+                    tituloDesafio: titulo,
+                    solicitanteNombre,
+                    onSuccessCallback: marcarComoSolicitado
+                });
+            });
+
+            // Acción 2: Solicitar Contacto directo
             btnContacto.addEventListener('click', async () => {
                 btnContacto.disabled = true;
                 btnContacto.innerText = 'Registrando...';
@@ -762,13 +893,11 @@ function mostrarPantallaMatches(empresa, contactoEmail, rubro, nivelRiesgo, titu
                 fdContacto.append('solicitanteEmail', contactoEmail);
                 fdContacto.append('nombreStartup', item.nombre);
                 fdContacto.append('correoDestino', item.contacto || 'No disponible');
-                fdContacto.append('origen', `Match desde Desafío: ${tituloDesafio}`);
+                fdContacto.append('origen', `Match desde Desafío: ${titulo}`);
 
                 try {
                     await postToAppsScript(fdContacto);
-                    btnContacto.style.backgroundColor = '#10b981';
-                    btnContacto.innerHTML = '<i data-lucide="check" size="14"></i> Contacto Solicitado';
-                    refreshIcons();
+                    marcarComoSolicitado();
                 } catch (e) {
                     btnContacto.disabled = false;
                     btnContacto.innerText = 'Solicitar Contacto';
