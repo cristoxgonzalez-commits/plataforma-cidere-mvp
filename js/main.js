@@ -13,6 +13,8 @@ let empresaSeleccionadaActual = null;
 let filtroIndustriaStartupActual = 'Todos';
 let filtroIndustriaIESActual = 'Todos';
 let scannerAnimFrameId = null;
+let capacidadContactoPendiente = null;
+let origenContactoPendiente = 'Catálogo Web';
 
 const trlDefinitions = [
     { level: 1, title: "TRL 1: Principios básicos observados", desc: "Investigación inicial" },
@@ -60,6 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initFiltrosPills();
     initTRL();
     initCarrusel();
+    initModalContactoRapido();
     initModalesFormularios();
     cargarDatos();
 });
@@ -271,13 +274,16 @@ function renderGrid(containerId, list, tipo) {
         return;
     }
 
+    const origenVista = tipo === 'STARTUP' ? 'Catálogo Startups' : 'Catálogo Capacidades Regionales';
+
     list.forEach(s => {
         const badgeColor = tipo === 'STARTUP' ? 'badge-green' : 'badge-blue';
         const nombreSeguro = escaparHTML(s.nombre);
         const queHaceSeguro = escaparHTML(s.queHace);
         const industriaSegura = escaparHTML(s.industria);
+        // No se expone el correo en la tarjeta para garantizar trazabilidad vía CIDERE
         const metaField = tipo === 'STARTUP' 
-            ? `<b>Contacto:</b> ${escaparHTML(s.contacto || 'Privado (Vía CIDERE)')}`
+            ? `<b>Vinculación:</b> <span class="meta-highlight">Gestión directa vía CIDERE Biobío</span>`
             : `<b>Institución:</b> <span class="meta-highlight">${escaparHTML(s.institucion || 'No especificada')}</span>`;
         const trlText = escaparHTML(s.trlMax === "Por validar" ? "Por validar" : `TRL ${s.trlMax}`);
 
@@ -301,29 +307,156 @@ function renderGrid(containerId, list, tipo) {
             </div>
         `;
 
-        card.querySelector('.btn-ver-ficha').addEventListener('click', () => abrirFichaTecnica(s));
-        card.querySelector('.btn-pedir-contacto').addEventListener('click', () => solicitarContacto(s.contacto, s.nombre));
+        card.querySelector('.btn-ver-ficha').addEventListener('click', () => abrirFichaTecnica(s, null, 'Ficha Técnica'));
+        card.querySelector('.btn-pedir-contacto').addEventListener('click', () => abrirModalContactoRapido(s, origenVista));
         contenedor.appendChild(card);
     });
 }
 
-// FICHA TÉCNICA CON SOPORTE DE CONTEXTO
-function abrirFichaTecnica(item, contextoMatch = null) {
+// ========================================================
+// MODAL DE SOLICITUD DE CONTACTO CON TRAZABILIDAD COMPLETA
+// ========================================================
+function initModalContactoRapido() {
+    if (document.getElementById('modal-solicitar-contacto')) return;
+
+    const modalHtml = `
+        <div id="modal-solicitar-contacto" class="modal-overlay">
+            <div class="modal-box" style="max-width: 480px; background: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.15); border: 1px solid var(--border-color); width: 92%;">
+                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 12px; margin-bottom: 14px;">
+                    <h3 style="font-size: 16px; font-weight: 700; color: var(--cidere-blue); margin: 0;">Solicitar Vinculación Tecnológica</h3>
+                    <button type="button" id="btn-cerrar-modal-contacto" style="background: none; border: none; font-size: 22px; line-height: 1; color: var(--text-muted); cursor: pointer;">&times;</button>
+                </div>
+
+                <div style="background: #f8fafc; border-left: 3px solid var(--cidere-green-bright); padding: 10px 12px; border-radius: 6px; margin-bottom: 16px;">
+                    <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700;">Capacidad de interés</div>
+                    <div id="contacto-modal-proyecto" style="font-size: 14px; font-weight: 700; color: var(--cidere-blue-dark); margin-top: 2px;"></div>
+                    <div id="contacto-modal-meta" style="font-size: 12px; color: var(--text-muted); margin-top: 2px;"></div>
+                </div>
+
+                <p style="font-size: 12px; color: var(--text-muted); line-height: 1.45; margin-bottom: 14px;">
+                    Completa tus datos para que el equipo de transferencia tecnológica de <b>CIDERE Biobío</b> gestione la reunión de vinculación y registre la trazabilidad de tu interés.
+                </p>
+
+                <form id="form-solicitar-contacto-rapido">
+                    <div class="form-group" style="margin-bottom: 12px;">
+                        <label style="display: block; font-size: 12px; font-weight: 600; margin-bottom: 4px;">Solicitante (Nombre y Apellidos) *</label>
+                        <input type="text" id="contacto-sol-nombre" required placeholder="Ej. Camila Rojas Muñoz" style="width: 100%; padding: 9px 11px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 13px;">
+                    </div>
+                    <div class="form-group" style="margin-bottom: 12px;">
+                        <label style="display: block; font-size: 12px; font-weight: 600; margin-bottom: 4px;">Empresa Solicitante *</label>
+                        <input type="text" id="contacto-sol-empresa" required placeholder="Ej. Forestal Biobío S.A." style="width: 100%; padding: 9px 11px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 13px;">
+                    </div>
+                    <div class="form-group" style="margin-bottom: 12px;">
+                        <label style="display: block; font-size: 12px; font-weight: 600; margin-bottom: 4px;">Email Solicitante *</label>
+                        <input type="email" id="contacto-sol-email" required placeholder="Ej. crojas@empresa.cl" style="width: 100%; padding: 9px 11px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 13px;">
+                    </div>
+                    <div class="form-group" style="margin-bottom: 16px;">
+                        <label style="display: block; font-size: 12px; font-weight: 600; margin-bottom: 4px;">Interés o requerimiento breve (Opcional)</label>
+                        <textarea id="contacto-sol-motivo" rows="2" placeholder="Ej. Evaluar aplicación piloto en planta de procesos..." style="width: 100%; padding: 9px 11px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 13px; resize: vertical;"></textarea>
+                    </div>
+                    <div style="display: flex; justify-content: flex-end; gap: 8px; border-top: 1px solid var(--border-color); padding-top: 14px;">
+                        <button type="button" id="btn-cancelar-modal-contacto" class="btn-outline" style="padding: 8px 14px; font-size: 12.5px;">Cancelar</button>
+                        <button type="submit" id="btn-enviar-modal-contacto" class="btn-primary" style="background-color: var(--cidere-green-bright); padding: 8px 16px; font-size: 12.5px;">Enviar Solicitud</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    `;
+
+    document.body.insertAdjacentHTML('beforeend', modalHtml);
+
+    const modalEl = document.getElementById('modal-solicitar-contacto');
+    const formEl = document.getElementById('form-solicitar-contacto-rapido');
+    inyectarHoneypot(formEl);
+
+    document.getElementById('btn-cerrar-modal-contacto')?.addEventListener('click', () => closeModal('modal-solicitar-contacto'));
+    document.getElementById('btn-cancelar-modal-contacto')?.addEventListener('click', () => closeModal('modal-solicitar-contacto'));
+    modalEl?.addEventListener('click', (e) => {
+        if (e.target === modalEl) closeModal('modal-solicitar-contacto');
+    });
+
+    formEl?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        if (!capacidadContactoPendiente) return;
+
+        const btnSubmit = document.getElementById('btn-enviar-modal-contacto');
+        const textoOriginal = btnSubmit.innerText;
+        btnSubmit.disabled = true;
+        btnSubmit.innerText = 'Registrando...';
+
+        const hpVal = formEl.querySelector('input[name="hp_website"]')?.value || '';
+        const solNombre = document.getElementById('contacto-sol-nombre').value.trim();
+        const solEmpresa = document.getElementById('contacto-sol-empresa').value.trim();
+        const solEmail = document.getElementById('contacto-sol-email').value.trim();
+        const motivo = document.getElementById('contacto-sol-motivo').value.trim();
+
+        const origenFinal = motivo
+            ? `${origenContactoPendiente} — Motivo: ${motivo}`
+            : origenContactoPendiente;
+
+        const fd = new FormData();
+        fd.append('tipoFormulario', 'Contacto');
+        fd.append('hp_website', hpVal);
+        fd.append('solicitanteNombre', solNombre);
+        fd.append('solicitanteEmpresa', solEmpresa);
+        fd.append('solicitanteEmail', solEmail);
+        fd.append('nombreStartup', capacidadContactoPendiente.nombre);
+        fd.append('origen', origenFinal);
+
+        try {
+            const resp = await postToAppsScript(fd);
+            let parsed = null;
+            try { parsed = JSON.parse(resp); } catch (_) {}
+
+            if (parsed && parsed.status === 'rate_limited') {
+                alert(parsed.message || 'Ya enviaste una solicitud reciente. Por favor espera unos segundos.');
+            } else {
+                closeModal('modal-solicitar-contacto');
+                formEl.reset();
+                alert(`¡Solicitud registrada con éxito! CIDERE Biobío gestionará tu vinculación con ${capacidadContactoPendiente.nombre}.`);
+            }
+        } catch (_) {
+            alert('Error al procesar la solicitud de contacto. Intenta nuevamente.');
+        } finally {
+            btnSubmit.disabled = false;
+            btnSubmit.innerText = textoOriginal;
+        }
+    });
+}
+
+function abrirModalContactoRapido(item, origen = 'Catálogo Web') {
+    initModalContactoRapido();
+    capacidadContactoPendiente = item;
+    origenContactoPendiente = origen;
+
+    const formEl = document.getElementById('form-solicitar-contacto-rapido');
+    formEl?.reset();
+
+    document.getElementById('contacto-modal-proyecto').innerText = item.nombre;
+    const etiquetaTipo = item.tipo && item.tipo.toUpperCase() === 'IES' ? 'Capacidad Regional' : 'Startup';
+    const instTxt = item.institucion ? ` • ${item.institucion}` : '';
+    document.getElementById('contacto-modal-meta').innerText = `${etiquetaTipo}${instTxt} • Industria: ${item.industria}`;
+
+    openModal('modal-solicitar-contacto');
+}
+
+// FICHA TÉCNICA CON SOPORTE DE CONTEXTO (DESDE CATÁLOGO O DESDE MATCH)
+function abrirFichaTecnica(item, contextoMatch = null, origenFicha = 'Ficha Técnica') {
     document.getElementById('ficha-nombre').innerText = item.nombre;
     document.getElementById('ficha-tipo-badge').innerText = item.tipo === 'Startup' ? 'STARTUP' : 'CAPACIDAD REGIONAL';
     document.getElementById('ficha-institucion').innerText = item.institucion || (item.tipo === 'Startup' ? 'Emprendimiento Independiente' : 'No especificada');
     document.getElementById('ficha-que-hace').innerText = item.queHace || 'Sin información disponible';
     document.getElementById('ficha-como-hace').innerText = item.comoHace || 'Tecnología base en evaluación';
     document.getElementById('ficha-industria').innerText = item.industria;
-    document.getElementById('ficha-contacto').innerText = item.contacto || 'Privado (Vía CIDERE)';
+    // Correo oculto en UI para proteger privacidad y asegurar trazabilidad
+    document.getElementById('ficha-contacto').innerText = 'Gestión confidencial vía CIDERE Biobío';
     document.getElementById('ficha-trl-val').innerText = item.trlMax === "Por validar" ? "Por validar" : `Nivel TRL ${item.trlMax}`;
 
     const btnContacto = document.getElementById('ficha-btn-contacto');
     btnContacto.onclick = async () => {
         closeModal('modal-ficha-tecnica');
         if (contextoMatch) {
-            await solicitarContacto(
-                item.contacto,
+            await registrarContactoDesdeDesafio(
                 item.nombre,
                 contextoMatch.empresa,
                 contextoMatch.contactoEmail,
@@ -332,32 +465,26 @@ function abrirFichaTecnica(item, contextoMatch = null) {
             );
             if (contextoMatch.onSuccessCallback) contextoMatch.onSuccessCallback();
         } else {
-            await solicitarContacto(item.contacto, item.nombre);
+            abrirModalContactoRapido(item, origenFicha);
         }
     };
 
     openModal('modal-ficha-tecnica');
 }
 
-async function solicitarContacto(email, nombre, solicitanteEmpresa = "Empresa Socia", solicitanteEmail = "No especificado", origen = "Ficha Técnica", solicitanteNombre = "No especificado") {
-    if (!email || email === 'No disponible' || !email.trim()) {
-        alert("Esta entidad no posee un correo público registrado.");
-        return;
-    }
-    
+async function registrarContactoDesdeDesafio(nombreStartup, solicitanteEmpresa, solicitanteEmail, origen, solicitanteNombre) {
     const fd = new FormData();
     fd.append('tipoFormulario', 'Contacto');
-    fd.append('correoDestino', email);
-    fd.append('nombreStartup', nombre);
-    fd.append('solicitanteNombre', solicitanteNombre);
-    fd.append('solicitanteEmpresa', solicitanteEmpresa);
-    fd.append('solicitanteEmail', solicitanteEmail);
+    fd.append('nombreStartup', nombreStartup);
+    fd.append('solicitanteNombre', solicitanteNombre || 'No especificado');
+    fd.append('solicitanteEmpresa', solicitanteEmpresa || 'No especificada');
+    fd.append('solicitanteEmail', solicitanteEmail || 'No especificado');
     fd.append('origen', origen);
 
     try {
         await postToAppsScript(fd);
-        alert(`¡Solicitud enviada exitosamente! Se notificó a CIDERE Biobío y a ${nombre}.`);
-    } catch (e) {
+        alert(`¡Solicitud enviada exitosamente! Se notificó a CIDERE Biobío tu interés en ${nombreStartup}.`);
+    } catch (_) {
         alert("Error al procesar la vinculación.");
     }
 }
@@ -473,7 +600,7 @@ function initBuscadorSpotlight() {
                 dropdown.classList.remove('active');
                 switchView(el.getAttribute('data-view'));
                 const item = startupsRegistry.find(s => s.nombre === el.getAttribute('data-name'));
-                if (item) abrirFichaTecnica(item);
+                if (item) abrirFichaTecnica(item, null, 'Buscador Conceptual');
             });
         });
 
@@ -629,7 +756,7 @@ function initModalesFormularios() {
             alert("¡Solicitud enviada con éxito! Quedará registrada como 'Pendiente' en la base de datos.");
             closeModal('modal-subir-capacidad');
             e.target.reset();
-        } catch (err) {
+        } catch (_) {
             alert("Error al conectar con el servidor.");
         } finally {
             loader.style.display = 'none';
@@ -923,7 +1050,7 @@ function mostrarPantallaMatches(datosDesafio, respuestaServidor) {
                     tituloDesafio: titulo,
                     solicitanteNombre,
                     onSuccessCallback: marcarComoSolicitado
-                });
+                }, 'Match desde Desafío');
             });
 
             btnContacto.addEventListener('click', async () => {
@@ -936,13 +1063,12 @@ function mostrarPantallaMatches(datosDesafio, respuestaServidor) {
                 fdContacto.append('solicitanteEmpresa', empresa);
                 fdContacto.append('solicitanteEmail', contactoEmail);
                 fdContacto.append('nombreStartup', item.nombre);
-                fdContacto.append('correoDestino', item.contacto || 'No disponible');
                 fdContacto.append('origen', `Match desde Desafío: ${titulo}`);
 
                 try {
                     await postToAppsScript(fdContacto);
                     marcarComoSolicitado();
-                } catch (e) {
+                } catch (_) {
                     btnContacto.disabled = false;
                     btnContacto.innerText = 'Solicitar Contacto';
                     alert("Error al registrar solicitud de contacto.");
