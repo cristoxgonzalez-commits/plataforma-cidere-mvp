@@ -156,10 +156,6 @@ function limpiarTexto(texto) {
     return texto.toString().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
 }
 
-/**
- * Lematizador ligero para español: agrupa variaciones morfológicas
- * Ej: "automatizacion", "automatizar", "automatizado" -> "automatiz"
- */
 function stemEs(palabra) {
     let w = limpiarTexto(palabra);
     if (w.length <= 4) return w;
@@ -175,10 +171,6 @@ function tokenizar(texto) {
         .map(stemEs);
 }
 
-/**
- * Construye un índice TF-IDF dinámico sobre el catálogo real cargado desde Google Sheets.
- * Identifica qué palabras son realmente distintivas en `queHace` y `comoHace`.
- */
 function construirIndiceCatalogo(registry) {
     const N = registry.length || 1;
     const docFreq = new Map();
@@ -198,7 +190,6 @@ function construirIndiceCatalogo(registry) {
 
     const idf = new Map();
     docFreq.forEach((df, token) => {
-        // Palabras poco frecuentes en el catálogo reciben mayor peso técnico
         idf.set(token, Math.log((N + 1) / (df + 1)) + 1);
     });
 
@@ -239,7 +230,6 @@ export function evaluarBuscadorConceptual(consultaUsuario, registry) {
         const textoCapacidad = limpiarTexto(`${item.nombre} ${item.queHace} ${item.comoHace} ${item.industria}`);
         let score = 0;
 
-        // A. Similitud léxica ponderada por especificidad (TF-IDF)
         tokensQuery.forEach(tq => {
             const peso = idf.get(tq) || 1;
             if (tokensNombre.has(tq)) score += 18 * peso;
@@ -248,7 +238,6 @@ export function evaluarBuscadorConceptual(consultaUsuario, registry) {
             if (tokensInd.has(tq)) score += 8 * peso;
         });
 
-        // B. Puentes Problema -> Solución
         puentesActivos.forEach(puente => {
             const resuelveMecanismo = puente.mecanismos.some(m => textoCapacidad.includes(m));
             const comparteSintoma = puente.sintomas.some(s => textoCapacidad.includes(s));
@@ -300,7 +289,6 @@ export function analizarCalidadDesafio(texto, rubroSeleccionado = "", registry =
         consejo = "Formulación completa: el motor tiene contexto suficiente para cruzar causa raíz con tecnologías base.";
     }
 
-    // Radar en vivo del catálogo real
     let radarHtml = "";
     if (registry.length > 0 && (rubroSeleccionado || t.length >= 20)) {
         const enRubro = rubroSeleccionado
@@ -349,7 +337,6 @@ export function ejecutarMatchLocalConceptual(desafio, registry) {
     const tokensDesafio = tokenizar(textoDesafio);
     const { docsIndexados, idf } = construirIndiceCatalogo(registry);
 
-    // Umbral de madurez acumulativo
     let minTrlPermitido = 1;
     let targetMin = 1, targetMax = 3;
 
@@ -361,7 +348,6 @@ export function ejecutarMatchLocalConceptual(desafio, registry) {
         minTrlPermitido = 7; targetMin = 7; targetMax = 9;
     }
 
-    // Identificar qué arquetipos de problema presenta la empresa
     const puentesDelDesafio = PUENTES_PROBLEMA_SOLUCION.filter(puente =>
         puente.sintomas.some(s => textoDesafio.includes(s)) ||
         puente.mecanismos.some(m => textoDesafio.includes(m))
@@ -371,7 +357,6 @@ export function ejecutarMatchLocalConceptual(desafio, registry) {
         .filter(({ item }) => {
             const trlNum = extraerNumeroTRL(item.trlMax);
             if (trlNum === null) {
-                // Capacidades "Por validar" son admisibles en riesgo alto/medio, pero no en riesgo bajo (7-9)
                 return minTrlPermitido <= 4;
             }
             return trlNum >= minTrlPermitido;
@@ -381,9 +366,7 @@ export function ejecutarMatchLocalConceptual(desafio, registry) {
             const coincideRubro = limpiarTexto(item.industria) === limpiarTexto(rubro);
             const textoQue = limpiarTexto(item.queHace);
             const textoComo = limpiarTexto(item.comoHace);
-            const textoCapacidad = `${limpiarTexto(item.nombre)} ${textoQue} ${textoComo}`;
 
-            // 1. Puntaje de Resolución del Problema (Máx ~80 pts)
             let puntajeProblemaSolucion = 0;
             let puentePrincipal = null;
             let mejorScorePuente = 0;
@@ -393,7 +376,7 @@ export function ejecutarMatchLocalConceptual(desafio, registry) {
                 let hitsSintoma = 0;
 
                 puente.mecanismos.forEach(m => {
-                    if (textoComo.includes(m)) hitsMecanismo += 2; // El "Cómo lo hace" tiene el mecanismo exacto
+                    if (textoComo.includes(m)) hitsMecanismo += 2;
                     else if (textoQue.includes(m)) hitsMecanismo += 1.5;
                 });
 
@@ -409,7 +392,6 @@ export function ejecutarMatchLocalConceptual(desafio, registry) {
             });
             puntajeProblemaSolucion += mejorScorePuente;
 
-            // 2. Puntaje de Similitud Técnica Específica (TF-IDF sobre `queHace` y `comoHace`)
             let puntajeTfIdf = 0;
             tokensDesafio.forEach(td => {
                 const peso = idf.get(td) || 1;
@@ -419,20 +401,15 @@ export function ejecutarMatchLocalConceptual(desafio, registry) {
             });
             puntajeProblemaSolucion += Math.min(34, puntajeTfIdf);
 
-            // 3. Bonificador contextual de Rubro (+18 pts, no reemplaza la pertinencia técnica)
             const bonusRubro = coincideRubro ? 18 : 0;
 
-            // 4. Alineación con rango TRL preferido (+8 pts)
             const esExacto = trlNum !== null && trlNum >= targetMin && trlNum <= targetMax;
             const esMayorMadurez = trlNum !== null && trlNum > targetMax;
             const bonusTrl = esExacto ? 8 : 0;
 
             const scoreTotal = puntajeProblemaSolucion + bonusRubro + bonusTrl;
-
-            // Normalizar afinidad visible (64% - 98%)
             const afinidad = Math.min(98, Math.max(64, Math.round(52 + (scoreTotal * 0.48))));
 
-            // Construir justificación técnica contrastando Problema vs. Qué hace / Cómo lo hace
             const justificacion = generarJustificacionEspecifica(
                 item,
                 coincideRubro,
@@ -453,7 +430,6 @@ export function ejecutarMatchLocalConceptual(desafio, registry) {
             };
         });
 
-    // Filtrar: Exigir pertinencia real con el problema (>= 16 pts técnicos) o coincidencia directa de sector con algo de afinidad
     return evaluados
         .filter(c => c.puntajeProblemaSolucion >= 16 || (c.coincideRubro && c.puntajeProblemaSolucion >= 8))
         .sort((a, b) => b.scoreTotal - a.scoreTotal)
