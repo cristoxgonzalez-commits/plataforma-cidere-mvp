@@ -41,7 +41,7 @@ function doPost(e) {
       return ContentService.createTextOutput("Capacidad registrada exitosamente").setMimeType(ContentService.MimeType.TEXT);
     }
     
-    // 2. REGISTRO DE DESAFÍOS EN 'Desafios_Postulados' + RAZONAMIENTO SEMÁNTICO
+    // 2. REGISTRO DE DESAFÍOS EN 'Desafios_Postulados' + RAZONAMIENTO SEMÁNTICO AUDITABLE
     if (tipoFormulario === 'Desafio') {
       var sheetDesafios = doc.getSheetByName('Desafios_Postulados') || doc.insertSheet('Desafios_Postulados');
       var fechaChile = Utilities.formatDate(new Date(), "America/Santiago", "dd/MM/yyyy HH:mm:ss");
@@ -67,8 +67,8 @@ function doPost(e) {
         "Pendiente"
       ]);
 
-      // Razonamiento semántico en servidor (requiere GEMINI_API_KEY en Propiedades del script)
-      var matchesSemanticos = ejecutarMatchSemantico(doc, {
+      // Ejecutar razonamiento semántico con auditoría completa
+      var resultadoAgente = ejecutarMatchSemantico(doc, {
         empresa: empresa,
         rubro: rubro,
         titulo: titulo,
@@ -78,8 +78,9 @@ function doPost(e) {
 
       var respuestaJson = JSON.stringify({
         status: "ok",
-        mode: matchesSemanticos.length > 0 ? "semantic" : "local",
-        matches: matchesSemanticos
+        mode: resultadoAgente.matches.length > 0 ? "semantic" : "local",
+        matches: resultadoAgente.matches,
+        auditoria: resultadoAgente.auditoria
       });
       
       return ContentService.createTextOutput(respuestaJson).setMimeType(ContentService.MimeType.JSON);
@@ -109,17 +110,37 @@ function doPost(e) {
       return ContentService.createTextOutput("Contacto registrado").setMimeType(ContentService.MimeType.TEXT);
     }
   } catch (error) {
+    console.error("[ERROR CRÍTICO doPost]:", error.message);
     return ContentService.createTextOutput(JSON.stringify({ status: "error", message: error.message })).setMimeType(ContentService.MimeType.JSON);
   }
 }
 
 function ejecutarMatchSemantico(doc, datosDesafio) {
+  var auditoria = {
+    apiKeyConfigurada: false,
+    capacidadesEvaluadas: 0,
+    codigoHttp: null,
+    detalle: ""
+  };
+
   try {
+    console.log("=== [INICIO AUDITORÍA AGENTE CIDERE] ===");
+    console.log("Desafío recibido:", JSON.stringify(datosDesafio));
+
     var apiKey = PropertiesService.getScriptProperties().getProperty('GEMINI_API_KEY');
-    if (!apiKey) return [];
+    if (!apiKey) {
+      auditoria.detalle = "Propiedad GEMINI_API_KEY no encontrada en ScriptProperties.";
+      console.warn("[AUDITORÍA AGENTE]:", auditoria.detalle);
+      return { matches: [], auditoria: auditoria };
+    }
+    auditoria.apiKeyConfigurada = true;
 
     var sheet = doc.getSheetByName('Ecosistema Regional');
-    if (!sheet) return [];
+    if (!sheet) {
+      auditoria.detalle = "Hoja 'Ecosistema Regional' no encontrada.";
+      console.warn("[AUDITORÍA AGENTE]:", auditoria.detalle);
+      return { matches: [], auditoria: auditoria };
+    }
     var rows = sheet.getDataRange().getValues();
     
     var catalogo = [];
@@ -129,7 +150,6 @@ function ejecutarMatchSemantico(doc, datosDesafio) {
       var trlMatch = trlRaw.match(/(\d)/);
       var trl = trlMatch ? parseInt(trlMatch[1], 10) : null;
 
-      // Capacidades "Por validar" son admisibles en tolerancia alta/media, pero no en riesgo bajo (7-9)
       var cumpleTrl = (trl === null) ? (datosDesafio.minTrlPermitido <= 4) : (trl >= datosDesafio.minTrlPermitido);
 
       if (estado === "Aprobado" && cumpleTrl) {
@@ -145,7 +165,13 @@ function ejecutarMatchSemantico(doc, datosDesafio) {
       }
     }
 
-    if (catalogo.length === 0) return [];
+    auditoria.capacidadesEvaluadas = catalogo.length;
+    console.log("Capacidades aprobadas dentro del umbral TRL enviadas al agente:", catalogo.length);
+
+    if (catalogo.length === 0) {
+      auditoria.detalle = "No hay capacidades aprobadas que cumplan el umbral TRL mínimo (" + datosDesafio.minTrlPermitido + ").";
+      return { matches: [], auditoria: auditoria };
+    }
 
     var prompt = 
       "Eres el director de transferencia tecnológica de CIDERE Biobío.\n" +
@@ -176,13 +202,31 @@ function ejecutarMatchSemantico(doc, datosDesafio) {
       muteHttpExceptions: true
     });
 
-    if (response.getResponseCode() !== 200) return [];
+    var codigoHttp = response.getResponseCode();
+    var cuerpoRespuesta = response.getContentText();
+    auditoria.codigoHttp = codigoHttp;
 
-    var jsonResponse = JSON.parse(response.getContentText());
+    console.log("Código HTTP respuesta Gemini:", codigoHttp);
+    console.log("Respuesta cruda del Agente:", cuerpoRespuesta);
+
+    if (codigoHttp !== 200) {
+      auditoria.detalle = "Error HTTP " + codigoHttp + " al consultar Gemini.";
+      return { matches: [], auditoria: auditoria };
+    }
+
+    var jsonResponse = JSON.parse(cuerpoRespuesta);
     var textoSalida = jsonResponse.candidates[0].content.parts[0].text;
+    console.log("Razonamiento JSON extraído:", textoSalida);
+
     var parsed = JSON.parse(textoSalida);
-    return parsed.matches || [];
+    var listaMatches = parsed.matches || [];
+    auditoria.detalle = "Evaluación semántica completada con " + listaMatches.length + " coincidencias.";
+    console.log("=== [FIN AUDITORÍA AGENTE CIDERE] ===");
+
+    return { matches: listaMatches, auditoria: auditoria };
   } catch (err) {
-    return [];
+    auditoria.detalle = "Excepción en ejecución: " + err.message;
+    console.error("[EXCEPCIÓN AGENTE]:", err.message);
+    return { matches: [], auditoria: auditoria };
   }
 }
