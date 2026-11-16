@@ -60,7 +60,7 @@
                 </button>
                 <div class="search-bar">
                     <i data-lucide="search" size="16" style="color: var(--text-muted)"></i>
-                    <input type="text" id="buscador-global" placeholder="Buscar startups, capacidades, desafíos, tecnologías..." autocomplete="off">
+                    <input type="text" id="buscador-global" placeholder="Describe un problema operativo o busca capacidades..." autocomplete="off">
                     <div id="search-dropdown-results" class="search-dropdown"></div>
                 </div>
             </div>
@@ -158,8 +158,6 @@
                 <!-- BLOQUE DE INTRODUCCIÓN HERO -->
                 <div class="hero-intro-card">
                     <div class="hero-intro-grid">
-                        
-                        <!-- Columna izquierda: Textos y Enlace -->
                         <div class="hero-text-col">
                             <h1 class="hero-title">Plataforma de Capacidades Regionales</h1>
                             <p class="hero-p">
@@ -173,7 +171,6 @@
                             </a>
                         </div>
 
-                        <!-- Columna derecha: Grilla de Cifras 3x2 Centradas -->
                         <div class="hero-stats-wrapper">
                             <div class="hero-stats-grid">
                                 <div class="hero-stat-card">
@@ -202,7 +199,6 @@
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </div>
 
@@ -392,7 +388,6 @@
                     <p style="color: var(--text-muted); font-size: 13px; margin-top: 4px;">Canal de comunicación entre Empresas, Startups, Centros de I+D y el equipo facilitador de CIDERE Biobío.</p>
                 </div>
 
-                <!-- BLOQUE DESTACADO: CONTÁCTATE CON NOSOTROS -->
                 <div class="card" style="text-align: center; padding: 42px 28px; margin-bottom: 24px; border: 1px solid var(--border-color); background: #ffffff;">
                     <div style="width: 58px; height: 58px; border-radius: 50%; background: var(--cidere-blue-light); color: var(--cidere-blue); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;">
                         <i data-lucide="mail" size="28"></i>
@@ -632,34 +627,34 @@
         </div>
     </div>
 
-    <!-- MODAL PUBLICAR DESAFÍO Y MATCHMAKING INTELIGENTE -->
+    <!-- MODAL PUBLICAR DESAFÍO + AGENTE GUÍA + MATCHMAKING -->
     <div id="modal-publicar-desafio" class="modal-overlay">
-        <div class="modal-content" style="width: 720px;">
+        <div class="modal-content" style="width: 740px;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
                 <h2 id="modal-desafio-title" style="font-size: 18px; color: var(--cidere-blue);">Estructurador de Desafíos</h2>
                 <button class="btn-outline close-modal" data-modal="modal-publicar-desafio">✕</button>
             </div>
             
-            <!-- VISTA 1: FORMULARIO DE POSTULACIÓN -->
+            <!-- VISTA 1: FORMULARIO UNIFICADO CON AGENTE GUÍA -->
             <form id="form-publicar-desafio">
                 <div class="grid-2" style="gap: 16px; margin-bottom: 14px;">
                     <div>
-                        <label style="font-size: 12px; font-weight: 600; display: block; margin-bottom: 4px;">Nombre y Apellido del Solicitante:</label>
+                        <label>Nombre y Apellido del Solicitante:</label>
                         <input type="text" id="des-solicitante" placeholder="Ej: Carlos Muñoz Valenzuela" required>
                     </div>
                     <div>
-                        <label style="font-size: 12px; font-weight: 600; display: block; margin-bottom: 4px;">Empresa Solicitante:</label>
+                        <label>Empresa Solicitante:</label>
                         <input type="text" id="des-empresa" placeholder="Ej: Inchalam, Arauco, Camanchaca..." required>
                     </div>
                 </div>
 
                 <div class="grid-2" style="gap: 16px; margin-bottom: 14px;">
                     <div>
-                        <label style="font-size: 12px; font-weight: 600; display: block; margin-bottom: 4px;">Email / Contacto del Solicitante:</label>
+                        <label>Email / Contacto del Solicitante:</label>
                         <input type="email" id="des-contacto" placeholder="innovacion@empresa.cl" required>
                     </div>
                     <div>
-                        <label style="font-size: 12px; font-weight: 600; display: block; margin-bottom: 4px;">Rubro / Sector:</label>
+                        <label>Rubro / Sector:</label>
                         <select id="des-rubro" required>
                             <option value="">-- Seleccionar rubro --</option>
                             <option value="Agroindustria">Agroindustria</option>
@@ -679,7 +674,7 @@
 
                 <div class="grid-2" style="gap: 16px; margin-bottom: 14px;">
                     <div>
-                        <label style="font-size: 12px; font-weight: 600; display: block; margin-bottom: 4px;">Nivel de Riesgo (Tolerancia TRL):</label>
+                        <label>Nivel de Riesgo (Tolerancia TRL):</label>
                         <select id="des-riesgo" required>
                             <option value="">-- Seleccionar tolerancia al riesgo --</option>
                             <option value="Riesgo Alto (TRL 1-3)">Riesgo Alto (I+D Inicial / Exploratoria — TRL 1 al 3)</option>
@@ -688,95 +683,107 @@
                         </select>
                     </div>
                     <div>
-                        <label style="font-size: 12px; font-weight: 600; display: block; margin-bottom: 4px;">Título del Desafío:</label>
+                        <label>Título del Desafío:</label>
                         <input type="text" id="des-titulo" placeholder="Ej: Optimización energética en procesos..." required>
                     </div>
                 </div>
 
-                <div style="background: #f8fafc; padding: 16px; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 20px;">
-                    <div style="margin-bottom: 12px;">
-                        <label style="font-size: 12px; font-weight: 600; color: var(--cidere-blue); display: block; margin-bottom: 4px;">1. Contexto:</label>
-                        <textarea id="des-contexto" required style="height: 60px;" placeholder="¿Cuál es el problema o proceso actual?"></textarea>
+                <!-- CUADRO GENERAL UNIFICADO DEL PROBLEMA -->
+                <div>
+                    <label>Descripción General del Problema y Requerimiento:</label>
+                    <textarea id="des-descripcion" required style="height: 115px;" placeholder="Describe qué ocurre en tu operación, bajo qué condiciones técnicas o restricciones de planta, y cuál es el impacto o mejora esperada..."></textarea>
+                </div>
+
+                <!-- PANEL DEL AGENTE GUÍA EN TIEMPO REAL -->
+                <div class="form-guide-panel" id="agente-guia-desafio">
+                    <div class="form-guide-header">
+                        <span class="form-guide-title">
+                            <i data-lucide="compass" size="15"></i> Guía de Estructuración para Matchmaking
+                        </span>
+                        <div class="guide-criteria-list">
+                            <span class="guide-criterion" id="crit-problema">○ Problema / Síntoma</span>
+                            <span class="guide-criterion" id="crit-entorno">○ Entorno / Condiciones</span>
+                            <span class="guide-criterion" id="crit-impacto">○ Impacto Esperado</span>
+                        </div>
                     </div>
-                    <div style="margin-bottom: 12px;">
-                        <label style="font-size: 12px; font-weight: 600; color: var(--cidere-blue); display: block; margin-bottom: 4px;">2. Impacto:</label>
-                        <textarea id="des-impacto" required style="height: 50px;" placeholder="¿Qué beneficio cuantitativo o cualitativo esperan?"></textarea>
-                    </div>
-                    <div>
-                        <label style="font-size: 12px; font-weight: 600; color: var(--cidere-blue); display: block; margin-bottom: 4px;">3. Restricciones:</label>
-                        <textarea id="des-restricciones" required style="height: 50px;" placeholder="Presupuesto, normativas, tiempos o condiciones operativas"></textarea>
-                    </div>
+                    <p class="form-guide-tip" id="guide-tip-text">
+                        Describe qué ocurre actualmente en tu operación, bajo qué condiciones y qué resultado esperas lograr.
+                    </p>
                 </div>
 
                 <div style="display: flex; justify-content: flex-end; gap: 10px; align-items: center;">
                     <button type="button" class="btn-outline close-modal" data-modal="modal-publicar-desafio">Cancelar</button>
-                    <button type="submit" class="btn-primary" style="background-color: var(--cidere-blue); padding: 10px 20px; font-weight: 700;">
+                    <button type="submit" class="btn-primary" style="background-color: var(--cidere-blue); padding: 10px 18px;">
                         Publicar Desafío y Buscar Soluciones
                     </button>
                 </div>
             </form>
 
-            <!-- VISTA 2: ESCÁNER CIRCULAR DE PROCESAMIENTO (5.5s) -->
-            <div id="desafio-scanning-container" class="scanner-modal-view" style="display: none;">
-                <div class="scanner-circle-wrap">
-                    <!-- Fondo radial segmentado tipo visor industrial -->
-                    <div class="scanner-radial-backdrop"></div>
-                    
-                    <svg class="scanner-svg" viewBox="0 0 200 200">
-                        <defs>
-                            <!-- Gradiente Corporativo CIDERE Biobío: Azul -> Cyan -> Verde -> Naranja -->
-                            <linearGradient id="cidereScannerGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" stop-color="#3C63AD" />
-                                <stop offset="35%" stop-color="#01DCFF" />
-                                <stop offset="75%" stop-color="#31AD72" />
-                                <stop offset="100%" stop-color="#EE731B" />
-                            </linearGradient>
-                        </defs>
-                        <!-- Pista circular base -->
-                        <circle class="scanner-track-circle" cx="100" cy="100" r="85"></circle>
-                        <!-- Arco de progreso -->
-                        <circle id="scanner-progress-bar" class="scanner-progress-circle" cx="100" cy="100" r="85"></circle>
-                        <!-- Máscara de ticks segmentados radiales -->
-                        <circle class="scanner-tick-mask" cx="100" cy="100" r="85"></circle>
-                    </svg>
-
-                    <!-- Núcleo central numérico -->
-                    <div class="scanner-center-content">
-                        <div id="scanner-percentage-num" class="scanner-percentage-text">0%</div>
-                        <div class="scanner-center-sub">Matching IA</div>
+            <!-- VISTA 2: TRANSICIÓN B2B CORPORATIVA LIMPIA -->
+            <div id="desafio-scanning-container" style="display: none;">
+                <div class="analysis-card-clean">
+                    <div class="analysis-dial-wrapper">
+                        <svg class="analysis-svg" viewBox="0 0 160 160">
+                            <defs>
+                                <linearGradient id="cidereCorporateGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                    <stop offset="0%" stop-color="#3C63AD" />
+                                    <stop offset="100%" stop-color="#31AD72" />
+                                </linearGradient>
+                            </defs>
+                            <circle class="analysis-track" cx="80" cy="80" r="68"></circle>
+                            <circle id="scanner-progress-ring" class="analysis-fill" cx="80" cy="80" r="68"></circle>
+                        </svg>
+                        <div class="analysis-center-text">
+                            <div id="scanner-pct-text" class="analysis-pct">0%</div>
+                            <div class="analysis-label">PROCESANDO</div>
+                        </div>
                     </div>
-                </div>
 
-                <!-- Caja dinámica de etapas progresivas -->
-                <div class="scanner-step-box">
-                    <span class="scanner-pulse-dot"></span>
-                    <div id="scanner-step-msg" class="scanner-step-text">
-                        Iniciando conexión con la Mesa de Innovación...
+                    <h3 id="scanner-phase-title" class="analysis-heading">Evaluando Requerimiento Industrial</h3>
+                    <p id="scanner-phase-desc" class="analysis-sub">Analizando compatibilidad técnica con el ecosistema de I+D y startups del Biobío.</p>
+
+                    <div class="analysis-steps-list">
+                        <div class="analysis-step-item active" id="step-item-1">
+                            <span class="step-bullet" id="step-bullet-1">1</span>
+                            <span>Registrando desafío en la Mesa de Innovación CIDERE</span>
+                        </div>
+                        <div class="analysis-step-item" id="step-item-2">
+                            <span class="step-bullet" id="step-bullet-2">2</span>
+                            <span id="step-label-2">Mapeando capacidades en el sector seleccionado</span>
+                        </div>
+                        <div class="analysis-step-item" id="step-item-3">
+                            <span class="step-bullet" id="step-bullet-3">3</span>
+                            <span id="step-label-3">Evaluando afinidad técnica y umbral de madurez TRL</span>
+                        </div>
+                        <div class="analysis-step-item" id="step-item-4">
+                            <span class="step-bullet" id="step-bullet-4">4</span>
+                            <span>Estructurando fichas técnicas y canales de contacto</span>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- VISTA 3: RESULTADOS DE MATCHMAKING EN TIEMPO REAL -->
+            <!-- VISTA 3: RESULTADOS DE MATCHMAKING CON FICHA TÉCNICA PREVIA -->
             <div id="desafio-matches-container" style="display: none;">
-                <div style="background: #f0fdf4; border: 1px solid var(--cidere-green-bright); border-radius: 10px; padding: 16px; margin-bottom: 20px; display: flex; align-items: center; gap: 14px;">
-                    <div style="width: 40px; height: 40px; border-radius: 50%; background: #d1fae5; color: #065f46; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                        <i data-lucide="check-circle" size="24"></i>
+                <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px; padding: 14px 16px; margin-bottom: 18px; display: flex; align-items: center; gap: 12px;">
+                    <div style="width: 36px; height: 36px; border-radius: 50%; background: #d1fae5; color: #065f46; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <i data-lucide="check-circle" size="20"></i>
                     </div>
                     <div>
-                        <h3 style="font-size: 15px; font-weight: 700; color: #065f46;">¡Desafío Publicado Exitosamente!</h3>
-                        <p style="font-size: 12.5px; color: #166534; margin-top: 2px;">
-                            Tu requerimiento fue registrado en la Mesa de Innovación. Hemos analizado el ecosistema y encontramos las siguientes capacidades y startups compatibles:
+                        <h3 style="font-size: 14.5px; font-weight: 700; color: #065f46;">Desafío Registrado en la Mesa de Innovación</h3>
+                        <p style="font-size: 12px; color: #166534; margin-top: 2px;">
+                            Revisa la ficha técnica de cada solución compatible antes de solicitar el contacto directo:
                         </p>
                     </div>
                 </div>
 
-                <div id="desafio-matches-lista" style="display: flex; flex-direction: column; gap: 12px; max-height: 380px; overflow-y: auto; padding-right: 4px; margin-bottom: 20px;">
+                <div id="desafio-matches-lista" style="display: flex; flex-direction: column; gap: 12px; max-height: 390px; overflow-y: auto; padding-right: 4px; margin-bottom: 18px;">
                     <!-- Se inyectan dinámicamente las tarjetas de match -->
                 </div>
 
                 <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 14px;">
-                    <span style="font-size: 12px; color: var(--text-muted);">
-                        Cada solicitud de contacto queda registrada en la base de datos de CIDERE Biobío.
+                    <span style="font-size: 11.5px; color: var(--text-muted);">
+                        Cada solicitud de contacto queda trazada en el historial de CIDERE Biobío.
                     </span>
                     <button type="button" class="btn-primary close-modal" data-modal="modal-publicar-desafio" style="background-color: var(--cidere-blue); padding: 9px 20px;">
                         Finalizar y Cerrar
