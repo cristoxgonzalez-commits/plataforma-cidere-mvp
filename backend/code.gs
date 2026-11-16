@@ -51,7 +51,7 @@ function doPost(e) {
       var nivelRiesgo = e.parameter.nivelRiesgo ? e.parameter.nivelRiesgo.trim() : "No especificado";
       var titulo = e.parameter.titulo ? e.parameter.titulo.trim() : "";
       var descripcion = e.parameter.descripcion ? e.parameter.descripcion.trim() : "";
-      var minTrl = parseInt(e.parameter.minTrlPermitido) || 1;
+      var minTrl = parseInt(e.parameter.minTrlPermitido, 10) || 1;
       
       sheetDesafios.appendRow([
         new Date(),
@@ -66,7 +66,7 @@ function doPost(e) {
         "Pendiente"
       ]);
 
-      // Intentar razonamiento semántico con Gemini si la API Key está configurada
+      // Razonamiento semántico en servidor (requiere GEMINI_API_KEY en Propiedades del script)
       var matchesSemanticos = ejecutarMatchSemantico(doc, {
         empresa: empresa,
         rubro: rubro,
@@ -123,8 +123,14 @@ function ejecutarMatchSemantico(doc, datosDesafio) {
     var catalogo = [];
     for (var i = 1; i < rows.length; i++) {
       var estado = (rows[i][9] || "").toString().trim();
-      var trl = parseInt(rows[i][7]) || 1;
-      if (estado === "Aprobado" && trl >= datosDesafio.minTrlPermitido) {
+      var trlRaw = (rows[i][7] || "").toString().trim();
+      var trlMatch = trlRaw.match(/(\d)/);
+      var trl = trlMatch ? parseInt(trlMatch[1], 10) : null;
+
+      // Capacidades "Por validar" son admisibles en tolerancia alta/media, pero no en riesgo bajo (7-9)
+      var cumpleTrl = (trl === null) ? (datosDesafio.minTrlPermitido <= 4) : (trl >= datosDesafio.minTrlPermitido);
+
+      if (estado === "Aprobado" && cumpleTrl) {
         catalogo.push({
           nombre: rows[i][1],
           tipo: rows[i][2],
@@ -132,7 +138,7 @@ function ejecutarMatchSemantico(doc, datosDesafio) {
           industria: rows[i][4],
           queHace: rows[i][5],
           comoHace: rows[i][6],
-          trl: trl
+          trl: trlRaw
         });
       }
     }
@@ -140,21 +146,25 @@ function ejecutarMatchSemantico(doc, datosDesafio) {
     if (catalogo.length === 0) return [];
 
     var prompt = 
-      "Eres especialista en transferencia tecnológica de CIDERE Biobío.\n" +
-      "Evalúa el siguiente desafío industrial y encuentra hasta 5 soluciones compatibles en el catálogo.\n" +
-      "Prioriza la comprensión del problema raíz y cómo la tecnología base (comoHace) lo resuelve, incluso si proviene de otro sector (transferencia intersectorial).\n\n" +
-      "DESAFÍO:\n" +
-      "Rubro: " + datosDesafio.rubro + "\n" +
-      "Título: " + datosDesafio.titulo + "\n" +
-      "Descripción: " + datosDesafio.descripcion + "\n\n" +
-      "CATÁLOGO:\n" + JSON.stringify(catalogo) + "\n\n" +
-      "Devuelve SOLO un JSON válido con este formato exacto:\n" +
-      "{ \"matches\": [ { \"nombre\": \"Nombre exacto del proyecto\", \"afinidad\": 92, \"justificacion\": \"Explicación técnica breve en español de por qué resuelve el problema\" } ] }";
+      "Eres el director de transferencia tecnológica de CIDERE Biobío.\n" +
+      "Tu tarea es emparejar un DESAFÍO INDUSTRIAL con las CAPACIDADES REGIONALES (Startups y Universidades) que realmente puedan resolverlo.\n\n" +
+      "REGLAS ESTRICTAS DE EVALUACIÓN:\n" +
+      "1. NO emparejes solo porque compartan el mismo 'rubro' si su 'queHace' y 'comoHace' no resuelven el problema específico.\n" +
+      "2. PRIORIZA el contraste técnico: verifica cómo el mecanismo descrito en 'comoHace' y la propuesta en 'queHace' atacan la causa raíz del problema.\n" +
+      "3. VALORA la transferencia tecnológica intersectorial (ej: una solución de sensores en agroindustria puede resolver monitoreo térmico en alimentos o forestal).\n" +
+      "4. Si ninguna capacidad del catálogo resuelve realmente el problema, devuelve una lista vacía [].\n\n" +
+      "DESAFÍO INDUSTRIAL:\n" +
+      "- Rubro solicitante: " + datosDesafio.rubro + "\n" +
+      "- Título: " + datosDesafio.titulo + "\n" +
+      "- Descripción del problema, entorno e impacto: " + datosDesafio.descripcion + "\n\n" +
+      "CATÁLOGO DE CAPACIDADES DISPONIBLES:\n" + JSON.stringify(catalogo) + "\n\n" +
+      "Devuelve ÚNICAMENTE un JSON válido con hasta 5 matches ordenados por afinidad real:\n" +
+      "{ \"matches\": [ { \"nombre\": \"Nombre exacto en catálogo\", \"afinidad\": 94, \"justificacion\": \"Contraste técnico en 2 líneas explicando cómo su 'comoHace' y 'queHace' resuelven el problema específico\" } ] }";
 
     var url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" + apiKey;
     var payload = {
       contents: [{ parts: [{ text: prompt }] }],
-      generationConfig: { temperature: 0.2, responseMimeType: "application/json" }
+      generationConfig: { temperature: 0.15, responseMimeType: "application/json" }
     };
 
     var response = UrlFetchApp.fetch(url, {
